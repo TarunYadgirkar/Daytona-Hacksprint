@@ -4,6 +4,7 @@ import {
   createCopilotRuntimeHandler,
 } from "@copilotkit/runtime/v2";
 import { createOpenAI } from "@ai-sdk/openai";
+import { requireDemoAccess } from "@/lib/access";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -40,6 +41,11 @@ const handler = createCopilotRuntimeHandler({
   basePath: "/api/copilotkit",
 });
 
-export const GET = handler;
-export const POST = handler;
+async function protectedHandler(request: Request): Promise<Response> {
+  const denied = requireDemoAccess(request);
+  return denied ?? handler(request);
+}
+
+export const GET = protectedHandler;
+export const POST = protectedHandler;
 export const OPTIONS = handler;
