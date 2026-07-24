@@ -75,3 +75,19 @@ Format: what we decided, why, and what it costs.
 **Why:** Found while testing the decision logic. If Daytona failed and CodeRabbit approved, the old code reported `both_clear` — the rail would have shown two green halves and the word "agreement" when in fact nothing had run. That is precisely the evidence/opinion blur this product exists to name, appearing in our own UI. `decide()` was already blocking correctly on infra failure; only the label was wrong, which is the most dangerous kind of wrong.
 
 **Costs:** One more case for the UI to label. Cheap.
+
+---
+
+## D-008 — Placeholder reviews have fixture provenance
+
+**Decided:** CodeRabbit placeholders use `source: "fixture"`. Only CLI output or a recorded cache
+entry may use `source: "cli"` or `source: "cache"`, and both require a `recordedAt` timestamp.
+
+**Why:** Adding the current time to hand-written placeholder findings would make them look like a
+review that actually ran. That would be the opinion-side equivalent of calling an unexecuted test
+evidence. The UI, SSE log, and types now preserve the distinction until the recorder replaces the
+fixtures with authenticated CodeRabbit output.
+
+**Costs:** A fresh checkout cannot honestly demonstrate the CodeRabbit comparison until someone
+authenticates the CLI and runs `npm run record:coderabbit`. That was already operationally true;
+now the product says so.

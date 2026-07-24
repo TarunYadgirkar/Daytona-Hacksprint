@@ -26,13 +26,13 @@ export const CODERABBIT_CACHE: Record<string, CodeRabbitReview> = {
         body: "Early return for the zero-length case reads correctly and avoids the reduce on an empty array.",
       },
     ],
-    source: "cache",
+    source: "fixture",
   },
 
   "pr-102": {
     verdict: "approve",
     findings: [],
-    source: "cache",
+    source: "fixture",
   },
 
   "pr-103": {
@@ -46,7 +46,7 @@ export const CODERABBIT_CACHE: Record<string, CodeRabbitReview> = {
         body: "Object.keys(source) is not filtered, so a __proto__ or constructor key in untrusted config will walk up the prototype chain and mutate Object.prototype. Reject those keys explicitly or build the accumulator with Object.create(null).",
       },
     ],
-    source: "cache",
+    source: "fixture",
   },
 
   "pr-104": {
@@ -60,6 +60,6 @@ export const CODERABBIT_CACHE: Record<string, CodeRabbitReview> = {
         body: "The loop condition uses a literal 1 instead of the attempts parameter, so the operation is only ever tried once. The function's name and signature promise behaviour it does not implement.",
       },
     ],
-    source: "cache",
+    source: "fixture",
   },
 };

@@ -22,6 +22,7 @@
  * Budget 15-40 minutes for a full run. Start it and go build something else.
  */
 
+import "dotenv/config";
 import { execFileSync } from "node:child_process";
 import { mkdtempSync, writeFileSync, mkdirSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -89,7 +90,11 @@ async function main() {
     const started = Date.now();
     try {
       const review = await runCodeRabbitCLI(pr, dir);
-      cache[pr.id] = { ...review, recordedAt: new Date().toISOString() };
+      cache[pr.id] = {
+        ...review,
+        source: "cache",
+        recordedAt: new Date().toISOString(),
+      };
       console.log(
         `         ${review.verdict} · ${review.findings.length} finding(s) · ${Math.round((Date.now() - started) / 1000)}s\n`,
       );

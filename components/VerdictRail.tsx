@@ -54,7 +54,9 @@ export default function VerdictRail({
         <div className="rail-seam" aria-hidden="true" />
 
         <div className={`rail-half right ${opinionState}`}>
-          <small>Opinion · CodeRabbit</small>
+          <small>
+            Opinion · {review?.source === "fixture" ? "placeholder" : "CodeRabbit"}
+          </small>
           <span>
             {!review
               ? "not run"

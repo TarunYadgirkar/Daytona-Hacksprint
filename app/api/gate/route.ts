@@ -8,6 +8,7 @@
  */
 
 import { encodeSSE, type GateEvent } from "@/lib/events";
+import { flushLogger } from "@/lib/adapters/braintrust";
 import { getPR } from "@/lib/fixtures/prs";
 import { runGate } from "@/lib/pipeline";
 
@@ -20,6 +21,7 @@ export async function GET(request: Request) {
   const pr = prId ? getPR(prId) : undefined;
 
   if (!pr) {
+    await flushLogger();
     return new Response(JSON.stringify({ error: `Unknown PR "${prId}"` }), {
       status: 404,
       headers: { "content-type": "application/json" },
@@ -49,6 +51,9 @@ export async function GET(request: Request) {
           message: err instanceof Error ? err.message : String(err),
         });
       } finally {
+        // runGate flushes completed traces itself. This second flush covers
+        // failures that happen before the assembled result can be logged.
+        await flushLogger();
         closed = true;
         try {
           controller.close();

@@ -5,6 +5,8 @@
  *     npx tsx scripts/check-env.ts
  */
 
+import "dotenv/config";
+
 interface Check {
   name: string;
   key: string;

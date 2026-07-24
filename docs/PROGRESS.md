@@ -4,7 +4,8 @@ Living status. Update this in the same commit as the work it describes.
 
 **How to use this file:** move items between sections, do not delete them. At 3am the useful question is usually "did we already try that?", and a deleted line cannot answer it.
 
-Last updated: scaffold complete. Decision logic and sandbox file-write verified locally; no live API calls made yet.
+Last updated: 2026-07-24. Repository structure restored, dependencies locked, routes built and
+locally verified. Live sponsor calls are still blocked on credentials.
 
 ---
 
@@ -14,11 +15,11 @@ Nobody assigned yet. Claim an item by putting your name on it.
 
 | # | Item | Owner | Notes |
 |---|------|-------|-------|
-| 1 | Get keys for all five sponsors, run `npm run check:env` | | Blocks everything. Do this first. |
+| 1 | Get keys for all five sponsors, run `npm run check:env` | | Preflight runs and reports Fireworks + Daytona missing. |
 | 2 | First live Fireworks call — confirm model ID and JSON mode | | Model IDs change; verify against fireworks.ai/models |
 | 3 | First live Daytona sandbox — confirm `executeCommand` shape | | See D-002 for why we avoid the filesystem API |
-| 4 | `npm run smoke -- pr-101` end to end | | The moment the project is real |
-| 5 | Install + auth CodeRabbit CLI, record verdicts | | Slow. Start it early, do other work while it runs. |
+| 4 | `npm run smoke -- pr-101` end to end | | Attempted; stops at claim extraction until Fireworks is configured. |
+| 5 | Authenticate CodeRabbit CLI and record verdicts | | CLI 0.7.0 is installed in `.tools/`; authentication is still required. |
 
 ## Done
 
@@ -33,6 +34,14 @@ Nobody assigned yet. Claim an item by putting your name on it.
 - [x] Verified `compare()`/`decide()` against all four quadrants plus infra-failure and inconclusive-only edge cases
 - [x] Verified the base64 sandbox file-write round-trips byte-identically with backticks, quotes and `$` in generated code
 - [x] Added `no_evidence` agreement kind (see D-007) — infra failure was mislabelled as agreement
+- [x] Restored the documented `app/`, `components/`, `lib/`, `scripts/`, and `docs/` structure
+- [x] Added `/api/override` and the CopilotKit v2 catch-all runtime endpoint
+- [x] Added `.env.example`, `.gitignore`, `next-env.d.ts`, dependencies, and `package-lock.json`
+- [x] Standalone scripts now load `.env` through `dotenv`
+- [x] `npm run typecheck` and `npm run build` pass
+- [x] CopilotKit `/api/copilotkit/info` returns the registered default agent
+- [x] Placeholder reviews are typed and labelled as `fixture`, never as recorded CodeRabbit cache
+- [x] CodeRabbit recorder fails fast when unauthenticated and preserves the existing cache
 
 ## Next
 
@@ -44,7 +53,11 @@ Nobody assigned yet. Claim an item by putting your name on it.
 
 ## Blocked
 
-Nothing yet.
+- Live Fireworks and Daytona validation: `FIREWORKS_API_KEY` and `DAYTONA_API_KEY` are absent.
+- Braintrust trace validation: `BRAINTRUST_API_KEY` is absent.
+- CopilotKit chat completion: `OPENAI_API_KEY` is absent; the runtime metadata endpoint is verified.
+- Real CodeRabbit cache capture: local CLI is installed but `coderabbit auth status --agent`
+  reports `not_authenticated`, and no `CODERABBIT_API_KEY` is configured.
 
 ## Rejected
 
@@ -62,3 +75,4 @@ Keep failed approaches here so nobody retries them.
 | Generated tests are confirmatory, not adversarial | medium | The prompt is the lever. Check `pr-101` actually gets broken before trusting the demo. |
 | CodeRabbit CLI rate limit hit while recording | high | Record early, record once, commit the cache |
 | Venue wifi | high | Everything except Daytona can be shown from a recorded Braintrust trace |
+| Transitive dependency advisories | medium | `npm audit --omit=dev` reports 15 advisories, including 6 high. Current automatic fixes propose incompatible downgrades or have no upstream fix; reassess sponsor SDK updates before production use. |

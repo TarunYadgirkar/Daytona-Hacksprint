@@ -186,7 +186,9 @@ export async function runGate({ pr, emit, testCount = 4 }: RunGateOptions): Prom
     message:
       codeRabbit.source === "cache"
         ? `Reading recorded verdict${codeRabbit.recordedAt ? ` from ${codeRabbit.recordedAt}` : ""}.`
-        : "Live CLI review complete.",
+        : codeRabbit.source === "fixture"
+          ? "Using a staged review placeholder. This is not a recorded CodeRabbit verdict."
+          : "Live CLI review complete.",
   });
   emit({ type: "coderabbit_ready", review: codeRabbit });
   emit({ type: "stage_done", stage: "coderabbit", at: now() });

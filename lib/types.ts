@@ -115,14 +115,25 @@ export interface CodeRabbitFinding {
   body?: string;
 }
 
-export interface CodeRabbitReview {
+interface CodeRabbitReviewBase {
   verdict: CodeRabbitVerdict;
   findings: CodeRabbitFinding[];
-  /** Provenance matters on stage. Say out loud which one you are showing. */
-  source: "cli" | "cache";
-  recordedAt?: string;
   raw?: string;
 }
+
+/**
+ * Provenance matters on stage. A fixture is useful for local UI development,
+ * but it is not CodeRabbit's opinion and must never be presented as one.
+ */
+export type CodeRabbitReview =
+  | (CodeRabbitReviewBase & {
+      source: "cli" | "cache";
+      recordedAt: string;
+    })
+  | (CodeRabbitReviewBase & {
+      source: "fixture";
+      recordedAt?: never;
+    });
 
 /**
  * Stage 5. The disagreement taxonomy is the actual product, so these names

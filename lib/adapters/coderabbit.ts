@@ -24,10 +24,13 @@
  */
 
 import { spawn } from "node:child_process";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import type { CodeRabbitFinding, CodeRabbitReview, CodeRabbitVerdict, StagedPR } from "../types";
 import { CODERABBIT_CACHE } from "../fixtures/coderabbit-cache";
 
 const CLI_TIMEOUT_MS = 20 * 60 * 1000;
+const AUTH_STATUS_TIMEOUT_MS = 10 * 1000;
 
 export async function getCodeRabbitReview(pr: StagedPR): Promise<CodeRabbitReview> {
   const mode = process.env.CODERABBIT_MODE ?? "cache";
@@ -56,10 +59,10 @@ function fromCache(pr: StagedPR): CodeRabbitReview {
           body: `Run 'npm run record:coderabbit -- ${pr.id}' to capture one.`,
         },
       ],
-      source: "cache",
+      source: "fixture",
     };
   }
-  return { ...cached, source: "cache" };
+  return cached;
 }
 
 /**
@@ -70,8 +73,12 @@ function fromCache(pr: StagedPR): CodeRabbitReview {
  * change present as tracked edits.
  */
 export async function runCodeRabbitCLI(pr: StagedPR, cwd = process.cwd()): Promise<CodeRabbitReview> {
+  const projectLocalBin = join(process.cwd(), ".tools", "bin", "coderabbit");
+  const command =
+    process.env.CODERABBIT_BIN || (existsSync(projectLocalBin) ? projectLocalBin : "coderabbit");
+  await assertCodeRabbitAuthenticated(command, cwd);
   const stdout = await new Promise<string>((resolve, reject) => {
-    const child = spawn("coderabbit", ["review", "--agent"], {
+    const child = spawn(command, ["review", "--agent"], {
       cwd,
       env: { ...process.env, CODERABBIT_API_KEY: process.env.CODERABBIT_API_KEY ?? "" },
     });
@@ -91,13 +98,69 @@ export async function runCodeRabbitCLI(pr: StagedPR, cwd = process.cwd()): Promi
     });
     child.on("close", (code) => {
       clearTimeout(timer);
-      // The CLI exits non-zero when it has findings, which is not an error.
-      if (out.trim().length === 0) reject(new Error(`CodeRabbit CLI produced no output (exit ${code}): ${err}`));
-      else resolve(out);
+      const agentError = findAgentError(out);
+      if (out.trim().length === 0) {
+        reject(new Error(`CodeRabbit CLI produced no output (exit ${code}): ${err}`));
+      } else if (code !== 0 || agentError) {
+        reject(
+          new Error(
+            agentError
+              ? `CodeRabbit CLI failed: ${agentError}`
+              : `CodeRabbit CLI exited ${code}: ${err || out.slice(0, 500)}`,
+          ),
+        );
+      } else {
+        resolve(out);
+      }
     });
   });
 
   return parseAgentOutput(stdout, pr);
+}
+
+async function assertCodeRabbitAuthenticated(command: string, cwd: string): Promise<void> {
+  // API-key mode is non-interactive and does not create a stored CLI session.
+  if (process.env.CODERABBIT_API_KEY) return;
+
+  const stdout = await new Promise<string>((resolve, reject) => {
+    const child = spawn(command, ["auth", "status", "--agent"], {
+      cwd,
+      env: process.env,
+    });
+
+    let out = "";
+    let err = "";
+    const timer = setTimeout(() => {
+      child.kill("SIGTERM");
+      reject(new Error("CodeRabbit authentication check timed out"));
+    }, AUTH_STATUS_TIMEOUT_MS);
+
+    child.stdout.on("data", (data) => (out += data.toString()));
+    child.stderr.on("data", (data) => (err += data.toString()));
+    child.on("error", (error) => {
+      clearTimeout(timer);
+      reject(new Error(`CodeRabbit CLI not runnable: ${error.message}`));
+    });
+    child.on("close", (code) => {
+      clearTimeout(timer);
+      if (code === 0) resolve(out);
+      else reject(new Error(`CodeRabbit authentication check exited ${code}: ${err || out}`));
+    });
+  });
+
+  const authenticated = stdout.split("\n").some((line) => {
+    try {
+      return asRecord(JSON.parse(line) as unknown)?.authenticated === true;
+    } catch {
+      return false;
+    }
+  });
+
+  if (!authenticated) {
+    throw new Error(
+      "CodeRabbit CLI is not authenticated. Run 'coderabbit auth login' or set CODERABBIT_API_KEY.",
+    );
+  }
 }
 
 /**
@@ -106,27 +169,42 @@ export async function runCodeRabbitCLI(pr: StagedPR, cwd = process.cwd()): Promi
  * the rest. Written defensively because the event shape is not contractual.
  */
 export function parseAgentOutput(stdout: string, _pr: StagedPR): CodeRabbitReview {
+  const agentError = findAgentError(stdout);
+  if (agentError) throw new Error(`CodeRabbit CLI failed: ${agentError}`);
+
   const findings: CodeRabbitFinding[] = [];
 
   for (const line of stdout.split("\n")) {
     const trimmed = line.trim();
     if (!trimmed.startsWith("{")) continue;
-    let evt: any;
+    let parsed: unknown;
     try {
-      evt = JSON.parse(trimmed);
+      parsed = JSON.parse(trimmed) as unknown;
     } catch {
       continue;
     }
-    const candidates = evt.findings ?? evt.comments ?? (evt.type === "finding" ? [evt] : []);
+    const evt = asRecord(parsed);
+    if (!evt) continue;
+    const candidates =
+      (Array.isArray(evt.findings) && evt.findings) ||
+      (Array.isArray(evt.comments) && evt.comments) ||
+      (evt.type === "finding" ? [evt] : []);
     if (!Array.isArray(candidates)) continue;
 
-    for (const c of candidates) {
+    for (const candidate of candidates) {
+      const c = asRecord(candidate);
+      if (!c) continue;
       findings.push({
         severity: normalizeSeverity(c.severity ?? c.level),
-        file: c.file ?? c.path,
-        line: typeof c.line === "number" ? c.line : c.startLine,
-        title: c.title ?? c.summary ?? c.comment ?? "Finding",
-        body: c.body ?? c.description ?? c.codegenInstructions ?? c.comment,
+        file: firstString(c.fileName, c.file, c.path),
+        line:
+          typeof c.line === "number"
+            ? c.line
+            : typeof c.startLine === "number"
+              ? c.startLine
+              : undefined,
+        title: firstString(c.title, c.summary, c.comment) ?? "Finding",
+        body: firstString(c.body, c.description, c.codegenInstructions, c.comment),
       });
     }
   }
@@ -138,6 +216,30 @@ export function parseAgentOutput(stdout: string, _pr: StagedPR): CodeRabbitRevie
     recordedAt: new Date().toISOString(),
     raw: stdout.slice(0, 20000),
   };
+}
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+  return typeof value === "object" && value !== null ? (value as Record<string, unknown>) : null;
+}
+
+function firstString(...values: unknown[]): string | undefined {
+  return values.find((value): value is string => typeof value === "string");
+}
+
+function findAgentError(stdout: string): string | null {
+  for (const line of stdout.split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed.startsWith("{")) continue;
+    try {
+      const event = asRecord(JSON.parse(trimmed) as unknown);
+      if (event?.type === "error") {
+        return firstString(event.message, event.status, event.phase) ?? "unknown error";
+      }
+    } catch {
+      // Non-JSON progress output is ignored; the CLI can mix formats.
+    }
+  }
+  return null;
 }
 
 function normalizeSeverity(input: unknown): CodeRabbitFinding["severity"] {

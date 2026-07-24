@@ -265,8 +265,10 @@ export default function PipelineView({ prs }: { prs: StagedPR[] }) {
                   <span className="label">CodeRabbit · independent static review</span>
                   <p className="provenance">
                     {review.source === "cache"
-                      ? `Recorded verdict${review.recordedAt ? ` from ${new Date(review.recordedAt).toLocaleString()}` : " (placeholder — not yet recorded)"}. CodeRabbit reviews take minutes, so they are captured ahead of time.`
-                      : "Live CodeRabbit CLI review, run just now."}
+                      ? `Recorded verdict from ${new Date(review.recordedAt).toLocaleString()}. CodeRabbit reviews take minutes, so they are captured ahead of time.`
+                      : review.source === "fixture"
+                        ? "Staged placeholder for local development. This is not CodeRabbit output; authenticate the CLI and run the recorder before presenting."
+                        : "Live CodeRabbit CLI review, run just now."}
                   </p>
                   {review.findings.length === 0 ? (
                     <p className="empty">No findings.</p>

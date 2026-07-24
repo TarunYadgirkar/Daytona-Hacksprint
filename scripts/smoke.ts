@@ -8,6 +8,7 @@
  * same order the demo does, and prints the same verdicts the screen will show.
  */
 
+import "dotenv/config";
 import { STAGED_PRS, getPR } from "../lib/fixtures/prs";
 import { runGate } from "../lib/pipeline";
 import type { GateEvent } from "../lib/events";

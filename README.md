@@ -79,6 +79,11 @@ npm run record:coderabbit          # all four, slow — start it and go do somet
 npm run record:coderabbit -- pr-101
 ```
 
+Fresh checkouts contain clearly labelled `fixture` reviews so the UI can be developed before
+CodeRabbit is authenticated. Fixtures are not CodeRabbit output and are never relabelled as a
+recorded cache entry. A demo-ready `cache` review always has a `recordedAt` timestamp produced by
+the recorder.
+
 The verdict is CodeRabbit's real opinion of the real code; only the timing is pre-arranged. The UI shows the capture timestamp, and you should say so when presenting. Set `CODERABBIT_MODE=cli` to go live in development — never in a demo.
 
 ## Docs
