@@ -104,7 +104,7 @@ Rather than wiring a live GitHub webhook, four PRs with real bugs are staged in 
 
 | PR | Outcome | What it shows |
 |---|---|---|
-| `pr-101` | disagreement — evidence only | sandbox breaks the claim, CodeRabbit approves |
+| `pr-101` | agreement — both caught | sandbox and the recorded CodeRabbit review catch the null-cart bug |
 | `pr-102` | agreement — both clear | a genuinely correct fix; the gate does not cry wolf |
 | `pr-103` | disagreement — opinion only | CodeRabbit catches a risk the claim never mentioned |
 | `pr-104` | agreement — both caught | obvious bug, both methods flag it |
@@ -118,12 +118,12 @@ npm run record:coderabbit          # all four, slow — start it and go do somet
 npm run record:coderabbit -- pr-101
 ```
 
-Fresh checkouts contain clearly labelled `fixture` reviews so the UI can be developed before
-CodeRabbit is authenticated. Fixtures are not CodeRabbit output and are never relabelled as a
-recorded cache entry. The live pipeline treats a fixture as `no_opinion` and blocks. Bundled
-recorded-run fixtures are explicitly simulated UI examples and cannot record a human override.
-A demo-ready `cache` review has a capture timestamp and a digest binding it to the exact staged
-before/after content.
+The public cart demo includes a real CodeRabbit Pro Plus review bound to `pr-101` and its imported
+GitHub equivalent. Other staged cases contain clearly labelled `fixture` reviews for UI examples.
+Fixtures are not CodeRabbit output and are never relabelled as a recorded cache entry. The live
+pipeline treats a fixture as `no_opinion` and blocks. Bundled recorded-run fixtures are explicitly
+simulated UI examples and cannot record a human override. A demo-ready `cache` review has a capture
+timestamp and a digest binding it to the exact staged before/after content.
 
 The verdict is CodeRabbit's real opinion of the real code; only the timing is pre-arranged. The UI shows the capture timestamp, and you should say so when presenting. Set `CODERABBIT_MODE=cli` to go live in development — never in a demo.
 

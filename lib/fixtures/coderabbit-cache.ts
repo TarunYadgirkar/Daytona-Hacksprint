@@ -16,17 +16,37 @@ import type { CodeRabbitReview } from "../types";
 
 export const CODERABBIT_CACHE: Record<string, CodeRabbitReview> = {
   "pr-101": {
-    verdict: "approve",
+    verdict: "block",
     findings: [
       {
-        severity: "info",
+        severity: "major",
         file: "target.js",
-        line: 2,
-        title: "Guard clause added for empty collection",
-        body: "Early return for the zero-length case reads correctly and avoids the reduce on an empty array.",
+        line: 3,
+        title: "Guard null carts as well as empty arrays",
+        body: "The stated objective includes null responses, but items.length still throws for null. Guard null before accessing length or calling reduce.",
       },
     ],
-    source: "fixture",
+    raw: "Recorded from CodeRabbit Pro Plus review 9c2963e7-c135-445a-88cd-cce7dc21e111 on TarunYadgirkar/popper-demo-cart#1.",
+    source: "cache",
+    recordedAt: "2026-07-24T21:34:02.000Z",
+    prDigest: "7ffc26d7f445ed7aa0bd45105d587d4a83e1eb0a82352db146f4b29607fef290",
+  },
+
+  "github:TarunYadgirkar/popper-demo-cart#1": {
+    verdict: "block",
+    findings: [
+      {
+        severity: "major",
+        file: "cart.js",
+        line: 3,
+        title: "Guard null carts as well as empty arrays",
+        body: "The stated objective includes null responses, but items.length still throws for null. Guard null before accessing length or calling reduce.",
+      },
+    ],
+    raw: "Recorded from CodeRabbit Pro Plus review 9c2963e7-c135-445a-88cd-cce7dc21e111 on TarunYadgirkar/popper-demo-cart#1.",
+    source: "cache",
+    recordedAt: "2026-07-24T21:34:02.000Z",
+    prDigest: "ec31c5bfdabef98a59b913ed4dda9a36d8d51547e8832808a68e1ffa6cc3e0ad",
   },
 
   "pr-102": {

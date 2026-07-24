@@ -45,7 +45,7 @@ Then verify:
 - The production URL opens the Popper control room directly.
 - Selecting a PR makes no `/api/gate` request.
 - One explicit recorded-mode run completes without sponsor API keys.
-- One explicit live `pr-101` run returns `evidence_only` and `block`.
+- One explicit live `pr-101` run returns `both_caught` and `block`.
 - The recorded gallery loads every quadrant after clearing browser storage.
 - At 390px, 768px, and desktop widths, evidence remains reachable without
   page-level horizontal overflow.

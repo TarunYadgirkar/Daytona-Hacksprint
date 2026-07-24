@@ -159,3 +159,11 @@ test("readCodeRabbitCache trusts only a review bound to the staged PR content", 
   const changedPR = { ...pr, after: `${pr.after}\n// changed` };
   assert.equal(readCodeRabbitCache(changedPR, cache).source, "fixture");
 });
+
+test("bundled pr-101 review is genuine and bound to the staged content", () => {
+  const review = readCodeRabbitCache(pr);
+
+  assert.equal(review.source, "cache");
+  assert.equal(review.verdict, "block");
+  assert.equal(review.findings[0]?.severity, "major");
+});

@@ -106,6 +106,8 @@ Outstanding operator work:
   and a four-test Daytona `daytona-large` suite completed in 1.95 seconds before clean deletion
 - [x] Fireworks structured output uses enforced JSON Schema with reasoning disabled; the live
   claim-and-four-test generation path completed in 11.2 seconds
+- [x] CodeRabbit Pro Plus reviewed the public demo PR; its timestamped major null-cart finding
+  is digest-bound to both the staged and imported copies for instant demo playback
 
 ## Next
 

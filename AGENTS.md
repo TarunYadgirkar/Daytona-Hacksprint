@@ -7,7 +7,7 @@ Instructions for coding agents working in this repo. Human-facing setup lives in
 Scaffold complete, structure correct, pipeline runs live end to end. Verified, not aspirational:
 
 - `npm install` done, `npm run typecheck` passes.
-- `npm run smoke -- pr-101` returns `evidence_only` + `BLOCK` with **live** Fireworks + Daytona, cached CodeRabbit.
+- `npm run smoke -- pr-101` returns `both_caught` + `BLOCK` with **live** Fireworks + Daytona and a digest-bound CodeRabbit review.
 - `.env` holds working hackathon keys (gitignored). CopilotKit chat uses the same Fireworks key as the pipeline; no OpenAI key is needed.
 - Fireworks uses the fast `accounts/fireworks/routers/kimi-k2p6-turbo` route with Priority service. On a 404 `Model not found`, re-list `GET /inference/v1/models` and pick a compatible chat model.
 - Braintrust summary/override logs are wrapped in `traced` spans — do not reintroduce a top-level `logger.log()`; the SDK (1.63+) throws once spans are used.
@@ -30,7 +30,7 @@ Two agents build at once. Owned files are exclusive; shared files are contract-o
 
 **Shared — change only by agreement, one edit at a time:** `lib/types.ts`, `lib/events.ts` (the SSE contract). Announce any change in `docs/PROGRESS.md` before touching it.
 
-After every segment: `npm run typecheck`, `npm run smoke -- pr-101` (must stay `evidence_only`/`block`), append to `docs/PROGRESS.md`.
+After every segment: `npm run typecheck`, `npm run smoke -- pr-101` (must stay `both_caught`/`block`), append to `docs/PROGRESS.md`.
 
 ## What this project is
 
@@ -111,6 +111,6 @@ These cost real time to discover. Do not re-derive them.
 ## Before you say a task is done
 
 1. `npm run typecheck` passes.
-2. `npm run smoke -- pr-101` still produces `evidence_only` and a `block`.
+2. `npm run smoke -- pr-101` still produces `both_caught` and a `block`.
 3. If you changed anything in `lib/fixtures/prs.ts`, re-record CodeRabbit verdicts.
 4. Append what changed to `docs/PROGRESS.md`, and add a decision to `docs/DECISIONS.md` if you made a non-obvious call.

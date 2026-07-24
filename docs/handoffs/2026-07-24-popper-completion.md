@@ -168,7 +168,7 @@ npm run test:e2e
 npm run smoke -- pr-101
 ```
 
-The live smoke must finish with comparison `evidence_only` and gate decision
+The live smoke must finish with comparison `both_caught` and gate decision
 `block`. Run it once after deterministic checks pass; it uses paid external
 services.
 
