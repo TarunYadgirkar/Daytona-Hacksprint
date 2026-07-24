@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run build
+      # The managed build environment could not update package-lock.json.
+      # Install Playwright without mutating it; replace this with a committed
+      # devDependency once `npm install -D @playwright/test@1.61.1` is available.
+      - run: npm install --no-save --package-lock=false @playwright/test@1.61.1
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+        env:
+          SAFESHIP_GATE_MODE: recorded
+          SAFESHIP_RECORDED_DELAY_MS: "5"

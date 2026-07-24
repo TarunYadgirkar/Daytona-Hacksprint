@@ -51,13 +51,34 @@ npm run check:env         # preflight
 npm run dev               # http://localhost:3000
 ```
 
-Then pick a PR from the left rail and watch the gate run.
+Select a PR to preview its before/after diff. Nothing calls Fireworks or
+Daytona until you explicitly press **Run adversarial gate**.
 
-Verify without a browser:
+Verify the core logic without a browser:
 
 ```bash
+npm test
+npm run typecheck
 npm run smoke -- pr-101
 ```
+
+For deterministic UI development, set `SAFESHIP_GATE_MODE=recorded`. The gate
+route then streams the same SSE contract from validated fixtures and calls no
+sponsor APIs. Browser coverage lives in `e2e/` and runs with `npm run test:e2e`
+after Playwright is installed.
+
+## Safe demo access
+
+Live gates are deliberately bounded:
+
+- Only the four staged PR IDs are accepted.
+- Every live run requests exactly four tests.
+- A server-side quota allows five live runs per session in ten minutes.
+- `SAFESHIP_DEMO_ACCESS_CODE` creates a signed, HTTP-only demo session.
+- Vercel production fails closed if that access code is missing.
+
+The recorded-runs gallery contains all four comparison outcomes and never
+consumes Fireworks, Daytona, CodeRabbit, or Braintrust capacity.
 
 ## The staged PRs
 
@@ -93,6 +114,7 @@ The verdict is CodeRabbit's real opinion of the real code; only the timing is pr
 - `docs/PROGRESS.md` — living status, blockers, and rejected approaches
 - `docs/DECISIONS.md` — why the non-obvious calls were made
 - `docs/DEMO_SCRIPT.md` — the three-minute run, and answers to the questions you will get
+- `docs/DEPLOYMENT.md` — protected Vercel deployment and release checklist
 
 ## What this deliberately does not do
 

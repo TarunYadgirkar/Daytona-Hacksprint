@@ -151,3 +151,61 @@ ran means no opinion exists. Those states must remain distinct for the compariso
 
 **Costs:** Rate limits and unsupported repositories now stop cache recording instead of producing
 a convenient green signal.
+
+---
+
+## D-013 — Selection and execution are separate actions
+
+**Decided:** Clicking a staged PR selects it and previews its diff. Only the explicit
+“Run adversarial gate” action may open the SSE route and spend Fireworks or Daytona capacity.
+The server independently allowlists staged IDs, fixes the requested suite at four tests, and
+applies signed demo access plus a best-effort quota.
+
+**Why:** A navigation gesture should not have external cost. UI friction alone is not a security
+boundary, so the route enforces the same constraints even if it is called directly.
+
+**Costs:** One extra click before a live run. That pause communicates exactly what will happen.
+
+---
+
+## D-014 — Recorded runs are a validated library with explicit provenance
+
+**Decided:** Four bundled, schema-validated completed results cover every comparison outcome.
+Recorded mode streams those results over the production SSE contract, and the gallery labels
+their capture time, original run ID, evidence availability, and fixture provenance.
+
+**Why:** Browser-local “last run” disappears on a fresh device and is a poor venue-wifi fallback.
+A deterministic library makes every important state explorable without sponsor calls. Calling a
+fixture “live” would violate the evidence/opinion distinction, so provenance travels with it.
+
+**Costs:** The fixtures must stay compatible with the gate schema. Tests validate that contract.
+Decision D-010 remains true for saved live runs; this decision replaces its single-run storage
+limitation.
+
+---
+
+## D-015 — Stream closure is an explicit failure state
+
+**Decided:** The UI tracks connection and stage state separately. A stream that closes without
+`run_complete` marks any running stage as errored, keeps a persistent banner, announces the
+failure accessibly, and offers retry or recorded fallback.
+
+**Why:** `EventSource.onerror` is not a harmless browser detail. Leaving a spinner alive after
+the server has stopped makes an unavailable run look active and gives the operator no recovery
+path.
+
+**Costs:** More client state, timers, and failure copy. None of it computes a verdict.
+
+---
+
+## D-016 — Production access fails closed
+
+**Decided:** Vercel production requires `SAFESHIP_DEMO_ACCESS_CODE`. Missing configuration returns
+503 instead of silently exposing live integrations. Vercel Authentication protects preview and
+generated deployment URLs; application access still protects the public production domain.
+
+**Why:** Hobby Standard Protection does not cover the public production domain. A dashboard
+toggle and an in-memory quota are not substitutes for an application-level boundary.
+
+**Costs:** A forgotten environment variable makes production unavailable rather than permissive.
+That is the safer failure for a tool that creates paid sandboxes.

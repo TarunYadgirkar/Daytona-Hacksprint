@@ -41,6 +41,14 @@ export async function GET(request: Request) {
     });
   }
 
+  if (recordedMode && !recordedRun) {
+    await flushLogger();
+    return Response.json(
+      { error: `No recorded fixture exists for "${pr.id}"` },
+      { status: 500 },
+    );
+  }
+
   const quota = recordedMode
     ? { allowed: true, remaining: Number.POSITIVE_INFINITY, retryAfterSeconds: 0 }
     : consumeGateQuota(request);

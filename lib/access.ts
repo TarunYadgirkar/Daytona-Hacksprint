@@ -12,6 +12,15 @@ function configuredCode(): string | null {
   return code ? code : null;
 }
 
+function productionProtectionRequired(): boolean {
+  // NODE_ENV covers any production server, while VERCEL_ENV also catches a
+  // production target if framework/runtime configuration overrides NODE_ENV.
+  return (
+    process.env.NODE_ENV === "production" ||
+    process.env.VERCEL_ENV === "production"
+  );
+}
+
 function signature(sessionId: string, code: string): string {
   return createHmac("sha256", code).update(sessionId).digest("base64url");
 }
@@ -53,14 +62,22 @@ function verifiedSessionId(request: Request): string | null {
 export function demoAccessStatus(request: Request): {
   required: boolean;
   authorized: boolean;
+  configured: boolean;
 } {
-  const required = configuredCode() !== null;
-  return { required, authorized: !required || verifiedSessionId(request) !== null };
+  const configured = configuredCode() !== null;
+  const required = configured || productionProtectionRequired();
+  return {
+    required,
+    authorized: configured
+      ? verifiedSessionId(request) !== null
+      : !productionProtectionRequired(),
+    configured,
+  };
 }
 
 export function authorizeDemoCode(input: string): string | null {
   const code = configuredCode();
-  if (!code) return createAccessCookie("access-not-required", "");
+  if (!code) return null;
   if (!safeEqual(input.trim(), code)) return null;
   return createAccessCookie(randomUUID(), code);
 }
@@ -72,7 +89,17 @@ function createAccessCookie(sessionId: string, code: string): string {
 }
 
 export function requireDemoAccess(request: Request): Response | null {
-  if (demoAccessStatus(request).authorized) return null;
+  const status = demoAccessStatus(request);
+  if (status.authorized) return null;
+  if (!status.configured) {
+    return Response.json(
+      {
+        error:
+          "Production access protection is not configured. Set SAFESHIP_DEMO_ACCESS_CODE.",
+      },
+      { status: 503 },
+    );
+  }
   return Response.json(
     { error: "Demo access is required before using live integrations" },
     { status: 401 },

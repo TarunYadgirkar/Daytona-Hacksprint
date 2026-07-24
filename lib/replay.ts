@@ -137,7 +137,10 @@ export function createRunRecord(
 ): RunRecord {
   const capturedAt = options.capturedAt ?? new Date().toISOString();
   return runRecordSchema.parse({
-    id: `${options.origin}:${result.runId}`,
+    // A recorded-mode run uses the fixture's original run ID. Include the
+    // capture time so the newly streamed copy does not hide the bundled seed
+    // when both are present in the gallery.
+    id: `${options.origin}:${result.runId}:${capturedAt}`,
     label: options.label ?? result.agreement.kind.replaceAll("_", " "),
     capturedAt,
     origin: options.origin,

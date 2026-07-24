@@ -25,6 +25,13 @@ export async function POST(request: Request): Promise<Response> {
       );
     }
 
+    if (parsed.data.runId.startsWith("fixture-")) {
+      return Response.json(
+        { error: "Recorded fixture decisions are not written to Braintrust" },
+        { status: 409 },
+      );
+    }
+
     const override: HumanOverride = {
       ...parsed.data,
       at: new Date().toISOString(),

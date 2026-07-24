@@ -17,9 +17,21 @@ export default function AccessBoundary({ children }: { children: ReactNode }) {
     fetch("/api/access", { cache: "no-store" })
       .then(async (response) => {
         if (!response.ok) throw new Error(`Access check failed with status ${response.status}`);
-        return (await response.json()) as { required: boolean; authorized: boolean };
+        return (await response.json()) as {
+          required: boolean;
+          authorized: boolean;
+          configured: boolean;
+        };
       })
       .then((access) => {
+        if (access.required && !access.configured) {
+          setState({
+            status: "failed",
+            error:
+              "Production access protection is not configured. Set SAFESHIP_DEMO_ACCESS_CODE in Vercel.",
+          });
+          return;
+        }
         setState(
           access.authorized || !access.required
             ? { status: "authorized" }

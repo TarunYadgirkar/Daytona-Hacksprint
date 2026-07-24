@@ -21,6 +21,17 @@ export async function POST(request: Request): Promise<Response> {
       return Response.json({ error: "Enter the demo access code" }, { status: 400 });
     }
 
+    const status = demoAccessStatus(request);
+    if (status.required && !status.configured) {
+      return Response.json(
+        {
+          error:
+            "Production access protection is not configured. Set SAFESHIP_DEMO_ACCESS_CODE.",
+        },
+        { status: 503 },
+      );
+    }
+
     const cookie = authorizeDemoCode(parsed.data.code);
     if (!cookie) {
       return Response.json({ error: "Incorrect demo access code" }, { status: 401 });
