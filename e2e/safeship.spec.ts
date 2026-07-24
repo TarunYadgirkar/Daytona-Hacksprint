@@ -18,7 +18,7 @@ async function loadBundledRun(page: Page, prId: string): Promise<void> {
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByText("Recorded-runs gallery")).toBeVisible();
+  await expect(page.getByText("Recorded-runs gallery")).toBeVisible({ timeout: 15_000 });
 });
 
 test("selecting a PR previews it without starting a run", async ({ page }) => {
@@ -34,6 +34,23 @@ test("selecting a PR previews it without starting a run", async ({ page }) => {
   await expect(page.getByText(/Ready\. Start the gate/)).toBeVisible();
   await page.waitForTimeout(150);
   expect(gateRequests).toBe(0);
+});
+
+test("CopilotKit runtime advertises the default SafeShip agent", async ({
+  page,
+}) => {
+  const response = await page.request.get("/api/copilotkit/info");
+  expect(response.status()).toBe(200);
+  const info = (await response.json()) as {
+    agents?: Record<string, { className?: string }>;
+  };
+  expect(info.agents?.default?.className).toBe("BuiltInAgent");
+
+  await page.getByRole("button", { name: "Open chat" }).click();
+  await expect(
+    page.getByRole("complementary", { name: "Copilot chat sidebar" }),
+  ).toBeVisible();
+  await expect(page.getByText(/Runtime info request failed/)).toHaveCount(0);
 });
 
 test("completed evidence-only fixture blocks and labels opinion provenance", async ({
@@ -121,7 +138,9 @@ test("unavailable evidence is never rendered as green", async ({ page }) => {
   await expect(evidence).not.toHaveClass(/ok/);
   await expect(evidence).toContainText("unavailable");
   await expect(page.locator(".call.block")).toHaveText("Block");
-  await expect(page.getByRole("alert")).toContainText("Sandbox evidence unavailable");
+  await expect(page.locator(".run-alert[role='alert']")).toContainText(
+    "Sandbox evidence unavailable",
+  );
 });
 
 test("a completed recorded run remains loadable after reload", async ({ page }) => {
@@ -164,9 +183,25 @@ for (const viewport of [
     await expect(page.locator(".tests-scroll")).toBeVisible();
     await page.getByText("View generated test code").click();
     await expect(page.locator(".test-detail pre")).toBeVisible();
-    const hasPageOverflow = await page.evaluate(
-      () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
-    );
-    expect(hasPageOverflow).toBe(false);
+    const overflow = await page.evaluate(() => ({
+      documentWidth: document.documentElement.scrollWidth,
+      viewportWidth: document.documentElement.clientWidth,
+      offenders: Array.from(document.body.querySelectorAll<HTMLElement>("*"))
+        .filter((element) => {
+          const rect = element.getBoundingClientRect();
+          return rect.right > document.documentElement.clientWidth + 1;
+        })
+        .slice(0, 12)
+        .map((element) => ({
+          className: element.className,
+          tagName: element.tagName,
+          testId: element.dataset.testid,
+          right: Math.round(element.getBoundingClientRect().right),
+        })),
+    }));
+    expect(
+      overflow.documentWidth,
+      `Page overflowed at ${viewport.name}: ${JSON.stringify(overflow.offenders)}`,
+    ).toBeLessThanOrEqual(overflow.viewportWidth + 1);
   });
 }

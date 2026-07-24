@@ -94,6 +94,7 @@ html, body {
 @media (max-width: 900px) {
   .shell { display: flex; flex-direction: column; }
   .shell > aside { display: contents; }
+  .shell > aside > .panel { min-width: 0; width: 100%; }
   .shell > aside > .panel:first-child { order: 1; }
   .shell > main { order: 2; width: 100%; }
   .shell > aside > .panel:nth-child(2) { order: 3; }
@@ -544,6 +545,10 @@ button.act:focus-visible { outline: 2px solid var(--seam); outline-offset: 2px; 
 .evidence-error { margin-top: 12px; }
 
 .empty { color: var(--muted); font-size: 13px; }
+
+@media (max-width: 767px) {
+  [data-copilot-sidebar][aria-hidden="true"] { display: none; }
+}
 
 @media (max-width: 480px) {
   :root { --gap: 12px; }

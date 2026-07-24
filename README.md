@@ -45,6 +45,7 @@ Next.js 15 App Router · React 19 · TypeScript.
 ## Quick start
 
 ```bash
+nvm use
 npm install
 cp .env.example .env      # fill in the keys
 npm run check:env         # preflight
@@ -57,8 +58,8 @@ Daytona until you explicitly press **Run adversarial gate**.
 Verify the core logic without a browser:
 
 ```bash
-npm test
-npm run typecheck
+npm run verify
+npm run test:e2e
 npm run smoke -- pr-101
 ```
 
@@ -102,8 +103,10 @@ npm run record:coderabbit -- pr-101
 
 Fresh checkouts contain clearly labelled `fixture` reviews so the UI can be developed before
 CodeRabbit is authenticated. Fixtures are not CodeRabbit output and are never relabelled as a
-recorded cache entry. A demo-ready `cache` review always has a `recordedAt` timestamp produced by
-the recorder.
+recorded cache entry. The live pipeline treats a fixture as `no_opinion` and blocks. Bundled
+recorded-run fixtures are explicitly simulated UI examples and cannot record a human override.
+A demo-ready `cache` review has a capture timestamp and a digest binding it to the exact staged
+before/after content.
 
 The verdict is CodeRabbit's real opinion of the real code; only the timing is pre-arranged. The UI shows the capture timestamp, and you should say so when presenting. Set `CODERABBIT_MODE=cli` to go live in development — never in a demo.
 

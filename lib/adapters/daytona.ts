@@ -28,8 +28,27 @@ import type {
 } from "../types";
 
 const ROOT = "/home/daytona/safeship";
-/** Per-test wall clock ceiling. An adversarial test that hangs is a failed test. */
-const TEST_TIMEOUT_SECONDS = 10;
+
+export const DAYTONA_SANDBOX_POLICY = {
+  createParams: {
+    language: "javascript",
+    public: false,
+    networkBlockAll: true,
+    ephemeral: true,
+    autoDeleteInterval: 0,
+    ttlMinutes: 10,
+  },
+  createOptions: {
+    timeout: 60,
+  },
+  commandTimeoutSeconds: 15,
+  /** Inner GNU timeout. A generated test that hangs is a failed test. */
+  generatedTestTimeoutSeconds: 10,
+  deleteTimeoutSeconds: 60,
+  waitForDelete: true,
+  cleanupFailureLog:
+    "Sandbox cleanup failed; automatic deletion remains enabled.",
+} as const;
 
 interface ExecResult {
   exitCode: number;
@@ -45,7 +64,14 @@ function normalizeExec(raw: unknown): ExecResult {
 }
 
 async function exec(sandbox: any, command: string): Promise<ExecResult> {
-  return normalizeExec(await sandbox.process.executeCommand(command));
+  return normalizeExec(
+    await sandbox.process.executeCommand(
+      command,
+      undefined,
+      undefined,
+      DAYTONA_SANDBOX_POLICY.commandTimeoutSeconds,
+    ),
+  );
 }
 
 /** base64 round-trip keeps arbitrary generated code out of shell-quoting hell. */
@@ -81,7 +107,10 @@ export async function runAdversarialSuite(opts: RunSandboxOptions): Promise<Sand
 
   try {
     onLog?.("Creating isolated sandbox…");
-    sandbox = await daytona.create({ language: "javascript" });
+    sandbox = await daytona.create(
+      DAYTONA_SANDBOX_POLICY.createParams,
+      DAYTONA_SANDBOX_POLICY.createOptions,
+    );
     onLog?.(`Sandbox ${sandbox.id} ready.`);
 
     await exec(sandbox, `mkdir -p ${ROOT}/before ${ROOT}/after`);
@@ -97,11 +126,11 @@ export async function runAdversarialSuite(opts: RunSandboxOptions): Promise<Sand
 
       const beforeRun = await exec(
         sandbox,
-        `cd ${ROOT}/before && timeout ${TEST_TIMEOUT_SECONDS}s node ${file} 2>&1`,
+        `cd ${ROOT}/before && timeout ${DAYTONA_SANDBOX_POLICY.generatedTestTimeoutSeconds}s node ${file} 2>&1`,
       );
       const afterRun = await exec(
         sandbox,
-        `cd ${ROOT}/after && timeout ${TEST_TIMEOUT_SECONDS}s node ${file} 2>&1`,
+        `cd ${ROOT}/after && timeout ${DAYTONA_SANDBOX_POLICY.generatedTestTimeoutSeconds}s node ${file} 2>&1`,
       );
 
       // Exit 0 is a pass. 124 is GNU timeout's "killed", which we count as a
@@ -150,11 +179,15 @@ export async function runAdversarialSuite(opts: RunSandboxOptions): Promise<Sand
   } finally {
     if (sandbox) {
       try {
-        await sandbox.delete();
+        await sandbox.delete(
+          DAYTONA_SANDBOX_POLICY.deleteTimeoutSeconds,
+          DAYTONA_SANDBOX_POLICY.waitForDelete,
+        );
         onLog?.("Sandbox torn down.");
       } catch {
-        // Sandboxes auto-stop on their interval. A leaked sandbox is not worth
-        // failing the run over.
+        // TTL and ephemeral deletion remain the fallback. Cleanup is best-effort
+        // so an infrastructure failure cannot change the test verdict.
+        onLog?.(DAYTONA_SANDBOX_POLICY.cleanupFailureLog);
       }
     }
   }

@@ -8,7 +8,8 @@ Last updated: 2026-07-24. Full pipeline was verified live at `0bd3520`: `smoke -
 returned `evidence_only` + `BLOCK` against Fireworks `kimi-k2p6` and Daytona. The current
 hardening pass adds explicit execution, protected access, a four-outcome recorded-run library,
 failure recovery, evidence inspection, deterministic recorded-mode streaming, and browser CI.
-Current changes pass typecheck and a production build; the remaining validation is tracked below.
+The deployment hardening pass now passes unit, type, production-build, and recorded-browser
+verification locally; the remaining live and operator validation is tracked below.
 
 ---
 
@@ -16,10 +17,13 @@ Current changes pass typecheck and a production build; the remaining validation 
 
 Lanes assigned in AGENTS.md (A = pipeline/adapters, B = UI/app). Put your name next to what you pick up.
 
+Contract coordination completed: Lane C's content-bound CodeRabbit provenance is integrated into
+`lib/types.ts` with the corresponding `no_opinion` agreement state, replay validation, UI label,
+pipeline behavior, and tests.
+
 | # | Item | Owner | Notes |
 |---|------|-------|-------|
-| 1 | Re-run `npm run smoke -- pr-101` after Lane A changes | Codex | Approval service currently rejects the required elevated `tsx` execution. |
-| 2 | Run recorded-mode Playwright suite at 390px, 768px, and desktop | Codex | Test/config committed; local Playwright install is blocked by package-registry access. GitHub Actions installs it without changing the lockfile. |
+| 1 | Re-run `npm run smoke -- pr-101` after Lane A changes | Operator | Preflight currently finds no Fireworks or Daytona keys and `SAFESHIP_GATE_MODE=recorded`; restore live `.env` values first. |
 | 3 | Authenticate CodeRabbit CLI and record verdicts | Operator | CLI 0.7.0 is installed in `.tools/`; browser OAuth requires operator interaction. |
 | 4 | Configure Vercel Deployment Protection and production demo code | Operator | Dashboard action: Vercel Authentication + Standard Protection; set `SAFESHIP_DEMO_ACCESS_CODE` for Production and Preview. |
 
@@ -72,6 +76,20 @@ Lanes assigned in AGENTS.md (A = pipeline/adapters, B = UI/app). Put your name n
 - [x] Recorded test mode streams the production SSE contract without sponsor calls
 - [x] Playwright coverage and GitHub Actions workflow added for interaction, integrity, replay,
   unavailable evidence, provisional CodeRabbit provenance, and responsive layouts
+- [x] Playwright is a pinned dev dependency; the recorded-mode browser suite passes locally at
+  390px, 768px, and desktop, and Copilot chat starts closed so it cannot cover mobile evidence
+- [x] Fixed mobile intrinsic-width overflow from reordered diff panels; browser assertions now
+  identify the overflowing elements if page-level horizontal scroll regresses
+- [x] Verified `/api/copilotkit/info` returns the registered `BuiltInAgent`; browser coverage opens
+  the opt-in chat and rejects runtime connection errors; the client explicitly uses REST transport
+- [x] Integrated Lane C without overwriting newer UI work: Node/npm are pinned, strict lint and CI
+  checks are committed, all repository test files are discovered, and CI retains Playwright
+- [x] CodeRabbit provenance fails closed: CLI reviews run on the selected staged diff, malformed
+  or incomplete output propagates, cache entries are content-bound, and fixture opinions block
+- [x] Daytona sandboxes are private, ephemeral, network-blocked, TTL-bounded, command-bounded,
+  and retain automatic deletion if explicit cleanup fails
+- [x] Managed execution approval now works; local unit, browser, lint, type, and build commands run
+  from this environment
 - [x] Protected Vercel deployment checklist added in `docs/DEPLOYMENT.md`
 
 ## Next
@@ -82,11 +100,8 @@ Lanes assigned in AGENTS.md (A = pipeline/adapters, B = UI/app). Put your name n
 
 ## Blocked
 
-- Current agent-side `tsx` and local-server verification: the execution approval service rejects
-  escalations with an internal schema error. Run smoke/tests/browser checks from a normal terminal.
-- Local Playwright dependency install: the package registry is unavailable in the managed
-  sandbox. CI installs `@playwright/test@1.61.1` without mutating `package-lock.json`; when network
-  access is available, add it as a normal dev dependency and commit the refreshed lockfile.
+- Live pipeline re-verification: `.env` currently has recorded mode enabled and no Fireworks or
+  Daytona keys, so `npm run check:env` correctly fails before a paid run can start.
 - Real CodeRabbit cache capture: local CLI is installed but `coderabbit auth status --agent`
   reports `not_authenticated`, and no `CODERABBIT_API_KEY` is configured. Run
   `.tools/bin/coderabbit auth login`, then `npm run record:coderabbit`, from a normal terminal.

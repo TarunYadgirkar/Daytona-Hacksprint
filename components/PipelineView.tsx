@@ -821,7 +821,7 @@ export default function PipelineView({
         </main>
       </div>
 
-      <CopilotSidebar />
+      <CopilotSidebar defaultOpen={false} />
     </>
   );
 }

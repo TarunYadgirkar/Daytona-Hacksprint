@@ -41,9 +41,8 @@ not depend exclusively on a dashboard toggle.
 
 ```bash
 npm ci
-npm test
-npm run typecheck
-npm run build
+npm run verify
+npm run test:e2e
 npm run smoke -- pr-101
 ```
 

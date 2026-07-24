@@ -209,3 +209,70 @@ toggle and an in-memory quota are not substitutes for an application-level bound
 
 **Costs:** A forgotten environment variable makes production unavailable rather than permissive.
 That is the safer failure for a tool that creates paid sandboxes.
+
+---
+
+## D-017 — Copilot chat starts closed
+
+**Decided:** The Copilot sidebar is available from its toggle but does not open automatically.
+
+**Why:** On narrow screens the open sidebar covers the evidence UI and intercepts its controls.
+The gate result is the primary demo surface; chat is an optional way to interrogate that result.
+
+**Costs:** A user must click once before asking about the run.
+
+---
+
+## D-018 — Static-review provenance is content-bound
+
+**Decided:** Live CodeRabbit reviews run in a temporary repository containing the selected PR's
+`before` revision as the baseline and its `after` revision as the uncommitted diff. Recorded cache
+entries include a SHA-256 digest of that content. A missing or mismatched digest downgrades the
+review to fixture provenance, producing `no_opinion` and a blocking recommendation.
+
+**Why:** A completed review of different code is not an independent opinion about the selected
+PR. Authentication, parser, process, and rate-limit failures must remain failures instead of
+silently borrowing an older approval.
+
+**Costs:** Existing cache entries without a digest must be re-recorded.
+
+---
+
+## D-019 — Generated tests run without outbound network access
+
+**Decided:** Daytona sandboxes are private, ephemeral, network-blocked, limited to a ten-minute
+TTL, and guarded by SDK command timeouts plus an inner generated-test timeout. Explicit cleanup
+waits for deletion; TTL-backed automatic deletion remains the fallback.
+
+**Why:** Generated test code is untrusted. It needs the staged module and Node.js, not outbound
+network access or a durable sandbox.
+
+**Costs:** Adversarial tests cannot fetch packages or call external services. Test generation must
+remain self-contained.
+
+---
+
+## D-020 — Release tooling is pinned and enforced in CI
+
+**Decided:** Development and CI use Node 20.20.0 and npm 10.8.2. ESLint runs the Next.js
+core-web-vitals and TypeScript rules with zero warnings, the unit runner discovers every checked-in
+test file, and CI also runs the recorded Playwright suite.
+
+**Why:** A deployment build is not sufficient evidence that security, verdict, and responsive
+behavior still work. Pinning removes avoidable differences between local, CI, and Vercel builds.
+
+**Costs:** Contributors on other Node versions receive an engine warning and must switch runtimes.
+
+---
+
+## D-021 — CopilotKit uses its REST transport
+
+**Decided:** The v2 client sets `useSingleEndpoint={false}` and talks to the catch-all runtime
+through `/api/copilotkit/info` and the agent-specific REST routes.
+
+**Why:** The compatibility wrapper defaults to single-endpoint mode and POSTs to
+`/api/copilotkit`, but the App Router endpoint is intentionally mounted at `[...slug]` and does
+not match that root path. Explicit transport selection prevents a silent 404 in the chat.
+
+**Costs:** If the server is later converted to single-route mode, the provider and browser
+contract test must change together.
