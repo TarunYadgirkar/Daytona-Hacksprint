@@ -17,6 +17,7 @@ const KIND_LABEL: Record<AgreementAnalysis["kind"], string> = {
   evidence_only: "Disagreement — evidence only",
   opinion_only: "Disagreement — opinion only",
   no_evidence: "No comparison — evidence unavailable",
+  no_opinion: "No comparison — opinion unavailable",
 };
 
 export default function VerdictRail({
@@ -76,11 +77,13 @@ export default function VerdictRail({
           <span>
             {!review
               ? "not run"
-              : review.verdict === "block"
-                ? `${criticalCount} critical`
-                : review.verdict === "concerns"
-                  ? "concerns raised"
-                  : "approved"}
+              : review.source === "fixture"
+                ? "opinion unavailable"
+                : review.verdict === "block"
+                  ? `${criticalCount} critical`
+                  : review.verdict === "concerns"
+                    ? "concerns raised"
+                    : "approved"}
           </span>
         </div>
       </div>

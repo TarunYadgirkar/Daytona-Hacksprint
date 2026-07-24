@@ -92,6 +92,15 @@ export function compare(sandbox: SandboxReport, review: CodeRabbitReview): Agree
     };
   }
 
+  if (review.source === "fixture") {
+    return {
+      agree: false,
+      kind: "no_opinion",
+      summary:
+        "CodeRabbit's independent opinion is unavailable because this review is fixture data. SafeShip will not treat a placeholder verdict as a second review.",
+    };
+  }
+
   if (evidenceObjects && opinionObjects) {
     return {
       agree: true,
@@ -156,6 +165,14 @@ export function decide(
     return {
       call: "block",
       rationale: `Verification incomplete: ${agreement.summary} SafeShip blocks when it cannot support the claim with conclusive execution evidence.`,
+      requiresHuman: true,
+    };
+  }
+
+  if (agreement.kind === "no_opinion") {
+    return {
+      call: "block",
+      rationale: `Independent review unavailable: ${agreement.summary} SafeShip blocks when it has no trusted opinion to compare with execution evidence.`,
       requiresHuman: true,
     };
   }

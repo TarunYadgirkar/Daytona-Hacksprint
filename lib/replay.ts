@@ -58,13 +58,20 @@ const gateResultSchema: z.ZodType<GateResult> = z.object({
   codeRabbit: z.discriminatedUnion("source", [
     z.object({
       ...reviewBase,
-      source: z.enum(["cli", "cache"]),
+      source: z.literal("cli"),
       recordedAt: z.string().datetime(),
+    }),
+    z.object({
+      ...reviewBase,
+      source: z.literal("cache"),
+      recordedAt: z.string().datetime(),
+      prDigest: z.string().regex(/^[a-f0-9]{64}$/),
     }),
     z.object({
       ...reviewBase,
       source: z.literal("fixture"),
       recordedAt: z.undefined().optional(),
+      prDigest: z.undefined().optional(),
     }),
   ]),
   agreement: z.object({
@@ -75,6 +82,7 @@ const gateResultSchema: z.ZodType<GateResult> = z.object({
       "evidence_only",
       "opinion_only",
       "no_evidence",
+      "no_opinion",
     ]),
     summary: z.string(),
   }),

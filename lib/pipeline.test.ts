@@ -11,7 +11,8 @@ import type {
 const approvingReview: CodeRabbitReview = {
   verdict: "approve",
   findings: [],
-  source: "fixture",
+  source: "cli",
+  recordedAt: "2026-07-24T10:00:00.000Z",
 };
 
 function result(verdict: TestVerdict, id: string): SandboxTestResult {
@@ -86,4 +87,44 @@ test("conclusive support can recommend merge while naming inconclusive tests", (
   assert.match(decision.rationale, /1 conclusive adversarial test/);
   assert.match(decision.rationale, /proved nothing/);
   assert.equal(decision.requiresHuman, true);
+});
+
+test("an approving fixture is an unavailable opinion and blocks", () => {
+  const sandbox = report(["claim_upheld"]);
+  const fixture: CodeRabbitReview = {
+    verdict: "approve",
+    findings: [],
+    source: "fixture",
+  };
+  const agreement = compare(sandbox, fixture);
+
+  assert.equal(agreement.kind, "no_opinion");
+  assert.equal(agreement.agree, false);
+  assert.match(agreement.summary, /opinion is unavailable/i);
+  assert.equal(decide(agreement, sandbox, fixture).call, "block");
+});
+
+test("a blocking fixture is still an unavailable opinion and blocks", () => {
+  const sandbox = report(["claim_upheld"]);
+  const fixture: CodeRabbitReview = {
+    verdict: "block",
+    findings: [{ severity: "critical", title: "Placeholder finding" }],
+    source: "fixture",
+  };
+  const agreement = compare(sandbox, fixture);
+
+  assert.equal(agreement.kind, "no_opinion");
+  assert.equal(agreement.agree, false);
+  assert.equal(decide(agreement, sandbox, fixture).call, "block");
+});
+
+test("unavailable evidence takes precedence over fixture provenance", () => {
+  const sandbox = report(["test_inconclusive"]);
+  const fixture: CodeRabbitReview = {
+    verdict: "approve",
+    findings: [],
+    source: "fixture",
+  };
+
+  assert.equal(compare(sandbox, fixture).kind, "no_evidence");
 });

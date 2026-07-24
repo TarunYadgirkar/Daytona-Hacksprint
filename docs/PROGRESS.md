@@ -57,6 +57,8 @@ Lanes assigned in AGENTS.md (A = pipeline/adapters, B = UI/app). Put your name n
   use the same failure-aware request path
 - [x] Verdict rail renders unavailable evidence and fixture opinions distinctly from green signals
 - [x] CopilotKit setup and preflight now reflect its Fireworks-backed runtime; no OpenAI key required
+- [x] CodeRabbit provenance fails closed: live reviews use the selected staged diff, malformed
+  output and live failures propagate, recorded reviews are content-bound, and fixture opinions block
 
 ## Next
 

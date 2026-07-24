@@ -23,38 +23,13 @@
  */
 
 import "dotenv/config";
-import { execFileSync } from "node:child_process";
-import { mkdtempSync, writeFileSync, mkdirSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { STAGED_PRS, getPR } from "../lib/fixtures/prs";
-import { runCodeRabbitCLI } from "../lib/adapters/coderabbit";
+import { digestStagedPR, runCodeRabbitCLI } from "../lib/adapters/coderabbit";
 import type { CodeRabbitReview, StagedPR } from "../lib/types";
 
 const OUT = join(process.cwd(), "lib/fixtures/coderabbit-cache.ts");
-
-function git(cwd: string, ...args: string[]) {
-  execFileSync("git", args, { cwd, stdio: "pipe" });
-}
-
-/** Build a throwaway repo whose working tree diff is exactly this PR. */
-function stageRepo(pr: StagedPR): string {
-  const dir = mkdtempSync(join(tmpdir(), `safeship-${pr.id}-`));
-  mkdirSync(join(dir, "src"), { recursive: true });
-  const file = join(dir, "src", pr.entryFile);
-
-  git(dir, "init", "-q");
-  git(dir, "config", "user.email", "demo@safeship.local");
-  git(dir, "config", "user.name", "SafeShip Recorder");
-
-  writeFileSync(file, pr.before);
-  git(dir, "add", ".");
-  git(dir, "commit", "-q", "-m", "baseline");
-
-  // The PR itself, left uncommitted so `coderabbit review` picks it up.
-  writeFileSync(file, pr.after);
-  return dir;
-}
 
 function serialize(cache: Record<string, CodeRabbitReview>): string {
   return `/**
@@ -84,16 +59,18 @@ async function main() {
   const cache: Record<string, CodeRabbitReview> = {};
 
   for (const pr of targets) {
-    const dir = stageRepo(pr);
     console.log(`  ${pr.id}  ${pr.title}`);
-    console.log(`         staged at ${dir}, invoking CLI…`);
+    console.log("         staging repository and invoking CLI…");
     const started = Date.now();
     try {
-      const review = await runCodeRabbitCLI(pr, dir);
+      const review = await runCodeRabbitCLI(pr);
       cache[pr.id] = {
-        ...review,
+        verdict: review.verdict,
+        findings: review.findings,
+        raw: review.raw,
         source: "cache",
         recordedAt: new Date().toISOString(),
+        prDigest: digestStagedPR(pr),
       };
       console.log(
         `         ${review.verdict} · ${review.findings.length} finding(s) · ${Math.round((Date.now() - started) / 1000)}s\n`,

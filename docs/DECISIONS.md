@@ -151,3 +151,20 @@ ran means no opinion exists. Those states must remain distinct for the compariso
 
 **Costs:** Rate limits and unsupported repositories now stop cache recording instead of producing
 a convenient green signal.
+
+---
+
+## D-013 — Static-review provenance must be content-bound
+
+**Decided:** Live CodeRabbit reviews run against a temporary repository containing the selected
+PR's `before` revision as the baseline commit and `after` revision as its uncommitted diff.
+Recorded reviews include a SHA-256 digest of that content. Missing or mismatched digests downgrade
+the review to fixture provenance, which produces `no_opinion` and blocks.
+
+**Why:** A successful review of different code is not an independent opinion about the selected
+PR. Likewise, a placeholder verdict and malformed CLI output cannot safely stand in for a review
+that completed. Provenance must survive all the way into comparison and decision logic.
+
+**Costs:** Existing real cache entries without a digest become unavailable until they are
+re-recorded. Explicit CLI mode now surfaces authentication, parser, rate-limit, and process
+failures instead of using a demo fallback.

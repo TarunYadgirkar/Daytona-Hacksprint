@@ -23,8 +23,10 @@
  * when you present it.
  */
 
-import { spawn } from "node:child_process";
-import { existsSync } from "node:fs";
+import { execFileSync, spawn } from "node:child_process";
+import { createHash } from "node:crypto";
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { CodeRabbitFinding, CodeRabbitReview, CodeRabbitVerdict, StagedPR } from "../types";
 import { CODERABBIT_CACHE } from "../fixtures/coderabbit-cache";
@@ -35,20 +37,53 @@ const AUTH_STATUS_TIMEOUT_MS = 10 * 1000;
 export async function getCodeRabbitReview(pr: StagedPR): Promise<CodeRabbitReview> {
   const mode = process.env.CODERABBIT_MODE ?? "cache";
   if (mode === "cli") {
-    try {
-      return await runCodeRabbitCLI(pr);
-    } catch (err) {
-      // Never let a slow or rate-limited CLI take down the demo. Fall back and
-      // be loud about it in the console, quiet in the UI.
-      console.error("[coderabbit] CLI failed, falling back to cache:", err);
-      return fromCache(pr);
-    }
+    return runCodeRabbitCLI(pr);
   }
-  return fromCache(pr);
+  return readCodeRabbitCache(pr);
 }
 
-function fromCache(pr: StagedPR): CodeRabbitReview {
-  const cached = CODERABBIT_CACHE[pr.id];
+export async function withStagedCodeRabbitRepository<T>(
+  pr: StagedPR,
+  operation: (dir: string) => Promise<T>,
+): Promise<T> {
+  const dir = mkdtempSync(join(tmpdir(), "safeship-coderabbit-"));
+  try {
+    const sourceDir = join(dir, "src");
+    const file = join(sourceDir, pr.entryFile);
+    mkdirSync(sourceDir, { recursive: true });
+    execFileSync("git", ["init", "-q"], { cwd: dir, stdio: "pipe" });
+    execFileSync("git", ["config", "user.email", "demo@safeship.local"], {
+      cwd: dir,
+      stdio: "pipe",
+    });
+    execFileSync("git", ["config", "user.name", "SafeShip"], { cwd: dir, stdio: "pipe" });
+    writeFileSync(file, pr.before);
+    execFileSync("git", ["add", "."], { cwd: dir, stdio: "pipe" });
+    execFileSync("git", ["commit", "-q", "-m", "baseline"], { cwd: dir, stdio: "pipe" });
+    writeFileSync(file, pr.after);
+    return await operation(dir);
+  } finally {
+    rmSync(dir, { force: true, recursive: true });
+  }
+}
+
+export function digestStagedPR(pr: StagedPR): string {
+  return createHash("sha256")
+    .update(
+      JSON.stringify({
+        entryFile: pr.entryFile,
+        before: pr.before,
+        after: pr.after,
+      }),
+    )
+    .digest("hex");
+}
+
+export function readCodeRabbitCache(
+  pr: StagedPR,
+  cache: Readonly<Record<string, CodeRabbitReview>> = CODERABBIT_CACHE,
+): CodeRabbitReview {
+  const cached = cache[pr.id];
   if (!cached) {
     return {
       verdict: "concerns",
@@ -62,6 +97,17 @@ function fromCache(pr: StagedPR): CodeRabbitReview {
       source: "fixture",
     };
   }
+  if (cached.source === "cache" && cached.prDigest === digestStagedPR(pr)) {
+    return cached;
+  }
+  if (cached.source !== "fixture") {
+    return {
+      verdict: cached.verdict,
+      findings: cached.findings,
+      raw: cached.raw,
+      source: "fixture",
+    };
+  }
   return cached;
 }
 
@@ -72,7 +118,11 @@ function fromCache(pr: StagedPR): CodeRabbitReview {
  * authenticated (`coderabbit auth login`), and CWD inside a git repo with the
  * change present as tracked edits.
  */
-export async function runCodeRabbitCLI(pr: StagedPR, cwd = process.cwd()): Promise<CodeRabbitReview> {
+export async function runCodeRabbitCLI(pr: StagedPR): Promise<CodeRabbitReview> {
+  return withStagedCodeRabbitRepository(pr, (cwd) => runCodeRabbitCLIInRepository(cwd));
+}
+
+async function runCodeRabbitCLIInRepository(cwd: string): Promise<CodeRabbitReview> {
   const projectLocalBin = join(process.cwd(), ".tools", "bin", "coderabbit");
   const command =
     process.env.CODERABBIT_BIN || (existsSync(projectLocalBin) ? projectLocalBin : "coderabbit");
@@ -174,6 +224,7 @@ export function parseAgentOutput(stdout: string): CodeRabbitReview {
   if (agentError) throw new Error(`CodeRabbit CLI failed: ${agentError}`);
 
   const findings: CodeRabbitFinding[] = [];
+  let completed = false;
 
   for (const line of stdout.split("\n")) {
     const trimmed = line.trim();
@@ -186,6 +237,13 @@ export function parseAgentOutput(stdout: string): CodeRabbitReview {
     }
     const evt = asRecord(parsed);
     if (!evt) continue;
+    if (evt.type === "review_completed") completed = true;
+    if (evt.findings !== undefined && !Array.isArray(evt.findings)) {
+      throw new Error("CodeRabbit CLI returned malformed findings");
+    }
+    if (evt.comments !== undefined && !Array.isArray(evt.comments)) {
+      throw new Error("CodeRabbit CLI returned malformed findings");
+    }
     const candidates =
       (Array.isArray(evt.findings) && evt.findings) ||
       (Array.isArray(evt.comments) && evt.comments) ||
@@ -194,9 +252,16 @@ export function parseAgentOutput(stdout: string): CodeRabbitReview {
 
     for (const candidate of candidates) {
       const c = asRecord(candidate);
-      if (!c) continue;
+      const severity = c ? normalizeSeverity(c.severity ?? c.level) : null;
+      const title = c ? firstString(c.title, c.summary, c.comment) : undefined;
+      if (!c || !title?.trim()) {
+        throw new Error("CodeRabbit CLI returned a malformed finding");
+      }
+      if (!severity) {
+        throw new Error("CodeRabbit CLI returned a finding with unknown severity");
+      }
       findings.push({
-        severity: normalizeSeverity(c.severity ?? c.level),
+        severity,
         file: firstString(c.fileName, c.file, c.path),
         line:
           typeof c.line === "number"
@@ -208,6 +273,10 @@ export function parseAgentOutput(stdout: string): CodeRabbitReview {
         body: firstString(c.body, c.description, c.codegenInstructions, c.comment),
       });
     }
+  }
+
+  if (!completed) {
+    throw new Error("CodeRabbit CLI did not produce a completed review");
   }
 
   return {
@@ -247,12 +316,13 @@ function findAgentFailure(stdout: string): string | null {
   return null;
 }
 
-function normalizeSeverity(input: unknown): CodeRabbitFinding["severity"] {
+function normalizeSeverity(input: unknown): CodeRabbitFinding["severity"] | null {
   const s = String(input ?? "").toLowerCase();
   if (s.includes("critical")) return "critical";
   if (s.includes("major") || s.includes("warning")) return "major";
   if (s.includes("minor")) return "minor";
-  return "info";
+  if (s.includes("info")) return "info";
+  return null;
 }
 
 /**

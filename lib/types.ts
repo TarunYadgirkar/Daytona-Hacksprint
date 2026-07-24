@@ -127,12 +127,19 @@ interface CodeRabbitReviewBase {
  */
 export type CodeRabbitReview =
   | (CodeRabbitReviewBase & {
-      source: "cli" | "cache";
+      source: "cli";
       recordedAt: string;
+    })
+  | (CodeRabbitReviewBase & {
+      source: "cache";
+      recordedAt: string;
+      /** SHA-256 of the exact staged repository content reviewed. */
+      prDigest: string;
     })
   | (CodeRabbitReviewBase & {
       source: "fixture";
       recordedAt?: never;
+      prDigest?: never;
     });
 
 /**
@@ -149,7 +156,9 @@ export type AgreementKind =
   /** CodeRabbit blocked, tests found nothing. Opinion worth a human look. */
   | "opinion_only"
   /** The sandbox failed, so there is no evidence to compare against. Not agreement. */
-  | "no_evidence";
+  | "no_evidence"
+  /** Fixture provenance is not an independent review, so there is no opinion to compare. */
+  | "no_opinion";
 
 export interface AgreementAnalysis {
   agree: boolean;
