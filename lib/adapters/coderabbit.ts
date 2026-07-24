@@ -74,6 +74,9 @@ function fromCache(pr: StagedPR): CodeRabbitReview {
 const CODERABBIT_BIN = process.env.CODERABBIT_BIN ?? "coderabbit";
 
 export async function runCodeRabbitCLI(pr: StagedPR, cwd = process.cwd()): Promise<CodeRabbitReview> {
+  // The recorder passes a PR alongside its checkout; the CLI itself reviews cwd.
+  void pr;
+
   const stdout = await new Promise<string>((resolve, reject) => {
     const spawnCli = (bin: string) =>
       spawn(bin, ["review", "--agent"], {
@@ -116,7 +119,7 @@ export async function runCodeRabbitCLI(pr: StagedPR, cwd = process.cwd()): Promi
     attach();
   });
 
-  return parseAgentOutput(stdout, pr);
+  return parseAgentOutput(stdout);
 }
 
 /**
@@ -124,28 +127,40 @@ export async function runCodeRabbitCLI(pr: StagedPR, cwd = process.cwd()): Promi
  * `review_skipped`. We keep the last object that carries findings and ignore
  * the rest. Written defensively because the event shape is not contractual.
  */
-export function parseAgentOutput(stdout: string, _pr: StagedPR): CodeRabbitReview {
+export function parseAgentOutput(stdout: string): CodeRabbitReview {
   const findings: CodeRabbitFinding[] = [];
 
   for (const line of stdout.split("\n")) {
     const trimmed = line.trim();
     if (!trimmed.startsWith("{")) continue;
-    let evt: any;
+    let parsed: unknown;
     try {
-      evt = JSON.parse(trimmed);
+      parsed = JSON.parse(trimmed);
     } catch {
       continue;
     }
+    if (!isRecord(parsed)) continue;
+
+    const evt = parsed;
     const candidates = evt.findings ?? evt.comments ?? (evt.type === "finding" ? [evt] : []);
     if (!Array.isArray(candidates)) continue;
 
-    for (const c of candidates) {
+    for (const candidate of candidates) {
+      if (!isRecord(candidate)) continue;
+
+      const c = candidate;
+      const file = firstString(c.file, c.path);
+      const lineNumber =
+        typeof c.line === "number" ? c.line : typeof c.startLine === "number" ? c.startLine : undefined;
+      const title = firstString(c.title, c.summary, c.comment) ?? "Finding";
+      const body = firstString(c.body, c.description, c.codegenInstructions, c.comment);
+
       findings.push({
         severity: normalizeSeverity(c.severity ?? c.level),
-        file: c.file ?? c.path,
-        line: typeof c.line === "number" ? c.line : c.startLine,
-        title: c.title ?? c.summary ?? c.comment ?? "Finding",
-        body: c.body ?? c.description ?? c.codegenInstructions ?? c.comment,
+        file,
+        line: lineNumber,
+        title,
+        body,
       });
     }
   }
@@ -157,6 +172,14 @@ export function parseAgentOutput(stdout: string, _pr: StagedPR): CodeRabbitRevie
     recordedAt: new Date().toISOString(),
     raw: stdout.slice(0, 20000),
   };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function firstString(...values: unknown[]): string | undefined {
+  return values.find((value): value is string => typeof value === "string");
 }
 
 function normalizeSeverity(input: unknown): CodeRabbitFinding["severity"] {
