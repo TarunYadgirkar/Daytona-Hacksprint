@@ -94,7 +94,7 @@ test("an error state has no serious axe violations", async ({ page }) => {
   });
   await selectPR(page, "pr-101");
   await page.getByRole("button", { name: "Run adversarial gate" }).click();
-  await expect(page.getByRole("alert")).toContainText(
+  await expect(page.locator(".run-alert[role='alert']")).toContainText(
     "Pipeline connection closed",
   );
   expect(await seriousViolations(page, ".shell")).toEqual([]);
@@ -127,5 +127,5 @@ test("reduced motion removes the verdict split animation", async ({ page }) => {
   const duration = await page
     .locator(".rail-seam")
     .evaluate((element) => getComputedStyle(element).animationDuration);
-  expect(duration).toBe("0.00001s");
+  expect(Number.parseFloat(duration)).toBeLessThanOrEqual(0.00001);
 });

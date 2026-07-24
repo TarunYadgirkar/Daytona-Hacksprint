@@ -1,63 +1,32 @@
-# Demo script
+# Two-minute demo script
 
-Three minutes. The audience does not need the architecture; they need one moment where two respected methods disagree and only one of them can prove it.
+This is written for a calm speaking pace of about 145 words per minute. The
+operator action and narration happen at the same time. Rehearse the clicks until
+they do not interrupt the story.
 
----
+Before the clock starts, have `pr-101` selected, open **Diff under test**, and
+leave the page at the top of the case. Keep a verified saved **Live capture** in
+the recorded-runs gallery and the matching Braintrust trace open in a second
+tab. See [`DEMO_INSTRUCTIONS.md`](./DEMO_INSTRUCTIONS.md) for setup and
+truthfulness checks.
 
-## Before you walk up
+| Time | Operator action | Say |
+|---|---|---|
+| 0:00–0:14 | Point to the PR description, then the `items.length` guard in the after code. | “An AI agent says this PR fixes checkout for a new session. The diff adds an empty-cart guard, and it looks reasonable. Popper asks a different question: can we break the promise?” |
+| 0:14–0:37 | Click **Run adversarial gate**. Point to **The claim** as it appears, then to the generated attacks in the pipeline. | “Fireworks, using its fast Kimi K2.6 Turbo priority route, turns the description into one falsifiable claim and writes four attacks. Claim extraction can be wrong, but it only aims the tests. We show low confidence, and a bad aim produces inconclusive tests. The model’s reading never decides the verdict.” |
+| 0:37–1:05 | Point to the Daytona sandbox stage and the **Before** and **After** columns. If results are not visible by 0:50, silently click **Abort live run and load** on the saved **Live capture** for `pr-101`. | “Daytona runs that generated code in a private, network-blocked, disposable sandbox—not on our server. Every test runs against both revisions. Here, `null` fails before and still fails after, so the claim is broken. This is different from CI: CI runs the author’s tests against only the new code, inheriting the same blind spots. We independently attack the claim, and the before-and-after pair proves the test exercised the promised change.” |
+| 1:05–1:30 | Point to the split verdict rail: **Execution evidence** on the left and **CodeRabbit opinion** on the right. End on **Block**. | “You should use CodeRabbit, so we do. Its timestamped review of this exact diff approved the guard. CodeRabbit can execute code to sharpen its review, but it is not built to answer our claim-specific before-and-after question. That disagreement—review approves, execution disproves—is why Popper recommends block.” |
+| 1:30–1:47 | Open the CopilotKit sidebar. Enter **Why is this blocked?** if there is time, but do not wait for the response. | “CopilotKit lets the reviewer question the run. Its assistant reads the exact gate state before answering, and it can record—but never make—the human decision. We also reuse Fireworks to power this chat.” |
+| 1:47–2:00 | Switch to the matching Braintrust trace. Point to the ordered spans and the disagreement score. | “Braintrust traces every stage, scores disagreements, and records the human choice, so the decision is auditable. We never auto-merge. With more time, we would support multi-file PRs and use these traces and overrides to make the attacks stronger.” |
 
-- [ ] `npm run check:env` passes
-- [ ] `npm run smoke -- pr-101` produces `evidence_only` and `BLOCK`
-- [ ] CodeRabbit cache re-recorded, `recordedAt` visible in the UI
-- [ ] Braintrust project open in a second tab, sorted by `methods_agree` ascending
-- [ ] One sandbox already created once today, so the first call is warm
-- [ ] Recorded-runs gallery loads all four outcomes on a fresh browser
-- [ ] Production opens Popper directly; previews may use Vercel Authentication
+## If the saved run appears
 
-## The run
+Do not hide the replay banner. Add this one sentence while loading it, then
+resume the same script:
 
-**Open on the problem, not the product.** "An agent opened this PR. It says it fixes a checkout crash on an empty cart. Every review tool we have will now read that diff and tell us whether it looks right." Pause on the diff. The guard clause looks correct, and it is — for the case it handles.
+> “I’m loading the verified live capture so we stay inside two minutes; no
+> sponsor call is being rerun.”
 
-**Say what Popper does differently.** "We don't ask whether it looks right. We extract the promise the PR is making, and then we try to break it."
-
-**Select `pr-101`.** Pause on the preview: nothing has run yet. Point out the duration and live
-sandbox notice, then press **Run adversarial gate**. Let the claim appear. Read it aloud — it is
-one falsifiable sentence, which is the point. Let the tests generate and stream into the sandbox.
-
-**Stop on the table.** Point at the before/after columns. "This test fails on the old code and still fails on the new code. The PR's own description says new sessions get `null` from the cart service. The fix only handles the empty array."
-
-**Then the rail splits.** This is the moment. "CodeRabbit approved this change. It is a good tool and it read the diff correctly — the guard clause *is* correct. But reading and running are different, and only one of them found this."
-
-**Land it.** "So Popper blocks. Every step of that is logged" — switch to Braintrust — "and a human still makes the call." Click block, type the reason, show it land.
-
-## If you have another minute
-
-Run `pr-103`. CodeRabbit blocks it for prototype pollution and every adversarial test passes. "The tests targeted the claim, and the claim was about merging, which works. This is a risk the claim never mentioned. Neither method dominates — that is why we show both."
-
-That second case is what separates this from a tool that just argues with CodeRabbit, and it is worth the minute if you have it.
-
-Alternatively, paste `https://github.com/TarunYadgirkar/popper-demo-cart/pull/1`
-into **Import a public GitHub PR**. Show that Popper fetched a real GitHub diff,
-then return to the loaded staged case for the reliable live or recorded run.
-
-## Questions you will get
-
-**"Isn't this just tests?"** Tests written by the same agent that wrote the code inherit its blind spots. These are generated against the *claim*, adversarially, and scored on whether they fail before and pass after — which is what makes them evidence rather than decoration.
-
-**"What if the model writes bad tests?"** Then they come back inconclusive or errored and we show
-that rather than counting them as passes. If the requested suite cannot produce conclusive
-evidence, Popper blocks. Look at the verdict tags — we grade our own evidence.
-
-**"Why CodeRabbit if you're beating it?"** We are not. `pr-103` is the case where CodeRabbit catches something we structurally cannot. The product is the disagreement, not the winner.
-
-**"Is the CodeRabbit review live?"** No, and say so without flinching: reviews take minutes, so verdicts are recorded ahead of time. It is CodeRabbit's real opinion of this exact code. The timestamp is on screen.
-
-**"Would you let this merge automatically?"** No. That is the one thing we deliberately did not build. An autonomous merge bot judging an agent's code on another model's opinion is the problem, not the product.
-
-## If something breaks
-
-- Sandbox slow or failing → the gate blocks on missing evidence by design; use **Load recorded run**.
-- Fireworks returns garbage → Popper retries missing tests. If generation still stops, use the recorded gallery.
-- Wifi gone → use the recorded gallery; validated snapshots do not call the model, sandbox, review CLI, or Braintrust.
-
-Do not debug on stage. Narrate the fallback and keep moving.
+If the only fallback says **Recorded fixture** or **Fixture placeholder**, say
+“simulated example” instead of “verified live capture,” and do not describe its
+CodeRabbit result as a real review.

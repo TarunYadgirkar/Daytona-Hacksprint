@@ -133,7 +133,8 @@ The verdict is CodeRabbit's real opinion of the real code; only the timing is pr
 - `CLAUDE.md` — Claude Code entry point, imports `AGENTS.md`
 - `docs/PROGRESS.md` — living status, blockers, and rejected approaches
 - `docs/DECISIONS.md` — why the non-obvious calls were made
-- `docs/DEMO_SCRIPT.md` — the three-minute run, and answers to the questions you will get
+- `docs/DEMO_INSTRUCTIONS.md` — setup, sponsor roles, truthfulness checks, and fallbacks
+- `docs/DEMO_SCRIPT.md` — the synchronized two-minute operator and narration script
 - `docs/DEPLOYMENT.md` — public Vercel deployment and release checklist
 
 ## What this deliberately does not do

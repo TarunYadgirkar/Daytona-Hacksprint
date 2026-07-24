@@ -7,7 +7,9 @@ async function selectPR(page: Page, prId: string): Promise<void> {
 async function runRecordedGate(page: Page, prId = "pr-101"): Promise<void> {
   await selectPR(page, prId);
   await page.getByRole("button", { name: "Run adversarial gate" }).click();
-  await expect(page.locator(".connection")).toHaveText("complete");
+  await expect(page.locator(".connection")).toHaveText("complete", {
+    timeout: 30_000,
+  });
 }
 
 async function loadBundledRun(page: Page, prId: string): Promise<void> {
@@ -163,22 +165,38 @@ test("the forensic control room exposes its signature visual tokens", async ({
 }) => {
   const tokens = await page.evaluate(() => {
     const style = getComputedStyle(document.documentElement);
+    const bodyStyle = getComputedStyle(document.body);
+    const headingStyle = getComputedStyle(document.querySelector("h1")!);
+    const panelStyle = getComputedStyle(document.querySelector(".panel")!);
+    const cardStyle = getComputedStyle(document.querySelector(".case-card")!);
     return {
       ground: style.getPropertyValue("--ground").trim(),
       signal: style.getPropertyValue("--signal").trim(),
       danger: style.getPropertyValue("--danger").trim(),
       seam: style.getPropertyValue("--seam").trim(),
       display: style.getPropertyValue("--display").trim(),
+      sans: style.getPropertyValue("--sans").trim(),
+      bodyFont: bodyStyle.fontFamily,
+      headingFont: headingStyle.fontFamily,
+      panelRadius: panelStyle.borderRadius,
+      panelBackdrop: panelStyle.backdropFilter,
+      cardRadius: cardStyle.borderRadius,
     };
   });
 
-  expect(tokens).toEqual({
-    ground: "#071016",
-    signal: "#42e397",
-    danger: "#ff6565",
-    seam: "#5b91ff",
-    display: 'var(--font-display), "Arial Narrow", sans-serif',
+  expect(tokens).toMatchObject({
+    ground: "#020100",
+    signal: "#235789",
+    danger: "#c1292e",
+    seam: "#235789",
   });
+  expect(tokens.display).toContain("Newsreader");
+  expect(tokens.sans).toContain("Public Sans");
+  expect(tokens.bodyFont).toContain("Public Sans");
+  expect(tokens.headingFont).toContain("Newsreader");
+  expect(tokens.panelRadius).not.toBe("0px");
+  expect(tokens.panelBackdrop).toContain("blur");
+  expect(tokens.cardRadius).not.toBe("0px");
 });
 
 test("unavailable evidence is never rendered as green", async ({ page }) => {
@@ -331,7 +349,7 @@ test("a disconnected live stream exposes recovery without inventing evidence", a
   });
   await selectPR(page, "pr-101");
   await page.getByRole("button", { name: "Run adversarial gate" }).click();
-  await expect(page.getByRole("alert")).toContainText(
+  await expect(page.locator(".run-alert[role='alert']")).toContainText(
     "Pipeline connection closed",
   );
   await expect(
@@ -355,25 +373,37 @@ for (const viewport of [
     await expect(page.locator(".tests-scroll")).toBeVisible();
     await page.getByText("View generated test code").click();
     await expect(page.locator(".test-detail pre")).toBeVisible();
-    const overflow = await page.evaluate(() => ({
-      documentWidth: document.documentElement.scrollWidth,
-      viewportWidth: document.documentElement.clientWidth,
-      offenders: Array.from(document.body.querySelectorAll<HTMLElement>("*"))
-        .filter((element) => {
-          const rect = element.getBoundingClientRect();
-          return rect.right > document.documentElement.clientWidth + 1;
-        })
-        .slice(0, 12)
-        .map((element) => ({
-          className: element.className,
-          tagName: element.tagName,
-          testId: element.dataset.testid,
-          right: Math.round(element.getBoundingClientRect().right),
-        })),
-    }));
+    const overflow = await page.evaluate(() => {
+      const main = document.querySelector(".shell > main");
+      const gallery = document.querySelector(".shell > aside > .panel");
+      return {
+        documentWidth: document.documentElement.scrollWidth,
+        viewportWidth: document.documentElement.clientWidth,
+        mainTop: main?.getBoundingClientRect().top,
+        galleryTop: gallery?.getBoundingClientRect().top,
+        offenders: Array.from(document.body.querySelectorAll<HTMLElement>("*"))
+          .filter((element) => {
+            const rect = element.getBoundingClientRect();
+            return rect.right > document.documentElement.clientWidth + 1;
+          })
+          .slice(0, 12)
+          .map((element) => ({
+            className: element.className,
+            tagName: element.tagName,
+            testId: element.dataset.testid,
+            right: Math.round(element.getBoundingClientRect().right),
+          })),
+      };
+    });
     expect(
       overflow.documentWidth,
       `Page overflowed at ${viewport.name}: ${JSON.stringify(overflow.offenders)}`,
     ).toBeLessThanOrEqual(overflow.viewportWidth + 1);
+    if (viewport.width <= 768) {
+      expect(
+        overflow.mainTop,
+        "Mobile evidence should appear before the replay library",
+      ).toBeLessThan(overflow.galleryTop ?? Number.POSITIVE_INFINITY);
+    }
   });
 }

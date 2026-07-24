@@ -100,10 +100,24 @@ Outstanding operator work:
   prompts, tests, docs, storage keys, and sponsor defaults
 - [x] Application access-code boundary removed for the public hackathon demo while retaining
   staged-case allowlisting, fixed test counts, and a per-client live-run quota
+- [x] Glass interface redesign added Newsreader and Public Sans typography, rounded translucent
+  surfaces, semantic color accents, responsive evidence-first ordering, and updated browser
+  assertions; zero-warning lint, strict typecheck, all 42 unit/config tests, production build,
+  and all 24 recorded browser/accessibility tests pass
+- [x] Rebased the glass interface onto the supplied Porcelain/Black palette, using Baltic Blue
+  for interaction and evidence framing, Flag Red for blocking states, and Bright Gold for primary
+  actions, recorded provenance, and warnings; rendered QA at 390px, 768px, and 1440px found no
+  horizontal overflow, and the full deterministic verification suite still passes
+- [x] Finished the visual pass with semantic-tinted evidence panels and rounded pipeline states,
+  then rebuilt the pitch as a six-slide matching deck with native fade transitions and a
+  clickable Vercel demo link; PowerPoint rendering and overflow validation pass
 - [x] Optional public GitHub PR importer added alongside all four staged cases, with a dedicated
   standalone JavaScript demo repository and pull request
 - [x] Fast sponsor path verified: Fireworks Kimi K2.6 Turbo with Priority returned successfully,
   and a four-test Daytona `daytona-large` suite completed in 1.95 seconds before clean deletion
+- [x] Two-minute demo instructions and a synchronized operator/narration script now cover all
+  five sponsor integrations, the three expected judge objections, honest provenance, and a
+  timed saved-live-run fallback
 
 ## Next
 
@@ -113,8 +127,9 @@ Outstanding operator work:
 
 ## Blocked
 
-- Live pipeline re-verification: `.env` currently has recorded mode enabled and no Fireworks or
-  Daytona keys, so `npm run check:env` correctly fails before a paid run can start.
+- Live pipeline re-verification: the post-palette `npm run smoke -- pr-101` attempt reached
+  Fireworks but stopped at claim extraction with HTTP 401 because the configured API key is
+  invalid. Refresh the key, then require `evidence_only` + `BLOCK` before the demo.
 - Real CodeRabbit cache capture: local CLI is installed but `coderabbit auth status --agent`
   reports `not_authenticated`, and no `CODERABBIT_API_KEY` is configured. Run
   `.tools/bin/coderabbit auth login`, then `npm run record:coderabbit`, from a normal terminal.

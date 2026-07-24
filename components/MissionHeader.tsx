@@ -10,7 +10,13 @@ export default function MissionHeader() {
   return (
     <header className="mission-header">
       <div className="mission-brand">
-        <span className="wordmark">Popper</span>
+        <div className="mission-brand-top">
+          <span className="wordmark">Popper</span>
+          <span className="system-status">
+            <span aria-hidden="true" />
+            Gate online
+          </span>
+        </div>
         <span className="mission-index">Adversarial verification / 01</span>
       </div>
       <div className="mission-copy">

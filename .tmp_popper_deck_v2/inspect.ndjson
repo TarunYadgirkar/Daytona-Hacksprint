@@ -1,0 +1,144 @@
+{"kind":"slide","id":"sl/2pymph","slide":1,"title":"Popper","textShapes":10}
+{"kind":"shape","id":"sh/ad4jy5kj","slide":1,"bbox":[0,500,220,220]}
+{"kind":"shape","id":"sh/x0vitkja","slide":1,"bbox":[52.8,552.8,114.4,114.4]}
+{"kind":"shape","id":"sh/wzm10f2p","slide":1,"bbox":[1080,0,200,200]}
+{"kind":"shape","id":"sh/nat0nq18","slide":1,"bbox":[1128,48,104,104]}
+{"kind":"textbox","id":"sh/m9kjulkn","slide":1,"text":"Popper","textPreview":"Popper","textChars":6,"textLines":1,"bbox":[72,28,180,38]}
+{"kind":"textbox","id":"sh/9cvip0je","slide":1,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[1138,34,70,24]}
+{"kind":"textbox","id":"sh/obm1wv2t","slide":1,"text":"OUR PROBLEM → EVERY TEAM’S PROBLEM","textPreview":"OUR PROBLEM → EVERY TEAM’S PROBLEM","textChars":34,"textLines":1,"bbox":[74,60,700,25]}
+{"kind":"textbox","id":"sh/76xkzu1c","slide":1,"text":"We got the fix in minutes.","textPreview":"We got the fix in minutes.","textChars":26,"textLines":1,"bbox":[72,112,1040,82]}
+{"kind":"textbox","id":"sh/65oj6pkr","slide":1,"text":"Proving it took longer.","textPreview":"Proving it took longer.","textChars":23,"textLines":1,"bbox":[72,196,1040,92]}
+{"kind":"shape","id":"sh/sb61o3u9","slide":1,"bbox":[72,386,1136,206]}
+{"kind":"shape","id":"sh/dcfix8vu","slide":1,"bbox":[96,387,1088,0]}
+{"kind":"textbox","id":"sh/q9ojmtc3","slide":1,"text":"US","textPreview":"US","textChars":2,"textLines":1,"bbox":[106,421,82,26]}
+{"kind":"textbox","id":"sh/rax0vydo","slide":1,"text":"We became the\nreview bottleneck.","textPreview":"We became the | review bottleneck.","textChars":32,"textLines":2,"bbox":[104,458,420,92]}
+{"kind":"shape","id":"sh/4nm1kjex","slide":1,"bbox":[618,420,0,138]}
+{"kind":"textbox","id":"sh/58vitovi","slide":1,"text":"EVERY TEAM","textPreview":"EVERY TEAM","textChars":10,"textLines":1,"bbox":[678,421,230,26]}
+{"kind":"textbox","id":"sh/il4ji9w7","slide":1,"text":"Coding agents make this\neveryone’s bottleneck.","textPreview":"Coding agents make this | everyone’s bottleneck.","textChars":46,"textLines":2,"bbox":[676,458,450,92]}
+{"kind":"shape","id":"sh/3md0reds","slide":1,"bbox":[408,628,464,38]}
+{"kind":"textbox","id":"sh/gjm1gje1","slide":1,"text":"TRUST IS NOW THE SCARCE RESOURCE","textPreview":"TRUST IS NOW THE SCARCE RESOURCE","textChars":32,"textLines":1,"bbox":[408,628,464,38]}
+{"kind":"notes","id":"nt/2pymph","slide":1,"text":"We felt the problem ourselves: AI gave us plausible fixes almost instantly, but we were still responsible for proving them. Generalize immediately—every team adopting coding agents inherits the same review bottleneck.\n\n[Sources]\n- /Users/NithinAwasome/Downloads/Daytona-Hacksprint/AGENTS.md — parallel AI-agent build workflow and human gate requirements\n- /Users/NithinAwasome/Downloads/Daytona-Hacksprint/README.md — Popper product premise"}
+{"kind":"slide","id":"sl/gv0vr7","slide":2,"title":"Popper","textShapes":11}
+{"kind":"shape","id":"sh/2lobilkv","slide":2,"bbox":[0,500,220,220]}
+{"kind":"shape","id":"sh/p8fut0j6","slide":2,"bbox":[52.8,552.8,114.4,114.4]}
+{"kind":"shape","id":"sh/476tkv2l","slide":2,"bbox":[1080,0,200,200]}
+{"kind":"shape","id":"sh/rahcvq1c","slide":2,"bbox":[1128,48,104,104]}
+{"kind":"textbox","id":"sh/q98bm5kr","slide":2,"text":"Popper","textPreview":"Popper","textChars":6,"textLines":1,"bbox":[72,28,180,38]}
+{"kind":"textbox","id":"sh/dczux0ji","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1138,34,70,24]}
+{"kind":"textbox","id":"sh/cbqtov2x","slide":2,"text":"THE FALSE PASS","textPreview":"THE FALSE PASS","textChars":14,"textLines":1,"bbox":[74,60,700,25]}
+{"kind":"textbox","id":"sh/zehcza18","slide":2,"text":"A passing check can still prove nothing.","textPreview":"A passing check can still prove nothing.","textChars":40,"textLines":1,"bbox":[72,106,1080,86]}
+{"kind":"textbox","id":"sh/yd8bq5k3","slide":2,"text":"One test. Two revisions. The result looked reassuring.","textPreview":"One test. Two revisions. The result looked reassuring.","textChars":54,"textLines":1,"bbox":[76,202,780,38]}
+{"kind":"textbox","id":"sh/gju5w3ul","slide":2,"text":"BEFORE THE FIX","textPreview":"BEFORE THE FIX","textChars":14,"textLines":1,"bbox":[92,288,430,26]}
+{"kind":"shape","id":"sh/hk36p8v6","slide":2,"bbox":[92,326,488,162]}
+{"kind":"shape","id":"sh/uhsnudcf","slide":2,"bbox":[116,327,440,0]}
+{"kind":"textbox","id":"sh/filonid0","slide":2,"text":"PASS","textPreview":"PASS","textChars":4,"textLines":1,"bbox":[92,359,488,74]}
+{"kind":"textbox","id":"sh/47u50nuh","slide":2,"text":"AFTER THE FIX","textPreview":"AFTER THE FIX","textChars":13,"textLines":1,"bbox":[700,288,430,26]}
+{"kind":"shape","id":"sh/p836tsv2","slide":2,"bbox":[700,326,488,162]}
+{"kind":"shape","id":"sh/2lcnydcb","slide":2,"bbox":[724,327,440,0]}
+{"kind":"textbox","id":"sh/36loridw","slide":2,"text":"PASS","textPreview":"PASS","textChars":4,"textLines":1,"bbox":[700,359,488,74]}
+{"kind":"shape","id":"sh/cbep4nut","slide":2,"bbox":[548,386,184,48]}
+{"kind":"textbox","id":"sh/dcn6xsvy","slide":2,"text":"≠ PROOF","textPreview":"≠ PROOF","textChars":7,"textLines":1,"bbox":[548,386,184,48]}
+{"kind":"textbox","id":"sh/1gze18z6","slide":2,"text":"If it passed before the change, it did not prove the change.","textPreview":"If it passed before the change, it did not prove the change.","textChars":60,"textLines":1,"bbox":[160,548,960,52]}
+{"kind":"notes","id":"nt/gv0vr7","slide":2,"text":"This is the moment that pushed us to build Popper. A normal green result is not enough: if the same test passes before and after, it is inconclusive—not evidence that the fix works.\n\n[Sources]\n- /Users/NithinAwasome/Downloads/Daytona-Hacksprint/AGENTS.md — “A test that passes on both revisions proves nothing”\n- /Users/NithinAwasome/Downloads/Daytona-Hacksprint/lib/pipeline.ts — before/after verdict logic"}
+{"kind":"slide","id":"sl/0y98qt","slide":3,"title":"Popper","textShapes":17}
+{"kind":"shape","id":"sh/v2987m5k","slide":3,"bbox":[0,500,220,220]}
+{"kind":"shape","id":"sh/w329gr65","slide":3,"bbox":[52.8,552.8,114.4,114.4]}
+{"kind":"shape","id":"sh/x4bq9wnq","slide":3,"bbox":[1080,0,200,200]}
+{"kind":"shape","id":"sh/i5kri1ov","slide":3,"bbox":[1128,48,104,104]}
+{"kind":"textbox","id":"sh/j6t8b65g","slide":3,"text":"Popper","textPreview":"Popper","textChars":6,"textLines":1,"bbox":[72,28,180,38]}
+{"kind":"textbox","id":"sh/k729kb61","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1138,34,70,24]}
+{"kind":"textbox","id":"sh/58bqdwnm","slide":3,"text":"WHAT POPPER DOES","textPreview":"WHAT POPPER DOES","textChars":16,"textLines":1,"bbox":[74,60,700,25]}
+{"kind":"textbox","id":"sh/y9g76xor","slide":3,"text":"Every PR claim has to earn trust.","textPreview":"Every PR claim has to earn trust.","textChars":33,"textLines":1,"bbox":[72,104,1040,84]}
+{"kind":"textbox","id":"sh/zap8z25c","slide":3,"text":"Popper turns a pull request’s promise into an adversarial experiment.","textPreview":"Popper turns a pull request’s promise into an adversarial experiment.","textChars":69,"textLines":1,"bbox":[76,198,940,42]}
+{"kind":"shape","id":"sh/7yh0jydk","slide":3,"bbox":[72,278,334,224]}
+{"kind":"shape","id":"sh/mxozatwf","slide":3,"bbox":[96,279,286,0]}
+{"kind":"textbox","id":"sh/90zil8vq","slide":3,"text":"01 / ATTACK","textPreview":"01 / ATTACK","textChars":11,"textLines":1,"bbox":[98,306,280,24]}
+{"kind":"textbox","id":"sh/8zqhc3e5","slide":3,"text":"Fireworks","textPreview":"Fireworks","textChars":9,"textLines":1,"bbox":[98,346,280,44]}
+{"kind":"textbox","id":"sh/zux0fedo","slide":3,"text":"Extract the claim.\nGenerate tests to falsify it.","textPreview":"Extract the claim. | Generate tests to falsify it.","textChars":48,"textLines":2,"bbox":[98,407,282,70]}
+{"kind":"shape","id":"sh/ytoz69w3","slide":3,"bbox":[449,278,334,224]}
+{"kind":"shape","id":"sh/lwfihovu","slide":3,"bbox":[473,279,286,0]}
+{"kind":"textbox","id":"sh/kv6h8je9","slide":3,"text":"02 / EXECUTE","textPreview":"02 / EXECUTE","textChars":12,"textLines":1,"bbox":[475,306,280,24]}
+{"kind":"textbox","id":"sh/b6d0bedc","slide":3,"text":"Daytona","textPreview":"Daytona","textChars":7,"textLines":1,"bbox":[475,346,280,44]}
+{"kind":"textbox","id":"sh/a54zi9w7","slide":3,"text":"Run each test on the\nbefore and after code.","textPreview":"Run each test on the | before and after code.","textChars":43,"textLines":2,"bbox":[475,407,282,70]}
+{"kind":"shape","id":"sh/e14ju9gz","slide":3,"bbox":[826,278,334,224]}
+{"kind":"shape","id":"sh/f2d0nexk","slide":3,"bbox":[850,279,286,0]}
+{"kind":"textbox","id":"sh/03m1wjy5","slide":3,"text":"03 / COMPARE","textPreview":"03 / COMPARE","textChars":12,"textLines":1,"bbox":[852,306,280,24]}
+{"kind":"textbox","id":"sh/14vip4fa","slide":3,"text":"CodeRabbit","textPreview":"CodeRabbit","textChars":10,"textLines":1,"bbox":[852,346,280,44]}
+{"kind":"textbox","id":"sh/2p4jy9gv","slide":3,"text":"Set execution evidence beside\nan independent review opinion.","textPreview":"Set execution evidence beside | an independent review opinion.","textChars":60,"textLines":2,"bbox":[852,407,282,70]}
+{"kind":"shape","id":"sh/nqd0rexg","slide":3,"bbox":[72,548,1136,92]}
+{"kind":"shape","id":"sh/or610jy1","slide":3,"bbox":[96,549,1088,0]}
+{"kind":"textbox","id":"sh/psfitofm","slide":3,"text":"Braintrust traces the evidence","textPreview":"Braintrust traces the evidence","textChars":30,"textLines":1,"bbox":[104,580,318,28]}
+{"kind":"textbox","id":"sh/atoj2tg7","slide":3,"text":"CopilotKit lets reviewers interrogate it","textPreview":"CopilotKit lets reviewers interrogate it","textChars":40,"textLines":1,"bbox":[462,580,370,28]}
+{"kind":"textbox","id":"sh/buxkvyxs","slide":3,"text":"A human decides","textPreview":"A human decides","textChars":15,"textLines":1,"bbox":[882,580,250,28]}
+{"kind":"notes","id":"nt/0y98qt","slide":3,"text":"Explain the product in one sweep: Fireworks extracts the behavioral claim and designs attacks; Daytona executes those attacks against both revisions; CodeRabbit supplies a separate review opinion. Braintrust traces the decision, CopilotKit makes it explorable, and the human owns the final call.\n\n[Sources]\n- /Users/NithinAwasome/Downloads/Daytona-Hacksprint/lib/pipeline.ts — orchestrated claim, evidence, comparison, and recommendation flow\n- /Users/NithinAwasome/Downloads/Daytona-Hacksprint/lib/adapters/fireworks.ts — claim extraction and adversarial test generation\n- /Users/NithinAwasome/Downloads/Daytona-Hacksprint/lib/adapters/daytona.ts — isolated before/after execution\n- /Users/NithinAwasome/Downloads/Daytona-Hacksprint/app/api/copilotkit/[...slug]/route.ts — CopilotKit runtime"}
+{"kind":"slide","id":"sl/5ztj38","slide":4,"title":"Popper","textShapes":12}
+{"kind":"shape","id":"sh/s769wret","slide":4,"bbox":[0,500,220,220]}
+{"kind":"shape","id":"sh/r6d83md8","slide":4,"bbox":[52.8,552.8,114.4,114.4]}
+{"kind":"shape","id":"sh/q54ruhwn","slide":4,"bbox":[1080,0,200,200]}
+{"kind":"shape","id":"sh/54vq1cv2","slide":4,"bbox":[1128,48,104,104]}
+{"kind":"textbox","id":"sh/43m9s7ex","slide":4,"text":"Popper","textPreview":"Popper","textChars":6,"textLines":1,"bbox":[72,28,180,38]}
+{"kind":"textbox","id":"sh/32d8z2xc","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1138,34,70,24]}
+{"kind":"textbox","id":"sh/ih4rqxwr","slide":4,"text":"LIVE DEMO","textPreview":"LIVE DEMO","textChars":9,"textLines":1,"bbox":[74,60,700,25]}
+{"kind":"textbox","id":"sh/p0zadgvm","slide":4,"text":"Watch the claim meet the evidence.","textPreview":"Watch the claim meet the evidence.","textChars":34,"textLines":1,"bbox":[72,96,1040,78]}
+{"kind":"shape","id":"sh/ozq94be1","slide":4,"bbox":[56,184,818,456]}
+{"kind":"shape","id":"sh/u1onixon","slide":4,"bbox":[80,185,770,0]}
+{"kind":"shape","id":"sh/g365k76d","slide":4,"bbox":[900,184,324,456]}
+{"kind":"shape","id":"sh/h4f6dc7y","slide":4,"bbox":[924,185,276,0]}
+{"kind":"textbox","id":"sh/6d4nexob","slide":4,"text":"90-SECOND DEMO","textPreview":"90-SECOND DEMO","textChars":14,"textLines":1,"bbox":[928,216,268,26]}
+{"kind":"shape","id":"sh/7ydo72pw","slide":4,"bbox":[928,278,42,42]}
+{"kind":"textbox","id":"sh/8z65gn6h","slide":4,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[928,278,42,42]}
+{"kind":"textbox","id":"sh/t0f69s72","slide":4,"text":"Load a recorded PR run","textPreview":"Load a recorded PR run","textChars":22,"textLines":1,"bbox":[986,285,206,36]}
+{"kind":"shape","id":"sh/q987qhov","slide":4,"bbox":[928,358,42,42]}
+{"kind":"textbox","id":"sh/ruhojmp0","slide":4,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[928,358,42,42]}
+{"kind":"textbox","id":"sh/ne9kbe5s","slide":4,"text":"See evidence disagree","textPreview":"See evidence disagree","textChars":21,"textLines":1,"bbox":[986,365,206,36]}
+{"kind":"shape","id":"sh/md032947","slide":4,"bbox":[928,438,42,42]}
+{"kind":"textbox","id":"sh/9gb2doni","slide":4,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[928,438,42,42]}
+{"kind":"textbox","id":"sh/ofil4jmd","slide":4,"text":"Let the human decide","textPreview":"Let the human decide","textChars":20,"textLines":1,"bbox":[986,445,206,36]}
+{"kind":"textbox","id":"sh/bitkfy5o","slide":4,"text":"daytona-hacksprint.vercel.app","textPreview":"daytona-hacksprint.vercel.app","textChars":29,"textLines":1,"bbox":[928,548,268,48]}
+{"kind":"image","id":"im/srad0n65","slide":4,"name":"","alt":"Popper glass interface showing a PR claim, conflicting evidence, and a human block recommendation","bbox":[68,196,794,432]}
+{"kind":"notes","id":"nt/5ztj38","slide":4,"text":"Demo only the proof loop. Load the recorded pr-101 run, read the claim, point to the split between execution evidence and review opinion, then end on the human block recommendation. If time remains, open the generated test.\n\n[Sources]\n- https://daytona-hacksprint.vercel.app/ — deployed Popper demo\n- /Users/NithinAwasome/Downloads/Daytona-Hacksprint/.tmp_popper_deck_v2/popper-evidence-palette.jpg — local screenshot of the redesigned product UI"}
+{"kind":"slide","id":"sl/2288sk","slide":5,"title":"Popper","textShapes":15}
+{"kind":"shape","id":"sh/0n2dkzud","slide":5,"bbox":[0,500,220,220]}
+{"kind":"shape","id":"sh/fm9cbuts","slide":5,"bbox":[52.8,552.8,114.4,114.4]}
+{"kind":"shape","id":"sh/el0vipc7","slide":5,"bbox":[1080,0,200,200]}
+{"kind":"shape","id":"sh/dkru9kbm","slide":5,"bbox":[1128,48,104,104]}
+{"kind":"textbox","id":"sh/sjidgfu1","slide":5,"text":"Popper","textPreview":"Popper","textChars":6,"textLines":1,"bbox":[72,28,180,38]}
+{"kind":"textbox","id":"sh/ri9c7atw","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1138,34,70,24]}
+{"kind":"textbox","id":"sh/qx0vepcb","slide":5,"text":"WHAT WE LEARNED","textPreview":"WHAT WE LEARNED","textChars":15,"textLines":1,"bbox":[74,60,700,25]}
+{"kind":"textbox","id":"sh/5wru5kbq","slide":5,"text":"We had to verify the verifier.","textPreview":"We had to verify the verifier.","textChars":30,"textLines":1,"bbox":[72,106,980,82]}
+{"kind":"textbox","id":"sh/4vydcfu5","slide":5,"text":"The hard part was preserving the meaning of evidence.","textPreview":"The hard part was preserving the meaning of evidence.","textChars":53,"textLines":1,"bbox":[76,202,820,36]}
+{"kind":"shape","id":"sh/y50bi5sb","slide":5,"bbox":[72,280,334,260]}
+{"kind":"shape","id":"sh/j69sbatw","slide":5,"bbox":[96,281,286,0]}
+{"kind":"textbox","id":"sh/k7itkfah","slide":5,"text":"PASS ≠ PROOF","textPreview":"PASS ≠ PROOF","textChars":12,"textLines":1,"bbox":[98,310,284,26]}
+{"kind":"textbox","id":"sh/l8rudkb2","slide":5,"text":"Pass before + after","textPreview":"Pass before + after","textChars":19,"textLines":1,"bbox":[98,365,284,76]}
+{"kind":"textbox","id":"sh/ahgbe5sf","slide":5,"text":"That test is inconclusive.","textPreview":"That test is inconclusive.","textChars":26,"textLines":1,"bbox":[98,470,282,44]}
+{"kind":"shape","id":"sh/bips7at0","slide":5,"bbox":[449,280,334,260]}
+{"kind":"shape","id":"sh/wjytgfal","slide":5,"bbox":[473,281,286,0]}
+{"kind":"textbox","id":"sh/x4ra90bq","slide":5,"text":"TIMEOUT ≠ FAILURE","textPreview":"TIMEOUT ≠ FAILURE","textChars":17,"textLines":1,"bbox":[475,310,284,26]}
+{"kind":"textbox","id":"sh/mdgbals3","slide":5,"text":"Sandbox unavailable","textPreview":"Sandbox unavailable","textChars":19,"textLines":1,"bbox":[475,365,284,76]}
+{"kind":"textbox","id":"sh/neps3qto","slide":5,"text":"That is missing evidence.","textPreview":"That is missing evidence.","textChars":25,"textLines":1,"bbox":[475,470,282,44]}
+{"kind":"shape","id":"sh/ril8bm9g","slide":5,"bbox":[826,280,334,260]}
+{"kind":"shape","id":"sh/qhc7ih8v","slide":5,"bbox":[850,281,286,0]}
+{"kind":"textbox","id":"sh/dknqdwrm","slide":5,"text":"OPINION ≠ EVIDENCE","textPreview":"OPINION ≠ EVIDENCE","textChars":18,"textLines":1,"bbox":[852,310,284,26]}
+{"kind":"textbox","id":"sh/cjupkrq1","slide":5,"text":"Review says “looks good”","textPreview":"Review says “looks good”","textChars":24,"textLines":1,"bbox":[852,365,284,76]}
+{"kind":"textbox","id":"sh/zm58f69s","slide":5,"text":"Only execution can prove behavior.","textPreview":"Only execution can prove behavior.","textChars":34,"textLines":1,"bbox":[852,470,282,44]}
+{"kind":"shape","id":"sh/elwrm187","slide":5,"bbox":[342,594,596,42]}
+{"kind":"textbox","id":"sh/1onqhgri","slide":5,"text":"WHEN PROOF IS MISSING, THE GATE STAYS CLOSED","textPreview":"WHEN PROOF IS MISSING, THE GATE STAYS CLOSED","textChars":44,"textLines":1,"bbox":[342,594,596,42]}
+{"kind":"notes","id":"nt/2288sk","slide":5,"text":"These distinctions were our biggest engineering challenge and our most important accomplishment. We kept model opinion, executed evidence, inconclusive tests, and infrastructure failure separate. If Popper cannot gather trustworthy evidence, it blocks rather than pretending to know.\n\n[Sources]\n- /Users/NithinAwasome/Downloads/Daytona-Hacksprint/AGENTS.md — evidence/opinion boundary and fail-closed rules\n- /Users/NithinAwasome/Downloads/Daytona-Hacksprint/docs/DECISIONS.md — implementation decisions\n- /Users/NithinAwasome/Downloads/Daytona-Hacksprint/docs/PROGRESS.md — challenges and verification history"}
+{"kind":"slide","id":"sl/9gud7x","slide":6,"title":"Popper","textShapes":7}
+{"kind":"shape","id":"sh/0j6ds7mp","slide":6,"bbox":[0,500,220,220]}
+{"kind":"shape","id":"sh/zydcj25k","slide":6,"bbox":[52.8,552.8,114.4,114.4]}
+{"kind":"shape","id":"sh/yx4vqx4z","slide":6,"bbox":[1080,0,200,200]}
+{"kind":"shape","id":"sh/dwvuhsne","slide":6,"bbox":[1128,48,104,104]}
+{"kind":"textbox","id":"sh/cvmdonmt","slide":6,"text":"Popper","textPreview":"Popper","textChars":6,"textLines":1,"bbox":[72,28,180,38]}
+{"kind":"textbox","id":"sh/budcfi58","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1138,34,70,24]}
+{"kind":"textbox","id":"sh/qt4vmd4n","slide":6,"text":"THE PROMISE","textPreview":"THE PROMISE","textChars":11,"textLines":1,"bbox":[74,60,700,25]}
+{"kind":"shape","id":"sh/xszetwni","slide":6,"bbox":[900,250,380,380]}
+{"kind":"shape","id":"sh/wrqd0rmx","slide":6,"bbox":[991.2,341.2,197.6,197.6]}
+{"kind":"shape","id":"sh/q1s32xw7","slide":6,"bbox":[1010,130,0,470]}
+{"kind":"textbox","id":"sh/b2l4v2xs","slide":6,"text":"AI makes\nthe claim.","textPreview":"AI makes | the claim.","textChars":19,"textLines":2,"bbox":[72,132,730,175]}
+{"kind":"textbox","id":"sh/c3ul47ed","slide":6,"text":"Popper makes it\nearn trust.","textPreview":"Popper makes it | earn trust.","textChars":27,"textLines":2,"bbox":[72,324,820,184]}
+{"kind":"shape","id":"sh/d43mxcvy","slide":6,"bbox":[78,570,364,44]}
+{"kind":"textbox","id":"sh/2xs3yxwb","slide":6,"text":"THE HUMAN STILL DECIDES","textPreview":"THE HUMAN STILL DECIDES","textChars":23,"textLines":1,"bbox":[78,570,364,44]}
+{"kind":"textbox","id":"sh/3y1krixg","slide":6,"text":"daytona-hacksprint.vercel.app","textPreview":"daytona-hacksprint.vercel.app","textChars":29,"textLines":1,"bbox":[78,636,620,30]}
+{"kind":"notes","id":"nt/9gud7x","slide":6,"text":"Resolve the opening: agents give us speed; Popper gives reviewers executed evidence. The system recommends, but the human remains accountable for the merge.\n\n[Sources]\n- https://daytona-hacksprint.vercel.app/ — deployed Popper demo\n- /Users/NithinAwasome/Downloads/Daytona-Hacksprint/README.md — product description"}

@@ -1,0 +1,1249 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/2288sk",
+    "id": "2288sk",
+    "slide": 5,
+    "layoutId": "96d8366a-1e87-48d9-9f21-9f331ae2d7dd",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "69a6441e-1994-475b-8407-a518a8dc6aa6",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#020100",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "Courier New",
+      "Georgia",
+      "Public Sans"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "96d8366a-1e87-48d9-9f21-9f331ae2d7dd",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "69a6441e-1994-475b-8407-a518a8dc6aa6",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "69a6441e-1994-475b-8407-a518a8dc6aa6",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/0n2dkzud",
+      "id": "1",
+      "bbox": [
+        0,
+        500,
+        220,
+        220
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#0D2438",
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/fm9cbuts",
+      "id": "2",
+      "bbox": [
+        52.8,
+        552.8,
+        114.4,
+        114.4
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#020100",
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/el0vipc7",
+      "id": "3",
+      "bbox": [
+        1080,
+        0,
+        200,
+        200
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#3D3501",
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/dkru9kbm",
+      "id": "4",
+      "bbox": [
+        1128,
+        48,
+        104,
+        104
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#020100",
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/sjidgfu1",
+      "id": "5",
+      "bbox": [
+        72,
+        28,
+        180,
+        38
+      ],
+      "geometry": "rect",
+      "text": "Popper",
+      "textPreview": "Popper",
+      "resolvedFontSize": 28,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 28,
+        "typeface": "Georgia",
+        "color": "#FDFFFC",
+        "bold": true,
+        "italic": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Popper"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Popper",
+          "resolvedTextStyle": {
+            "fontSize": 28,
+            "typeface": "Georgia",
+            "color": "#FDFFFC",
+            "bold": true,
+            "italic": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Popper",
+              "fontSize": 28,
+              "typeface": "Georgia",
+              "color": "#FDFFFC",
+              "bold": true,
+              "italic": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ri9c7atw",
+      "id": "6",
+      "bbox": [
+        1138,
+        34,
+        70,
+        24
+      ],
+      "geometry": "rect",
+      "text": "05",
+      "textPreview": "05",
+      "resolvedFontSize": 14,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 14,
+        "typeface": "Courier New",
+        "color": "#B5BCB7",
+        "alignment": "right",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "05"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "05",
+          "resolvedTextStyle": {
+            "fontSize": 14,
+            "typeface": "Courier New",
+            "color": "#B5BCB7",
+            "alignment": "right"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "05",
+              "fontSize": 14,
+              "typeface": "Courier New",
+              "color": "#B5BCB7",
+              "alignment": "right"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/qx0vepcb",
+      "id": "7",
+      "bbox": [
+        74,
+        60,
+        700,
+        25
+      ],
+      "geometry": "rect",
+      "text": "WHAT WE LEARNED",
+      "textPreview": "WHAT WE LEARNED",
+      "resolvedFontSize": 14,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 14,
+        "typeface": "Public Sans",
+        "color": "#F1D302",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "WHAT WE LEARNED"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "WHAT WE LEARNED",
+          "resolvedTextStyle": {
+            "fontSize": 14,
+            "typeface": "Public Sans",
+            "color": "#F1D302",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "WHAT WE LEARNED",
+              "fontSize": 14,
+              "typeface": "Public Sans",
+              "color": "#F1D302",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/5wru5kbq",
+      "id": "8",
+      "bbox": [
+        72,
+        106,
+        980,
+        82
+      ],
+      "geometry": "rect",
+      "text": "We had to verify the verifier.",
+      "textPreview": "We had to verify the verifier.",
+      "resolvedFontSize": 58,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 58,
+        "typeface": "Georgia",
+        "color": "#FDFFFC",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "We had to verify the verifier."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "We had to verify the verifier.",
+          "resolvedTextStyle": {
+            "fontSize": 58,
+            "typeface": "Georgia",
+            "color": "#FDFFFC",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "We had to verify the verifier.",
+              "fontSize": 58,
+              "typeface": "Georgia",
+              "color": "#FDFFFC",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/4vydcfu5",
+      "id": "9",
+      "bbox": [
+        76,
+        202,
+        820,
+        36
+      ],
+      "geometry": "rect",
+      "text": "The hard part was preserving the meaning of evidence.",
+      "textPreview": "The hard part was preserving the meaning of evidence.",
+      "resolvedFontSize": 22,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 22,
+        "typeface": "Public Sans",
+        "color": "#B5BCB7",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The hard part was preserving the meaning of evidence."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The hard part was preserving the meaning of evidence.",
+          "resolvedTextStyle": {
+            "fontSize": 22,
+            "typeface": "Public Sans",
+            "color": "#B5BCB7",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The hard part was preserving the meaning of evidence.",
+              "fontSize": 22,
+              "typeface": "Public Sans",
+              "color": "#B5BCB7",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/y50bi5sb",
+      "id": "10",
+      "bbox": [
+        72,
+        280,
+        334,
+        260
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#0D2438",
+      "lineColor": "#FDFFFC",
+      "lineWidth": 1.25
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/j69sbatw",
+      "id": "11",
+      "bbox": [
+        96,
+        281,
+        286,
+        0
+      ],
+      "geometry": "line",
+      "lineColor": "#4D78A1",
+      "lineWidth": 1
+    },
+    {
+      "order": 12,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/k7itkfah",
+      "id": "12",
+      "bbox": [
+        98,
+        310,
+        284,
+        26
+      ],
+      "geometry": "rect",
+      "text": "PASS ≠ PROOF",
+      "textPreview": "PASS ≠ PROOF",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 13,
+        "typeface": "Courier New",
+        "color": "#FDFFFC",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "PASS ≠ PROOF"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "PASS ≠ PROOF",
+          "resolvedTextStyle": {
+            "fontSize": 13,
+            "typeface": "Courier New",
+            "color": "#FDFFFC",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "PASS ≠ PROOF",
+              "fontSize": 13,
+              "typeface": "Courier New",
+              "color": "#FDFFFC",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 13,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/l8rudkb2",
+      "id": "13",
+      "bbox": [
+        98,
+        365,
+        284,
+        76
+      ],
+      "geometry": "rect",
+      "text": "Pass before + after",
+      "textPreview": "Pass before + after",
+      "resolvedFontSize": 31,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 31,
+        "typeface": "Georgia",
+        "color": "#FDFFFC",
+        "italic": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Pass before + after"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Pass before + after",
+          "resolvedTextStyle": {
+            "fontSize": 31,
+            "typeface": "Georgia",
+            "color": "#FDFFFC",
+            "italic": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Pass before + after",
+              "fontSize": 31,
+              "typeface": "Georgia",
+              "color": "#FDFFFC",
+              "italic": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 14,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ahgbe5sf",
+      "id": "14",
+      "bbox": [
+        98,
+        470,
+        282,
+        44
+      ],
+      "geometry": "rect",
+      "text": "That test is inconclusive.",
+      "textPreview": "That test is inconclusive.",
+      "resolvedFontSize": 17,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 17,
+        "typeface": "Public Sans",
+        "color": "#B5BCB7",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "That test is inconclusive."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "That test is inconclusive.",
+          "resolvedTextStyle": {
+            "fontSize": 17,
+            "typeface": "Public Sans",
+            "color": "#B5BCB7",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "That test is inconclusive.",
+              "fontSize": 17,
+              "typeface": "Public Sans",
+              "color": "#B5BCB7",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 15,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/bips7at0",
+      "id": "15",
+      "bbox": [
+        449,
+        280,
+        334,
+        260
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#3D3501",
+      "lineColor": "#F1D302",
+      "lineWidth": 1.25
+    },
+    {
+      "order": 16,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/wjytgfal",
+      "id": "16",
+      "bbox": [
+        473,
+        281,
+        286,
+        0
+      ],
+      "geometry": "line",
+      "lineColor": "#4D78A1",
+      "lineWidth": 1
+    },
+    {
+      "order": 17,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/x4ra90bq",
+      "id": "17",
+      "bbox": [
+        475,
+        310,
+        284,
+        26
+      ],
+      "geometry": "rect",
+      "text": "TIMEOUT ≠ FAILURE",
+      "textPreview": "TIMEOUT ≠ FAILURE",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 13,
+        "typeface": "Courier New",
+        "color": "#F1D302",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "TIMEOUT ≠ FAILURE"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "TIMEOUT ≠ FAILURE",
+          "resolvedTextStyle": {
+            "fontSize": 13,
+            "typeface": "Courier New",
+            "color": "#F1D302",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "TIMEOUT ≠ FAILURE",
+              "fontSize": 13,
+              "typeface": "Courier New",
+              "color": "#F1D302",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 18,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/mdgbals3",
+      "id": "18",
+      "bbox": [
+        475,
+        365,
+        284,
+        76
+      ],
+      "geometry": "rect",
+      "text": "Sandbox unavailable",
+      "textPreview": "Sandbox unavailable",
+      "resolvedFontSize": 31,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 31,
+        "typeface": "Georgia",
+        "color": "#FDFFFC",
+        "italic": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Sandbox"
+          },
+          {
+            "index": 2,
+            "text": "unavailable"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Sandbox unavailable",
+          "resolvedTextStyle": {
+            "fontSize": 31,
+            "typeface": "Georgia",
+            "color": "#FDFFFC",
+            "italic": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Sandbox unavailable",
+              "fontSize": 31,
+              "typeface": "Georgia",
+              "color": "#FDFFFC",
+              "italic": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 19,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/neps3qto",
+      "id": "19",
+      "bbox": [
+        475,
+        470,
+        282,
+        44
+      ],
+      "geometry": "rect",
+      "text": "That is missing evidence.",
+      "textPreview": "That is missing evidence.",
+      "resolvedFontSize": 17,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 17,
+        "typeface": "Public Sans",
+        "color": "#B5BCB7",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "That is missing evidence."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "That is missing evidence.",
+          "resolvedTextStyle": {
+            "fontSize": 17,
+            "typeface": "Public Sans",
+            "color": "#B5BCB7",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "That is missing evidence.",
+              "fontSize": 17,
+              "typeface": "Public Sans",
+              "color": "#B5BCB7",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 20,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ril8bm9g",
+      "id": "20",
+      "bbox": [
+        826,
+        280,
+        334,
+        260
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#3B0C0F",
+      "lineColor": "#C1292E",
+      "lineWidth": 1.25
+    },
+    {
+      "order": 21,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/qhc7ih8v",
+      "id": "21",
+      "bbox": [
+        850,
+        281,
+        286,
+        0
+      ],
+      "geometry": "line",
+      "lineColor": "#4D78A1",
+      "lineWidth": 1
+    },
+    {
+      "order": 22,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/dknqdwrm",
+      "id": "22",
+      "bbox": [
+        852,
+        310,
+        284,
+        26
+      ],
+      "geometry": "rect",
+      "text": "OPINION ≠ EVIDENCE",
+      "textPreview": "OPINION ≠ EVIDENCE",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 13,
+        "typeface": "Courier New",
+        "color": "#C1292E",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "OPINION ≠ EVIDENCE"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "OPINION ≠ EVIDENCE",
+          "resolvedTextStyle": {
+            "fontSize": 13,
+            "typeface": "Courier New",
+            "color": "#C1292E",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "OPINION ≠ EVIDENCE",
+              "fontSize": 13,
+              "typeface": "Courier New",
+              "color": "#C1292E",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 23,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/cjupkrq1",
+      "id": "23",
+      "bbox": [
+        852,
+        365,
+        284,
+        76
+      ],
+      "geometry": "rect",
+      "text": "Review says “looks good”",
+      "textPreview": "Review says “looks good”",
+      "resolvedFontSize": 31,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 31,
+        "typeface": "Georgia",
+        "color": "#FDFFFC",
+        "italic": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Review says “looks"
+          },
+          {
+            "index": 2,
+            "text": "good”"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Review says “looks good”",
+          "resolvedTextStyle": {
+            "fontSize": 31,
+            "typeface": "Georgia",
+            "color": "#FDFFFC",
+            "italic": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Review says “looks good”",
+              "fontSize": 31,
+              "typeface": "Georgia",
+              "color": "#FDFFFC",
+              "italic": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 24,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/zm58f69s",
+      "id": "24",
+      "bbox": [
+        852,
+        470,
+        282,
+        44
+      ],
+      "geometry": "rect",
+      "text": "Only execution can prove behavior.",
+      "textPreview": "Only execution can prove behavior.",
+      "resolvedFontSize": 17,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 17,
+        "typeface": "Public Sans",
+        "color": "#B5BCB7",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Only execution can prove"
+          },
+          {
+            "index": 2,
+            "text": "behavior."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Only execution can prove behavior.",
+          "resolvedTextStyle": {
+            "fontSize": 17,
+            "typeface": "Public Sans",
+            "color": "#B5BCB7",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Only execution can prove behavior.",
+              "fontSize": 17,
+              "typeface": "Public Sans",
+              "color": "#B5BCB7",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 25,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/elwrm187",
+      "id": "25",
+      "bbox": [
+        342,
+        594,
+        596,
+        42
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#3D3501",
+      "lineColor": "#F1D302",
+      "lineWidth": 1
+    },
+    {
+      "order": 26,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/1onqhgri",
+      "id": "26",
+      "bbox": [
+        342,
+        594,
+        596,
+        42
+      ],
+      "geometry": "rect",
+      "text": "WHEN PROOF IS MISSING, THE GATE STAYS CLOSED",
+      "textPreview": "WHEN PROOF IS MISSING, THE GATE STAYS CLOSED",
+      "resolvedFontSize": 14,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 14,
+        "typeface": "Public Sans",
+        "color": "#FDFFFC",
+        "bold": true,
+        "alignment": "center",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "WHEN PROOF IS MISSING, THE GATE STAYS CLOSED"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "WHEN PROOF IS MISSING, THE GATE STAYS CLOSED",
+          "resolvedTextStyle": {
+            "fontSize": 14,
+            "typeface": "Public Sans",
+            "color": "#FDFFFC",
+            "bold": true,
+            "alignment": "center"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "WHEN PROOF IS MISSING, THE GATE STAYS CLOSED",
+              "fontSize": 14,
+              "typeface": "Public Sans",
+              "color": "#FDFFFC",
+              "bold": true,
+              "alignment": "center"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

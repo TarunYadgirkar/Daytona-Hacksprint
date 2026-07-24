@@ -72,7 +72,7 @@ export default function OverrideBar({
         </p>
       )}
       {!sent && (
-        <p className="rationale" style={{ color: "var(--muted)", fontSize: 11, marginTop: 10 }}>
+        <p className="rationale override-safety">
           Nothing merges automatically. Popper never takes this action on its own.
         </p>
       )}
