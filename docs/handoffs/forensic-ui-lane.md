@@ -17,17 +17,17 @@ product:
 
 `docs/superpowers/specs/2026-07-24-safeship-forensic-control-room-design.md`
 
-## Create an isolated worktree
+## Clone on the second device
 
-Run from the repository root:
+The second account does not need access to the primary device. Clone the
+pushed GitHub repository into any directory on the second device:
 
 ```bash
-cd /Users/tarunyadgirkar/TarunsCode/daytona-hackathon/initial-export/daytona
+git clone https://github.com/TarunYadgirkar/Daytona-Hacksprint.git safeship
+cd safeship
 git fetch origin --prune
-git worktree add .worktrees/forensic-ui \
-  -b feature/forensic-control-room-ui \
+git switch -c feature/forensic-control-room-ui \
   origin/integration/github-main-lane-c
-cd .worktrees/forensic-ui
 ```
 
 Confirm the branch contains the approved integration baseline:
@@ -37,8 +37,8 @@ git merge-base --is-ancestor f06001c HEAD
 git status --short --branch
 ```
 
-Do not work in `.worktrees/github-main-integration`; the primary session owns
-that worktree.
+If GitHub authentication is requested, sign in with an account that can push a
+branch to `TarunYadgirkar/Daytona-Hacksprint`.
 
 ## Read before editing
 
@@ -120,10 +120,11 @@ Do not add `middleware.ts` or CSP headers in this lane.
 
 ## Node and commands
 
-Use Node 20 for every npm command:
+Use Node 20.20.0 for every npm command. With `nvm`:
 
 ```bash
-export PATH="/Users/tarunyadgirkar/.nvm/versions/node/v20.20.0/bin:$PATH"
+nvm install 20.20.0
+nvm use 20.20.0
 node --version
 npm ci
 ```
