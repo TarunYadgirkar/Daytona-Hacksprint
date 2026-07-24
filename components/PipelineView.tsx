@@ -668,9 +668,8 @@ export default function PipelineView({
                       type="button"
                       className="act ghost"
                       onClick={loadRecordedForSelection}
-                      disabled={running}
                     >
-                      Load recorded run
+                      {running ? "Abort and load recorded run" : "Load recorded run"}
                     </button>
                   </div>
                 </section>

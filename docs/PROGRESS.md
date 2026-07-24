@@ -67,6 +67,8 @@ Outstanding operator work:
 - [x] Preflight reports gate mode and requires the demo access code in deployed environments
 - [x] Persistent run failures expose retry, recorded fallback, connection state, stage timeout,
   copyable run ID, sponsor provenance, and never leave a closed stream marked running
+- [x] Recorded cases can interrupt an active live stream; focused Playwright coverage confirms
+  the EventSource closes before the completed record replaces live state
 - [x] Recorded-run gallery includes `evidence_only`, `opinion_only`, `both_caught`, and
   `both_clear`, with capture time, origin, opinion provenance, evidence availability, and run ID
 - [x] Evidence UI exposes generated code, separate stdout/stderr, verdict explanations, summary

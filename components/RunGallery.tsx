@@ -57,10 +57,9 @@ export default function RunGallery({
               <button
                 type="button"
                 className="act ghost"
-                disabled={running}
                 onClick={() => onLoad(record)}
               >
-                Load recorded run
+                {running ? "Abort live run and load" : "Load recorded run"}
               </button>
             </article>
           );

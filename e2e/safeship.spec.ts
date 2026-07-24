@@ -36,6 +36,53 @@ test("selecting a PR previews it without starting a run", async ({ page }) => {
   expect(gateRequests).toBe(0);
 });
 
+test("a recorded case can interrupt an active live run", async ({ page }) => {
+  await page.addInitScript(() => {
+    const state = window as Window & { __safeShipSourceClosed?: boolean };
+    state.__safeShipSourceClosed = false;
+
+    class HangingEventSource {
+      onopen: ((event: Event) => void) | null = null;
+      onmessage: ((event: MessageEvent) => void) | null = null;
+      onerror: ((event: Event) => void) | null = null;
+
+      constructor(_url: string | URL) {
+        window.setTimeout(() => this.onopen?.(new Event("open")), 0);
+      }
+
+      close() {
+        state.__safeShipSourceClosed = true;
+      }
+    }
+
+    Object.defineProperty(window, "EventSource", {
+      configurable: true,
+      value: HangingEventSource,
+    });
+  });
+
+  await page.reload();
+  await expect(page.getByText("Recorded-runs gallery")).toBeVisible();
+  await selectPR(page, "pr-101");
+  await page.getByRole("button", { name: "Run adversarial gate" }).click();
+  await expect(page.locator(".connection")).toHaveText(/connecting|connected/);
+
+  const record = page.locator(".run-card").filter({ hasText: "pr-101" }).first();
+  await record.getByRole("button", { name: "Abort live run and load" }).click();
+
+  await expect(page.locator(".connection")).toHaveText("recorded");
+  await expect(page.locator(".replay-banner")).toBeVisible();
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          (window as Window & { __safeShipSourceClosed?: boolean })
+            .__safeShipSourceClosed,
+      ),
+    )
+    .toBe(true);
+});
+
 test("CopilotKit runtime advertises the default SafeShip agent", async ({
   page,
 }) => {
