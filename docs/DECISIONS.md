@@ -154,17 +154,125 @@ a convenient green signal.
 
 ---
 
-## D-013 — Static-review provenance must be content-bound
+## D-013 — Selection and execution are separate actions
 
-**Decided:** Live CodeRabbit reviews run against a temporary repository containing the selected
-PR's `before` revision as the baseline commit and `after` revision as its uncommitted diff.
-Recorded reviews include a SHA-256 digest of that content. Missing or mismatched digests downgrade
-the review to fixture provenance, which produces `no_opinion` and blocks.
+**Decided:** Clicking a staged PR selects it and previews its diff. Only the explicit
+“Run adversarial gate” action may open the SSE route and spend Fireworks or Daytona capacity.
+The server independently allowlists staged IDs, fixes the requested suite at four tests, and
+applies signed demo access plus a best-effort quota.
 
-**Why:** A successful review of different code is not an independent opinion about the selected
-PR. Likewise, a placeholder verdict and malformed CLI output cannot safely stand in for a review
-that completed. Provenance must survive all the way into comparison and decision logic.
+**Why:** A navigation gesture should not have external cost. UI friction alone is not a security
+boundary, so the route enforces the same constraints even if it is called directly.
 
-**Costs:** Existing real cache entries without a digest become unavailable until they are
-re-recorded. Explicit CLI mode now surfaces authentication, parser, rate-limit, and process
-failures instead of using a demo fallback.
+**Costs:** One extra click before a live run. That pause communicates exactly what will happen.
+
+---
+
+## D-014 — Recorded runs are a validated library with explicit provenance
+
+**Decided:** Four bundled, schema-validated completed results cover every comparison outcome.
+Recorded mode streams those results over the production SSE contract, and the gallery labels
+their capture time, original run ID, evidence availability, and fixture provenance.
+
+**Why:** Browser-local “last run” disappears on a fresh device and is a poor venue-wifi fallback.
+A deterministic library makes every important state explorable without sponsor calls. Calling a
+fixture “live” would violate the evidence/opinion distinction, so provenance travels with it.
+
+**Costs:** The fixtures must stay compatible with the gate schema. Tests validate that contract.
+Decision D-010 remains true for saved live runs; this decision replaces its single-run storage
+limitation.
+
+---
+
+## D-015 — Stream closure is an explicit failure state
+
+**Decided:** The UI tracks connection and stage state separately. A stream that closes without
+`run_complete` marks any running stage as errored, keeps a persistent banner, announces the
+failure accessibly, and offers retry or recorded fallback.
+
+**Why:** `EventSource.onerror` is not a harmless browser detail. Leaving a spinner alive after
+the server has stopped makes an unavailable run look active and gives the operator no recovery
+path.
+
+**Costs:** More client state, timers, and failure copy. None of it computes a verdict.
+
+---
+
+## D-016 — Production access fails closed
+
+**Decided:** Vercel production requires `SAFESHIP_DEMO_ACCESS_CODE`. Missing configuration returns
+503 instead of silently exposing live integrations. Vercel Authentication protects preview and
+generated deployment URLs; application access still protects the public production domain.
+
+**Why:** Hobby Standard Protection does not cover the public production domain. A dashboard
+toggle and an in-memory quota are not substitutes for an application-level boundary.
+
+**Costs:** A forgotten environment variable makes production unavailable rather than permissive.
+That is the safer failure for a tool that creates paid sandboxes.
+
+---
+
+## D-017 — Copilot chat starts closed
+
+**Decided:** The Copilot sidebar is available from its toggle but does not open automatically.
+
+**Why:** On narrow screens the open sidebar covers the evidence UI and intercepts its controls.
+The gate result is the primary demo surface; chat is an optional way to interrogate that result.
+
+**Costs:** A user must click once before asking about the run.
+
+---
+
+## D-018 — Static-review provenance is content-bound
+
+**Decided:** Live CodeRabbit reviews run in a temporary repository containing the selected PR's
+`before` revision as the baseline and its `after` revision as the uncommitted diff. Recorded cache
+entries include a SHA-256 digest of that content. A missing or mismatched digest downgrades the
+review to fixture provenance, producing `no_opinion` and a blocking recommendation.
+
+**Why:** A completed review of different code is not an independent opinion about the selected
+PR. Authentication, parser, process, and rate-limit failures must remain failures instead of
+silently borrowing an older approval.
+
+**Costs:** Existing cache entries without a digest must be re-recorded.
+
+---
+
+## D-019 — Generated tests run without outbound network access
+
+**Decided:** Daytona sandboxes are private, ephemeral, network-blocked, limited to a ten-minute
+TTL, and guarded by SDK command timeouts plus an inner generated-test timeout. Explicit cleanup
+waits for deletion; TTL-backed automatic deletion remains the fallback.
+
+**Why:** Generated test code is untrusted. It needs the staged module and Node.js, not outbound
+network access or a durable sandbox.
+
+**Costs:** Adversarial tests cannot fetch packages or call external services. Test generation must
+remain self-contained.
+
+---
+
+## D-020 — Release tooling is pinned and enforced in CI
+
+**Decided:** Development and CI use Node 20.20.0 and npm 10.8.2. ESLint runs the Next.js
+core-web-vitals and TypeScript rules with zero warnings, the unit runner discovers every checked-in
+test file, and CI also runs the recorded Playwright suite.
+
+**Why:** A deployment build is not sufficient evidence that security, verdict, and responsive
+behavior still work. Pinning removes avoidable differences between local, CI, and Vercel builds.
+
+**Costs:** Contributors on other Node versions receive an engine warning and must switch runtimes.
+
+---
+
+## D-021 — CopilotKit uses its REST transport
+
+**Decided:** The v2 client sets `useSingleEndpoint={false}` and talks to the catch-all runtime
+through `/api/copilotkit/info` and the agent-specific REST routes.
+
+**Why:** The compatibility wrapper defaults to single-endpoint mode and POSTs to
+`/api/copilotkit`, but the App Router endpoint is intentionally mounted at `[...slug]` and does
+not match that root path. Explicit transport selection prevents a silent 404 in the chat.
+
+**Costs:** If the server is later converted to single-route mode, the provider and browser
+contract test must change together.

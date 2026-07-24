@@ -11,7 +11,8 @@ Three minutes. The audience does not need the architecture; they need one moment
 - [ ] CodeRabbit cache re-recorded, `recordedAt` visible in the UI
 - [ ] Braintrust project open in a second tab, sorted by `methods_agree` ascending
 - [ ] One sandbox already created once today, so the first call is warm
-- [ ] A completed `pr-101` saved in the browser; verify “Replay saved run” restores it
+- [ ] Recorded-runs gallery loads all four outcomes on a fresh browser
+- [ ] Production asks for the SafeShip demo code; previews use Vercel Authentication
 
 ## The run
 
@@ -19,7 +20,9 @@ Three minutes. The audience does not need the architecture; they need one moment
 
 **Say what SafeShip does differently.** "We don't ask whether it looks right. We extract the promise the PR is making, and then we try to break it."
 
-**Run `pr-101`.** Let the claim appear. Read it aloud — it is one falsifiable sentence, which is the point. Let the tests generate and stream into the sandbox.
+**Select `pr-101`.** Pause on the preview: nothing has run yet. Point out the duration and live
+sandbox notice, then press **Run adversarial gate**. Let the claim appear. Read it aloud — it is
+one falsifiable sentence, which is the point. Let the tests generate and stream into the sandbox.
 
 **Stop on the table.** Point at the before/after columns. "This test fails on the old code and still fails on the new code. The PR's own description says new sessions get `null` from the cart service. The fix only handles the empty array."
 
@@ -49,8 +52,8 @@ evidence, SafeShip blocks. Look at the verdict tags — we grade our own evidenc
 
 ## If something breaks
 
-- Sandbox slow or failing → the gate blocks on missing evidence by design; say that, then click “Replay saved run”.
-- Fireworks returns garbage → SafeShip retries missing tests. If generation still stops, click “Replay saved run”.
-- Wifi gone → use “Replay saved run”; the validated snapshot does not call the model, sandbox, or review CLI.
+- Sandbox slow or failing → the gate blocks on missing evidence by design; use **Load recorded run**.
+- Fireworks returns garbage → SafeShip retries missing tests. If generation still stops, use the recorded gallery.
+- Wifi gone → use the recorded gallery; validated snapshots do not call the model, sandbox, review CLI, or Braintrust.
 
 Do not debug on stage. Narrate the fallback and keep moving.

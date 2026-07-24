@@ -9,16 +9,29 @@
 
 import { encodeSSE, type GateEvent } from "@/lib/events";
 import { flushLogger } from "@/lib/adapters/braintrust";
+import { consumeGateQuota, requireDemoAccess } from "@/lib/access";
 import { getPR } from "@/lib/fixtures/prs";
+import { getRecordedRun } from "@/lib/fixtures/recorded-runs";
 import { GateStageError, runGate } from "@/lib/pipeline";
+import { streamRecordedRun } from "@/lib/recorded-stream";
 
 export const runtime = "nodejs"; // Daytona and Braintrust SDKs are Node-only
 export const dynamic = "force-dynamic";
 export const maxDuration = 300; // sandbox runs are slow; do not let the platform cut us off
 
+const DEMO_TEST_COUNT = 4;
+
 export async function GET(request: Request) {
+  const denied = requireDemoAccess(request);
+  if (denied) {
+    await flushLogger();
+    return denied;
+  }
+
   const prId = new URL(request.url).searchParams.get("pr");
   const pr = prId ? getPR(prId) : undefined;
+  const recordedMode = process.env.SAFESHIP_GATE_MODE === "recorded";
+  const recordedRun = prId && recordedMode ? getRecordedRun(prId) : undefined;
 
   if (!pr) {
     await flushLogger();
@@ -26,6 +39,31 @@ export async function GET(request: Request) {
       status: 404,
       headers: { "content-type": "application/json" },
     });
+  }
+
+  if (recordedMode && !recordedRun) {
+    await flushLogger();
+    return Response.json(
+      { error: `No recorded fixture exists for "${pr.id}"` },
+      { status: 500 },
+    );
+  }
+
+  const quota = recordedMode
+    ? { allowed: true, remaining: Number.POSITIVE_INFINITY, retryAfterSeconds: 0 }
+    : consumeGateQuota(request);
+  if (!quota.allowed) {
+    await flushLogger();
+    return Response.json(
+      { error: "Live-run limit reached. Load a recorded run or retry later." },
+      {
+        status: 429,
+        headers: {
+          "retry-after": String(quota.retryAfterSeconds),
+          "cache-control": "no-store",
+        },
+      },
+    );
   }
 
   const encoder = new TextEncoder();
@@ -43,7 +81,11 @@ export async function GET(request: Request) {
       };
 
       try {
-        await runGate({ pr, emit });
+        if (recordedRun) {
+          await streamRecordedRun(recordedRun, emit);
+        } else {
+          await runGate({ pr, emit, testCount: DEMO_TEST_COUNT });
+        }
       } catch (err) {
         emit({
           type: "stage_error",

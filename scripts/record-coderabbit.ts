@@ -26,7 +26,10 @@ import "dotenv/config";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { STAGED_PRS, getPR } from "../lib/fixtures/prs";
-import { digestStagedPR, runCodeRabbitCLI } from "../lib/adapters/coderabbit";
+import {
+  digestStagedPR,
+  runCodeRabbitCLI,
+} from "../lib/adapters/coderabbit";
 import type { CodeRabbitReview, StagedPR } from "../lib/types";
 
 const OUT = join(process.cwd(), "lib/fixtures/coderabbit-cache.ts");

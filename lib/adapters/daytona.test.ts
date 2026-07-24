@@ -19,6 +19,7 @@ test("Daytona sandbox policy constrains untrusted test execution", () => {
     generatedTestTimeoutSeconds: 10,
     deleteTimeoutSeconds: 60,
     waitForDelete: true,
-    cleanupFailureLog: "Sandbox cleanup failed; automatic deletion remains enabled.",
+    cleanupFailureLog:
+      "Sandbox cleanup failed; automatic deletion remains enabled.",
   });
 });

@@ -3,7 +3,8 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
-import type { CodeRabbitReview, StagedPR } from "../types";
+import type { CodeRabbitReview } from "../types";
+import { STAGED_PRS } from "../fixtures/prs";
 import {
   digestStagedPR,
   getCodeRabbitReview,
@@ -12,16 +13,7 @@ import {
   withStagedCodeRabbitRepository,
 } from "./coderabbit";
 
-const stagedPR: StagedPR = {
-  id: "pr-test",
-  title: "Test staged review",
-  description: "Changes the exported value.",
-  author: "test",
-  language: "javascript",
-  before: "module.exports = 1;\n",
-  after: "module.exports = 2;\n",
-  entryFile: "target.js",
-};
+const pr = STAGED_PRS[0]!;
 
 test("parseAgentOutput rejects a skipped review instead of approving it", () => {
   const output = JSON.stringify({
@@ -39,7 +31,10 @@ test("parseAgentOutput rejects heartbeat-only output", () => {
 });
 
 test("parseAgentOutput rejects non-JSON-only output", () => {
-  assert.throws(() => parseAgentOutput("Review finished without structured output"), /completed review/);
+  assert.throws(
+    () => parseAgentOutput("Review finished without structured output"),
+    /completed review/,
+  );
 });
 
 test("parseAgentOutput rejects an unknown terminal event", () => {
@@ -97,21 +92,29 @@ test("withStagedCodeRabbitRepository stages the selected PR and always cleans up
   let stagedDir = "";
 
   await assert.rejects(
-    withStagedCodeRabbitRepository(stagedPR, async (dir) => {
+    withStagedCodeRabbitRepository(pr, async (dir) => {
       stagedDir = dir;
-      const file = join(dir, "src", stagedPR.entryFile);
-      const baseline = execFileSync("git", ["show", `HEAD:src/${stagedPR.entryFile}`], {
-        cwd: dir,
-        encoding: "utf8",
-      });
-      const diff = execFileSync("git", ["diff", "--", `src/${stagedPR.entryFile}`], {
-        cwd: dir,
-        encoding: "utf8",
-      });
+      const file = join(dir, "src", pr.entryFile);
+      const baseline = execFileSync(
+        "git",
+        ["show", `HEAD:src/${pr.entryFile}`],
+        {
+          cwd: dir,
+          encoding: "utf8",
+        },
+      );
+      const diff = execFileSync(
+        "git",
+        ["diff", "--", `src/${pr.entryFile}`],
+        {
+          cwd: dir,
+          encoding: "utf8",
+        },
+      );
 
-      assert.equal(baseline, stagedPR.before);
-      assert.equal(readFileSync(file, "utf8"), stagedPR.after);
-      assert.match(diff, /module\.exports = 2/);
+      assert.equal(baseline, pr.before);
+      assert.equal(readFileSync(file, "utf8"), pr.after);
+      assert.match(diff, /items\.length/);
       throw new Error("force cleanup");
     }),
     /force cleanup/,
@@ -129,7 +132,7 @@ test("getCodeRabbitReview propagates failures in explicit CLI mode", async () =>
   process.env.CODERABBIT_API_KEY = "test-only";
 
   try {
-    await assert.rejects(getCodeRabbitReview(stagedPR), /exit 1/);
+    await assert.rejects(getCodeRabbitReview(pr), /exit 1/);
   } finally {
     if (previousMode === undefined) delete process.env.CODERABBIT_MODE;
     else process.env.CODERABBIT_MODE = previousMode;
@@ -142,17 +145,17 @@ test("getCodeRabbitReview propagates failures in explicit CLI mode", async () =>
 
 test("readCodeRabbitCache trusts only a review bound to the staged PR content", () => {
   const cache = {
-    [stagedPR.id]: {
+    [pr.id]: {
       verdict: "approve",
       findings: [],
       source: "cache",
       recordedAt: "2026-07-24T10:00:00.000Z",
-      prDigest: digestStagedPR(stagedPR),
+      prDigest: digestStagedPR(pr),
     },
-  } as unknown as Record<string, CodeRabbitReview>;
+  } satisfies Record<string, CodeRabbitReview>;
 
-  assert.equal(readCodeRabbitCache(stagedPR, cache).source, "cache");
+  assert.equal(readCodeRabbitCache(pr, cache).source, "cache");
 
-  const changedPR = { ...stagedPR, after: "module.exports = 3;\n" };
+  const changedPR = { ...pr, after: `${pr.after}\n// changed` };
   assert.equal(readCodeRabbitCache(changedPR, cache).source, "fixture");
 });

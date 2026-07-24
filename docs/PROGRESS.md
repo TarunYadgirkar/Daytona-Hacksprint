@@ -5,22 +5,25 @@ Living status. Update this in the same commit as the work it describes.
 **How to use this file:** move items between sections, do not delete them. At 3am the useful question is usually "did we already try that?", and a deleted line cannot answer it.
 
 Last updated: 2026-07-24. Full pipeline was verified live at `0bd3520`: `smoke -- pr-101`
-returned `evidence_only` + `BLOCK` against Fireworks `kimi-k2p6` and Daytona. Lane A exact-count
-test generation, Lane B saved-run replay, and the evidence/override integrity fixes below are
-implemented and pass typecheck/build; post-change live smoke, unit-test execution, and browser
-interaction still need verification.
+returned `evidence_only` + `BLOCK` against Fireworks `kimi-k2p6` and Daytona. That result predates
+the integration described below; no live post-merge verification is claimed here.
 
 ---
 
-## Now
+## Current state
 
-Lanes assigned in AGENTS.md (A = pipeline/adapters, B = UI/app). Put your name next to what you pick up.
+The merged baseline combines the protected demo work — explicit execution, signed access,
+four-outcome recorded runs, stream-failure recovery, evidence inspection, and recorded-mode
+Playwright coverage — with the hardening work — content-bound CodeRabbit provenance,
+`no_opinion` handling, constrained Daytona sandboxes, pinned Node/npm, strict linting, and
+least-privilege CI. Deterministic post-merge checks belong to this integration task; live smoke is
+deferred to the final task.
 
-| # | Item | Owner | Notes |
-|---|------|-------|-------|
-| 1 | Re-run `npm run smoke -- pr-101` after Lane A changes | Codex | Approval service currently rejects the required elevated `tsx` execution. |
-| 2 | Browser-check saved-run replay after a real completed run | Codex | Production build passes; local server binding needs the same unavailable approval path. |
-| 3 | Authenticate CodeRabbit CLI and record verdicts | Operator | CLI 0.7.0 is installed in `.tools/`; browser OAuth requires operator interaction. |
+Outstanding operator work:
+
+- Restore the live `.env` configuration before the final `npm run smoke -- pr-101`.
+- Authenticate CodeRabbit CLI and refresh the recorded cache.
+- Configure Vercel Deployment Protection and `SAFESHIP_DEMO_ACCESS_CODE`.
 
 ## Done
 
@@ -57,8 +60,34 @@ Lanes assigned in AGENTS.md (A = pipeline/adapters, B = UI/app). Put your name n
   use the same failure-aware request path
 - [x] Verdict rail renders unavailable evidence and fixture opinions distinctly from green signals
 - [x] CopilotKit setup and preflight now reflect its Fireworks-backed runtime; no OpenAI key required
-- [x] CodeRabbit provenance fails closed: live reviews use the selected staged diff, malformed
-  output and live failures propagate, recorded reviews are content-bound, and fixture opinions block
+- [x] Selecting a PR only previews it; an explicit run button shows cost/duration context before paid calls
+- [x] Gate APIs accept only staged IDs, request exactly four tests, enforce signed demo access,
+  and apply a best-effort five-runs-per-ten-minutes server quota
+- [x] Vercel production fails closed when `SAFESHIP_DEMO_ACCESS_CODE` is missing
+- [x] Preflight reports gate mode and requires the demo access code in deployed environments
+- [x] Persistent run failures expose retry, recorded fallback, connection state, stage timeout,
+  copyable run ID, sponsor provenance, and never leave a closed stream marked running
+- [x] Recorded-run gallery includes `evidence_only`, `opinion_only`, `both_caught`, and
+  `both_clear`, with capture time, origin, opinion provenance, evidence availability, and run ID
+- [x] Evidence UI exposes generated code, separate stdout/stderr, verdict explanations, summary
+  counts, an above-the-fold human decision, report copying, responsive overflow, and live regions
+- [x] Recorded test mode streams the production SSE contract without sponsor calls
+- [x] Playwright coverage and GitHub Actions workflow added for interaction, integrity, replay,
+  unavailable evidence, provisional CodeRabbit provenance, and responsive layouts
+- [x] Recorded-mode Playwright coverage exists for 390px, 768px, and desktop, and Copilot chat
+  starts closed so it cannot cover mobile evidence; CI uses a temporary pinned install until the
+  browser-test dependency is committed separately
+- [x] Fixed mobile intrinsic-width overflow from reordered diff panels; browser assertions now
+  identify the overflowing elements if page-level horizontal scroll regresses
+- [x] Verified `/api/copilotkit/info` returns the registered `BuiltInAgent`; browser coverage opens
+  the opt-in chat and rejects runtime connection errors; the client explicitly uses REST transport
+- [x] Node/npm are pinned, strict lint and CI checks are defined, all repository test files are
+  discovered, and CI retains recorded-mode Playwright
+- [x] CodeRabbit provenance fails closed: CLI reviews run on the selected staged diff, malformed
+  or incomplete output propagates, cache entries are content-bound, and fixture opinions block
+- [x] Daytona sandboxes are private, ephemeral, network-blocked, TTL-bounded, command-bounded,
+  and retain automatic deletion if explicit cleanup fails
+- [x] Protected Vercel deployment checklist added in `docs/DEPLOYMENT.md`
 
 ## Next
 
@@ -68,8 +97,8 @@ Lanes assigned in AGENTS.md (A = pipeline/adapters, B = UI/app). Put your name n
 
 ## Blocked
 
-- Current agent-side `tsx` and local-server verification: the execution approval service rejects
-  escalations with an internal schema error. Run smoke/tests/browser checks from a normal terminal.
+- Live pipeline re-verification: `.env` currently has recorded mode enabled and no Fireworks or
+  Daytona keys, so `npm run check:env` correctly fails before a paid run can start.
 - Real CodeRabbit cache capture: local CLI is installed but `coderabbit auth status --agent`
   reports `not_authenticated`, and no `CODERABBIT_API_KEY` is configured. Run
   `.tools/bin/coderabbit auth login`, then `npm run record:coderabbit`, from a normal terminal.
@@ -90,4 +119,5 @@ Keep failed approaches here so nobody retries them.
 | Generated tests are confirmatory, not adversarial | medium | The prompt is the lever. Check `pr-101` actually gets broken before trusting the demo. |
 | CodeRabbit CLI rate limit hit while recording | high | Record early, record once, commit the cache |
 | Venue wifi | high | Everything except Daytona can be shown from a recorded Braintrust trace |
+| Public production link triggers paid runs | medium | App access code fails closed on Vercel production; explicit run button, staged-ID allowlist, fixed count, and quota add defense in depth |
 | Transitive dependency advisories | medium | `npm audit --omit=dev` reports 15 advisories, including 6 high. Current automatic fixes propose incompatible downgrades or have no upstream fix; reassess sponsor SDK updates before production use. |

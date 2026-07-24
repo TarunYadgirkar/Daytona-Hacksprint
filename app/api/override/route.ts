@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { requireDemoAccess } from "@/lib/access";
 import { flushLogger, logHumanOverride } from "@/lib/adapters/braintrust";
 import type { HumanOverride } from "@/lib/types";
 
@@ -13,11 +14,21 @@ const overrideSchema = z.object({
 
 export async function POST(request: Request): Promise<Response> {
   try {
+    const denied = requireDemoAccess(request);
+    if (denied) return denied;
+
     const parsed = overrideSchema.safeParse(await request.json());
     if (!parsed.success) {
       return Response.json(
         { error: "Invalid override", details: parsed.error.flatten().fieldErrors },
         { status: 400 },
+      );
+    }
+
+    if (parsed.data.runId.startsWith("fixture-")) {
+      return Response.json(
+        { error: "Recorded fixture decisions are not written to Braintrust" },
+        { status: 409 },
       );
     }
 

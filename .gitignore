@@ -14,6 +14,9 @@ out/
 # TypeScript and test output
 *.tsbuildinfo
 coverage/
+test-results/
+playwright-report/
+blob-report/
 
 # Logs and operating-system files
 *.log

@@ -15,6 +15,8 @@ const config = [
       "node_modules/**",
       "out/**",
       "next-env.d.ts",
+      "playwright-report/**",
+      "test-results/**",
     ],
   },
   {

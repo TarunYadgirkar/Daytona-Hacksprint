@@ -77,7 +77,7 @@ export default function VerdictRail({
           <span>
             {!review
               ? "not run"
-              : review.source === "fixture"
+              : agreement?.kind === "no_opinion"
                 ? "opinion unavailable"
                 : review.verdict === "block"
                   ? `${criticalCount} critical`

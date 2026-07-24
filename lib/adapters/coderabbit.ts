@@ -25,7 +25,13 @@
 
 import { execFileSync, spawn } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { CodeRabbitFinding, CodeRabbitReview, CodeRabbitVerdict, StagedPR } from "../types";
@@ -56,10 +62,16 @@ export async function withStagedCodeRabbitRepository<T>(
       cwd: dir,
       stdio: "pipe",
     });
-    execFileSync("git", ["config", "user.name", "SafeShip"], { cwd: dir, stdio: "pipe" });
+    execFileSync("git", ["config", "user.name", "SafeShip"], {
+      cwd: dir,
+      stdio: "pipe",
+    });
     writeFileSync(file, pr.before);
     execFileSync("git", ["add", "."], { cwd: dir, stdio: "pipe" });
-    execFileSync("git", ["commit", "-q", "-m", "baseline"], { cwd: dir, stdio: "pipe" });
+    execFileSync("git", ["commit", "-q", "-m", "baseline"], {
+      cwd: dir,
+      stdio: "pipe",
+    });
     writeFileSync(file, pr.after);
     return await operation(dir);
   } finally {
@@ -119,7 +131,9 @@ export function readCodeRabbitCache(
  * change present as tracked edits.
  */
 export async function runCodeRabbitCLI(pr: StagedPR): Promise<CodeRabbitReview> {
-  return withStagedCodeRabbitRepository(pr, (cwd) => runCodeRabbitCLIInRepository(cwd));
+  return withStagedCodeRabbitRepository(pr, (cwd) =>
+    runCodeRabbitCLIInRepository(cwd),
+  );
 }
 
 async function runCodeRabbitCLIInRepository(cwd: string): Promise<CodeRabbitReview> {
@@ -269,7 +283,7 @@ export function parseAgentOutput(stdout: string): CodeRabbitReview {
             : typeof c.startLine === "number"
               ? c.startLine
               : undefined,
-        title: firstString(c.title, c.summary, c.comment) ?? "Finding",
+        title,
         body: firstString(c.body, c.description, c.codegenInstructions, c.comment),
       });
     }
@@ -316,7 +330,9 @@ function findAgentFailure(stdout: string): string | null {
   return null;
 }
 
-function normalizeSeverity(input: unknown): CodeRabbitFinding["severity"] | null {
+function normalizeSeverity(
+  input: unknown,
+): CodeRabbitFinding["severity"] | null {
   const s = String(input ?? "").toLowerCase();
   if (s.includes("critical")) return "critical";
   if (s.includes("major") || s.includes("warning")) return "major";

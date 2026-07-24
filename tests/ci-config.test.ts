@@ -15,7 +15,7 @@ test("defines the local verification command", () => {
   );
 });
 
-test("runs every verification gate in CI", () => {
+test("runs every verification gate and recorded browser suite in CI", () => {
   assert.equal(existsSync(workflowPath), true, "CI workflow must exist");
   const workflow = readFileSync(workflowPath, "utf8");
   for (const fragment of [
@@ -25,6 +25,10 @@ test("runs every verification gate in CI", () => {
     "run: npm run typecheck",
     "run: npm test",
     "run: npm run build",
+    "npm install --no-save --package-lock=false @playwright/test@1.61.1",
+    "npx playwright install --with-deps chromium",
+    "run: npm run test:e2e",
+    "SAFESHIP_GATE_MODE: recorded",
   ]) {
     assert.match(
       workflow,

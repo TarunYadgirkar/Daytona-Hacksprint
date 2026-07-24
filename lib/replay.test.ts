@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parseReplay, serializeReplay } from "./replay";
+import {
+  createRunRecord,
+  mergeRunRecords,
+  parseRunLibrary,
+  serializeRunLibrary,
+} from "./replay";
 import type { GateResult } from "./types";
 
 const result: GateResult = {
@@ -57,13 +62,41 @@ const result: GateResult = {
   },
 };
 
-test("serializeReplay round-trips a completed gate result", () => {
+test("run library round-trips a validated completed gate result", () => {
   const savedAt = "2026-07-24T10:01:00.000Z";
-  assert.deepEqual(parseReplay(serializeReplay(result, savedAt)), { savedAt, result });
+  const record = createRunRecord(result, {
+    capturedAt: savedAt,
+    label: "Evidence only",
+    origin: "live",
+    braintrust: "configured",
+  });
+  assert.deepEqual(parseRunLibrary(serializeRunLibrary([record])), [record]);
 });
 
-test("parseReplay rejects malformed or incomplete state", () => {
-  assert.equal(parseReplay(null), null);
-  assert.equal(parseReplay("not json"), null);
-  assert.equal(parseReplay(JSON.stringify({ version: 1, result: { runId: "partial" } })), null);
+test("parseRunLibrary rejects malformed or incomplete state", () => {
+  assert.deepEqual(parseRunLibrary(null), []);
+  assert.deepEqual(parseRunLibrary("not json"), []);
+  assert.deepEqual(
+    parseRunLibrary(JSON.stringify({ version: 2, runs: [{ id: "partial" }] })),
+    [],
+  );
+});
+
+test("parseRunLibrary migrates the version-one last-run snapshot", () => {
+  const savedAt = "2026-07-24T10:01:00.000Z";
+  const [record] = parseRunLibrary(
+    JSON.stringify({ version: 1, savedAt, result }),
+  );
+
+  assert.equal(record?.capturedAt, savedAt);
+  assert.equal(record?.result.runId, result.runId);
+  assert.equal(record?.origin, "live");
+});
+
+test("mergeRunRecords prefers the newest copy and removes duplicate ids", () => {
+  const record = createRunRecord(result, {
+    origin: "live",
+    braintrust: "configured",
+  });
+  assert.deepEqual(mergeRunRecords([record], [record]), [record]);
 });
