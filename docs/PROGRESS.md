@@ -104,6 +104,8 @@ Outstanding operator work:
   standalone JavaScript demo repository and pull request
 - [x] Fast sponsor path verified: Fireworks Kimi K2.6 Turbo with Priority returned successfully,
   and a four-test Daytona `daytona-large` suite completed in 1.95 seconds before clean deletion
+- [x] Fireworks structured output uses enforced JSON Schema with reasoning disabled; the live
+  claim-and-four-test generation path completed in 11.2 seconds
 
 ## Next
 

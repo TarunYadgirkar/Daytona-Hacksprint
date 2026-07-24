@@ -23,6 +23,13 @@ import type { AdversarialTest, ExtractedClaim, StagedPR } from "../types";
 const MAX_TEST_COUNT = 12;
 const MAX_GENERATION_ATTEMPTS = 3;
 
+const claimSchema = z.object({
+  statement: z.string().trim().min(1),
+  targetBehavior: z.string().trim().min(1),
+  impliedInputs: z.array(z.string()),
+  confidence: z.number().min(0).max(1),
+});
+
 function client(): OpenAI {
   const apiKey = process.env.FIREWORKS_API_KEY;
   if (!apiKey) throw new Error("FIREWORKS_API_KEY is not set");
@@ -86,8 +93,25 @@ export async function extractClaim(pr: StagedPR): Promise<ExtractedClaim> {
     model: model(),
     service_tier: serviceTier(),
     max_tokens: 512,
+    reasoning_effort: "none",
     temperature: 0.1,
-    response_format: { type: "json_object" },
+    response_format: {
+      type: "json_schema",
+      json_schema: {
+        name: "extracted_claim",
+        schema: {
+          type: "object",
+          properties: {
+            statement: { type: "string" },
+            targetBehavior: { type: "string" },
+            impliedInputs: { type: "array", items: { type: "string" } },
+            confidence: { type: "number", minimum: 0, maximum: 1 },
+          },
+          required: ["statement", "targetBehavior", "impliedInputs", "confidence"],
+          additionalProperties: false,
+        },
+      },
+    },
     messages: [
       { role: "system", content: CLAIM_SYSTEM },
       {
@@ -111,13 +135,12 @@ ${pr.after}
     ],
   });
 
-  const claim = parseJSON<ExtractedClaim>(res.choices[0]?.message?.content ?? "", "claim extraction");
-  return {
-    statement: claim.statement ?? "No claim could be extracted.",
-    targetBehavior: claim.targetBehavior ?? "",
-    impliedInputs: Array.isArray(claim.impliedInputs) ? claim.impliedInputs : [],
-    confidence: typeof claim.confidence === "number" ? claim.confidence : 0,
-  };
+  return claimSchema.parse(
+    parseJSON<ExtractedClaim>(
+      res.choices[0]?.message?.content ?? "",
+      "claim extraction",
+    ),
+  );
 }
 
 const TESTS_SYSTEM = `You are an adversarial test author. You are given a code change and the behavioural claim it makes. Your job is to BREAK that claim, not to confirm it.
@@ -219,8 +242,36 @@ async function requestTestDrafts(
     model: model(),
     service_tier: serviceTier(),
     max_tokens: 4096,
+    reasoning_effort: "none",
     temperature: 0.4, // some variety across attempts; the claim itself stays at 0.1
-    response_format: { type: "json_object" },
+    response_format: {
+      type: "json_schema",
+      json_schema: {
+        name: "adversarial_tests",
+        schema: {
+          type: "object",
+          properties: {
+            tests: {
+              type: "array",
+              minItems: missing,
+              maxItems: missing,
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  hypothesis: { type: "string" },
+                  code: { type: "string" },
+                },
+                required: ["name", "hypothesis", "code"],
+                additionalProperties: false,
+              },
+            },
+          },
+          required: ["tests"],
+          additionalProperties: false,
+        },
+      },
+    },
     messages: [
       { role: "system", content: TESTS_SYSTEM },
       {
