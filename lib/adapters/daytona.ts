@@ -27,7 +27,7 @@ import type {
   TestVerdict,
 } from "../types";
 
-const ROOT = "/home/daytona/safeship";
+const ROOT = "/home/daytona/popper";
 
 export const DAYTONA_SANDBOX_POLICY = {
   createParams: {

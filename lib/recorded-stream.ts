@@ -5,7 +5,7 @@ import type { StageName } from "./types";
 const now = () => new Date().toISOString();
 
 async function pause(): Promise<void> {
-  const delay = Number(process.env.SAFESHIP_RECORDED_DELAY_MS ?? "20");
+  const delay = Number(process.env.POPPER_RECORDED_DELAY_MS ?? "20");
   if (!Number.isFinite(delay) || delay <= 0) return;
   await new Promise((resolve) => setTimeout(resolve, Math.min(delay, 1000)));
 }

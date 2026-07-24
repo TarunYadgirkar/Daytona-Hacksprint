@@ -12,13 +12,13 @@ Three minutes. The audience does not need the architecture; they need one moment
 - [ ] Braintrust project open in a second tab, sorted by `methods_agree` ascending
 - [ ] One sandbox already created once today, so the first call is warm
 - [ ] Recorded-runs gallery loads all four outcomes on a fresh browser
-- [ ] Production asks for the SafeShip demo code; previews use Vercel Authentication
+- [ ] Production opens Popper directly; previews may use Vercel Authentication
 
 ## The run
 
 **Open on the problem, not the product.** "An agent opened this PR. It says it fixes a checkout crash on an empty cart. Every review tool we have will now read that diff and tell us whether it looks right." Pause on the diff. The guard clause looks correct, and it is — for the case it handles.
 
-**Say what SafeShip does differently.** "We don't ask whether it looks right. We extract the promise the PR is making, and then we try to break it."
+**Say what Popper does differently.** "We don't ask whether it looks right. We extract the promise the PR is making, and then we try to break it."
 
 **Select `pr-101`.** Pause on the preview: nothing has run yet. Point out the duration and live
 sandbox notice, then press **Run adversarial gate**. Let the claim appear. Read it aloud — it is
@@ -28,7 +28,7 @@ one falsifiable sentence, which is the point. Let the tests generate and stream 
 
 **Then the rail splits.** This is the moment. "CodeRabbit approved this change. It is a good tool and it read the diff correctly — the guard clause *is* correct. But reading and running are different, and only one of them found this."
 
-**Land it.** "So SafeShip blocks. Every step of that is logged" — switch to Braintrust — "and a human still makes the call." Click block, type the reason, show it land.
+**Land it.** "So Popper blocks. Every step of that is logged" — switch to Braintrust — "and a human still makes the call." Click block, type the reason, show it land.
 
 ## If you have another minute
 
@@ -42,7 +42,7 @@ That second case is what separates this from a tool that just argues with CodeRa
 
 **"What if the model writes bad tests?"** Then they come back inconclusive or errored and we show
 that rather than counting them as passes. If the requested suite cannot produce conclusive
-evidence, SafeShip blocks. Look at the verdict tags — we grade our own evidence.
+evidence, Popper blocks. Look at the verdict tags — we grade our own evidence.
 
 **"Why CodeRabbit if you're beating it?"** We are not. `pr-103` is the case where CodeRabbit catches something we structurally cannot. The product is the disagreement, not the winner.
 
@@ -53,7 +53,7 @@ evidence, SafeShip blocks. Look at the verdict tags — we grade our own evidenc
 ## If something breaks
 
 - Sandbox slow or failing → the gate blocks on missing evidence by design; use **Load recorded run**.
-- Fireworks returns garbage → SafeShip retries missing tests. If generation still stops, use the recorded gallery.
+- Fireworks returns garbage → Popper retries missing tests. If generation still stops, use the recorded gallery.
 - Wifi gone → use the recorded gallery; validated snapshots do not call the model, sandbox, review CLI, or Braintrust.
 
 Do not debug on stage. Narrate the fallback and keep moving.

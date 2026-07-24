@@ -58,7 +58,7 @@ test("formatEvidenceReport preserves the copyable evidence summary", () => {
   assert.equal(
     report,
     [
-      "SafeShip evidence report",
+      "Popper evidence report",
       "Run: run-123",
       "Claim: Null carts return zero.",
       "",

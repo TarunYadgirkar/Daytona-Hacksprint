@@ -9,7 +9,7 @@
 
 import { encodeSSE, type GateEvent } from "@/lib/events";
 import { flushLogger } from "@/lib/adapters/braintrust";
-import { consumeGateQuota, requireDemoAccess } from "@/lib/access";
+import { consumeGateQuota } from "@/lib/quota";
 import { getPR } from "@/lib/fixtures/prs";
 import { getRecordedRun } from "@/lib/fixtures/recorded-runs";
 import { GateStageError, runGate } from "@/lib/pipeline";
@@ -22,15 +22,9 @@ export const maxDuration = 300; // sandbox runs are slow; do not let the platfor
 const DEMO_TEST_COUNT = 4;
 
 export async function GET(request: Request) {
-  const denied = requireDemoAccess(request);
-  if (denied) {
-    await flushLogger();
-    return denied;
-  }
-
   const prId = new URL(request.url).searchParams.get("pr");
   const pr = prId ? getPR(prId) : undefined;
-  const recordedMode = process.env.SAFESHIP_GATE_MODE === "recorded";
+  const recordedMode = process.env.POPPER_GATE_MODE === "recorded";
   const recordedRun = prId && recordedMode ? getRecordedRun(prId) : undefined;
 
   if (!pr) {

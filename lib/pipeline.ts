@@ -1,5 +1,5 @@
 /**
- * The SafeShip gate.
+ * The Popper gate.
  *
  *   claim -> tests -> sandbox -> coderabbit -> compare -> decision
  *
@@ -72,12 +72,12 @@ export function compare(sandbox: SandboxReport, review: CodeRabbitReview): Agree
 
   // One real counterexample is enough to falsify the claim, even if another
   // generated harness errored. Errors only prevent a positive recommendation:
-  // SafeShip must never turn incomplete execution into evidence that a fix works.
+  // Popper must never turn incomplete execution into evidence that a fix works.
   if (!evidenceObjects && errored.length > 0) {
     return {
       agree: false,
       kind: "no_evidence",
-      summary: `${errored.length} adversarial ${errored.length === 1 ? "test did" : "tests did"} not execute cleanly, so the requested suite is incomplete. SafeShip cannot compare incomplete evidence with CodeRabbit's opinion.`,
+      summary: `${errored.length} adversarial ${errored.length === 1 ? "test did" : "tests did"} not execute cleanly, so the requested suite is incomplete. Popper cannot compare incomplete evidence with CodeRabbit's opinion.`,
     };
   }
 
@@ -97,7 +97,7 @@ export function compare(sandbox: SandboxReport, review: CodeRabbitReview): Agree
       agree: false,
       kind: "no_opinion",
       summary:
-        "CodeRabbit's independent opinion is unavailable because this review is fixture data. SafeShip will not treat a placeholder verdict as a second review.",
+        "CodeRabbit's independent opinion is unavailable because this review is fixture data. Popper will not treat a placeholder verdict as a second review.",
     };
   }
 
@@ -147,7 +147,7 @@ export function decide(
   if (sandbox.infraError) {
     return {
       call: "block",
-      rationale: `No evidence available: the sandbox failed with "${sandbox.infraError}". SafeShip blocks when it cannot verify rather than assuming the claim holds.`,
+      rationale: `No evidence available: the sandbox failed with "${sandbox.infraError}". Popper blocks when it cannot verify rather than assuming the claim holds.`,
       requiresHuman: true,
     };
   }
@@ -164,7 +164,7 @@ export function decide(
   if (agreement.kind === "no_evidence") {
     return {
       call: "block",
-      rationale: `Verification incomplete: ${agreement.summary} SafeShip blocks when it cannot support the claim with conclusive execution evidence.`,
+      rationale: `Verification incomplete: ${agreement.summary} Popper blocks when it cannot support the claim with conclusive execution evidence.`,
       requiresHuman: true,
     };
   }
@@ -172,7 +172,7 @@ export function decide(
   if (agreement.kind === "no_opinion") {
     return {
       call: "block",
-      rationale: `Independent review unavailable: ${agreement.summary} SafeShip blocks when it has no trusted opinion to compare with execution evidence.`,
+      rationale: `Independent review unavailable: ${agreement.summary} Popper blocks when it has no trusted opinion to compare with execution evidence.`,
       requiresHuman: true,
     };
   }

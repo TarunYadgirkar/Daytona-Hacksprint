@@ -1,8 +1,8 @@
-# SafeShip Forensic Control Room Implementation Plan
+# Popper Forensic Control Room Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use $subagent-driven-development (recommended) or $executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Deliver a judge-facing forensic control room that preserves SafeShip's protected live pipeline, recorded fallback, hardened trust boundaries, and human-owned decision model.
+**Goal:** Deliver a judge-facing forensic control room that preserves Popper's protected live pipeline, recorded fallback, hardened trust boundaries, and human-owned decision model.
 
 **Architecture:** Merge the protected-demo work from `origin/main` into the hardened integration branch first. Keep `PipelineView` as the sole owner of SSE-derived state, extract focused presentational components around that state, and validate behavior through recorded-mode Playwright tests before each UI change. Agreement and gate decisions continue to arrive precomputed from `lib/pipeline.ts`.
 
@@ -14,7 +14,7 @@
 - Preserve every hardening commit through `edd1a29` and every protected-demo commit through `b26914d`.
 - TypeScript remains strict; do not add `any`.
 - Components render pipeline decisions; they never calculate agreement or gate calls.
-- SafeShip never merges automatically; `GateDecision.requiresHuman` remains the literal `true`.
+- Popper never merges automatically; `GateDecision.requiresHuman` remains the literal `true`.
 - Infrastructure failure is unavailable evidence, never a failed test or positive signal.
 - Selecting a PR never starts `/api/gate`; a separate explicit action starts paid work.
 - `CODERABBIT_MODE=cache` remains the Preview and Production setting.
@@ -58,7 +58,7 @@
 - `components/TestTable.tsx` — evidence semantics and responsive disclosures.
 - `components/VerdictRail.tsx` — explicit method labels and signature split treatment.
 - `components/OverrideBar.tsx` — semantic success status.
-- `e2e/safeship.spec.ts` — narrative, fallback, provenance, and responsive regression coverage.
+- `e2e/popper.spec.ts` — narrative, fallback, provenance, and responsive regression coverage.
 - `lib/replay.ts` and `lib/replay.test.ts` — merge run-library behavior with trust-hardening schema.
 - `package.json` and `package-lock.json` — unified scripts and pinned browser-test dependencies.
 - `next.config.mjs` — standard production security headers.
@@ -82,7 +82,7 @@
 - Accept from `origin/main`: `app/api/access/route.ts`
 - Accept from `origin/main`: `components/AccessBoundary.tsx`
 - Accept from `origin/main`: `components/RunGallery.tsx`
-- Accept from `origin/main`: `e2e/safeship.spec.ts`
+- Accept from `origin/main`: `e2e/popper.spec.ts`
 - Accept from `origin/main`: `lib/access.ts`
 - Accept from `origin/main`: `lib/access.test.ts`
 - Accept from `origin/main`: `lib/fixtures/recorded-runs.ts`
@@ -155,8 +155,8 @@ agreement: z.object({
 Keep these public exports unchanged:
 
 ```ts
-export const REPLAY_STORAGE_KEY = "safeship:run-library:v2";
-export const LEGACY_REPLAY_STORAGE_KEY = "safeship:last-completed-run:v1";
+export const REPLAY_STORAGE_KEY = "popper:run-library:v2";
+export const LEGACY_REPLAY_STORAGE_KEY = "popper:last-completed-run:v1";
 export type RunOrigin = "live" | "recorded_fixture";
 export type BraintrustProvenance = "configured" | "not_configured" | "not_run";
 ```
@@ -247,7 +247,7 @@ git push origin integration/github-main-lane-c
 - Modify: `.github/workflows/ci.yml`
 - Modify: `components/RunGallery.tsx`
 - Modify: `components/PipelineView.tsx`
-- Modify: `e2e/safeship.spec.ts`
+- Modify: `e2e/popper.spec.ts`
 
 **Interfaces:**
 
@@ -266,19 +266,19 @@ Then remove the temporary `npm install --no-save` step from CI. Keep:
 - run: npx playwright install --with-deps chromium
 - run: npm run test:e2e
   env:
-    SAFESHIP_GATE_MODE: recorded
-    SAFESHIP_RECORDED_DELAY_MS: "5"
+    POPPER_GATE_MODE: recorded
+    POPPER_RECORDED_DELAY_MS: "5"
 ```
 
 - [ ] **Step 2: Write the failing active-run fallback test**
 
-Add this test to `e2e/safeship.spec.ts`:
+Add this test to `e2e/popper.spec.ts`:
 
 ```ts
 test("a recorded case can interrupt an active live run", async ({ page }) => {
   await page.addInitScript(() => {
-    const state = window as Window & { __safeShipSourceClosed?: boolean };
-    state.__safeShipSourceClosed = false;
+    const state = window as Window & { __popperSourceClosed?: boolean };
+    state.__popperSourceClosed = false;
 
     class HangingEventSource {
       onopen: ((event: Event) => void) | null = null;
@@ -290,7 +290,7 @@ test("a recorded case can interrupt an active live run", async ({ page }) => {
       }
 
       close() {
-        state.__safeShipSourceClosed = true;
+        state.__popperSourceClosed = true;
       }
     }
 
@@ -313,7 +313,7 @@ test("a recorded case can interrupt an active live run", async ({ page }) => {
   await expect
     .poll(() =>
       page.evaluate(
-        () => (window as Window & { __safeShipSourceClosed?: boolean }).__safeShipSourceClosed,
+        () => (window as Window & { __popperSourceClosed?: boolean }).__popperSourceClosed,
       ),
     )
     .toBe(true);
@@ -323,7 +323,7 @@ test("a recorded case can interrupt an active live run", async ({ page }) => {
 - [ ] **Step 3: Run the test and verify the expected failure**
 
 ```bash
-npx playwright test e2e/safeship.spec.ts --grep "interrupt an active"
+npx playwright test e2e/popper.spec.ts --grep "interrupt an active"
 ```
 
 Expected: FAIL because recorded-run buttons are disabled and do not expose the interrupt label.
@@ -353,7 +353,7 @@ Do not add new cancellation state. `showCompletedResult` already closes `sourceR
 - [ ] **Step 5: Run the focused and full browser tests**
 
 ```bash
-npx playwright test e2e/safeship.spec.ts --grep "interrupt an active"
+npx playwright test e2e/popper.spec.ts --grep "interrupt an active"
 npm run test:e2e
 ```
 
@@ -362,7 +362,7 @@ Expected: the focused test passes; the full recorded-mode suite has zero failure
 - [ ] **Step 6: Commit and push**
 
 ```bash
-git add package.json package-lock.json .github/workflows/ci.yml components/RunGallery.tsx components/PipelineView.tsx e2e/safeship.spec.ts
+git add package.json package-lock.json .github/workflows/ci.yml components/RunGallery.tsx components/PipelineView.tsx e2e/popper.spec.ts
 git commit -m "fix: keep recorded fallback interruptible"
 git push origin integration/github-main-lane-c
 ```
@@ -377,7 +377,7 @@ git push origin integration/github-main-lane-c
 - Modify: `app/layout.tsx`
 - Modify: `app/page.tsx`
 - Modify: `app/globals.css`
-- Modify: `e2e/safeship.spec.ts`
+- Modify: `e2e/popper.spec.ts`
 
 **Interfaces:**
 
@@ -407,10 +407,10 @@ test("the first viewport explains the method and sponsor roles", async ({ page }
 - [ ] **Step 2: Verify it fails for the old masthead**
 
 ```bash
-npx playwright test e2e/safeship.spec.ts --grep "first viewport"
+npx playwright test e2e/popper.spec.ts --grep "first viewport"
 ```
 
-Expected: FAIL because the current `h1` is only `SafeShip` and the method trace does not exist.
+Expected: FAIL because the current `h1` is only `Popper` and the method trace does not exist.
 
 - [ ] **Step 3: Create `MissionHeader`**
 
@@ -427,7 +427,7 @@ export default function MissionHeader() {
   return (
     <header className="mission-header">
       <div className="mission-brand">
-        <span className="wordmark">SafeShip</span>
+        <span className="wordmark">Popper</span>
         <span className="mission-index">Adversarial verification / 01</span>
       </div>
       <div className="mission-copy">
@@ -441,7 +441,7 @@ export default function MissionHeader() {
           Compare proof with review. Leave the call to a human.
         </p>
       </div>
-      <ol className="method-trace" aria-label="SafeShip integration trace">
+      <ol className="method-trace" aria-label="Popper integration trace">
         {METHODS.map(([name, role], index) => (
           <li key={name}>
             <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
@@ -499,7 +499,7 @@ export default function Page() {
         <PipelineView
           prs={STAGED_PRS}
           gateMode={
-            process.env.SAFESHIP_GATE_MODE === "recorded"
+            process.env.POPPER_GATE_MODE === "recorded"
               ? "recorded_fixture"
               : "live"
           }
@@ -639,10 +639,10 @@ Add:
 - [ ] **Step 7: Verify, commit, and push**
 
 ```bash
-npx playwright test e2e/safeship.spec.ts --grep "first viewport"
+npx playwright test e2e/popper.spec.ts --grep "first viewport"
 npm run lint
 npm run typecheck
-git add app components/MissionHeader.tsx e2e/safeship.spec.ts
+git add app components/MissionHeader.tsx e2e/popper.spec.ts
 git commit -m "feat: add forensic mission header"
 git push origin integration/github-main-lane-c
 ```
@@ -656,7 +656,7 @@ git push origin integration/github-main-lane-c
 - Create: `components/CaseSelector.tsx`
 - Modify: `components/PipelineView.tsx`
 - Modify: `app/globals.css`
-- Modify: `e2e/safeship.spec.ts`
+- Modify: `e2e/popper.spec.ts`
 
 **Interfaces:**
 
@@ -688,7 +688,7 @@ await expect(page.getByText("Nothing runs until you start the gate.")).toBeVisib
 - [ ] **Step 2: Verify the new case-file assertion fails**
 
 ```bash
-npx playwright test e2e/safeship.spec.ts --grep "previews it without starting"
+npx playwright test e2e/popper.spec.ts --grep "previews it without starting"
 ```
 
 Expected: FAIL because the extracted case-file heading and safety copy do not exist.
@@ -878,10 +878,10 @@ Remove the old PR buttons, `run-control`, and separate diff panel. Keep `activeP
 - [ ] **Step 6: Verify, commit, and push**
 
 ```bash
-npx playwright test e2e/safeship.spec.ts --grep "previews it without starting"
+npx playwright test e2e/popper.spec.ts --grep "previews it without starting"
 npm run lint
 npm run typecheck
-git add components/CaseSelector.tsx components/PipelineView.tsx app/globals.css e2e/safeship.spec.ts
+git add components/CaseSelector.tsx components/PipelineView.tsx app/globals.css e2e/popper.spec.ts
 git commit -m "refactor: extract staged case selector"
 git push origin integration/github-main-lane-c
 ```
@@ -896,7 +896,7 @@ git push origin integration/github-main-lane-c
 - Modify: `components/PipelineView.tsx`
 - Modify: `components/StageList.tsx`
 - Modify: `app/globals.css`
-- Modify: `e2e/safeship.spec.ts`
+- Modify: `e2e/popper.spec.ts`
 
 **Interfaces:**
 
@@ -933,7 +933,7 @@ await expect(page.getByRole("status", { name: "Pipeline status updates" })).toBe
 - [ ] **Step 2: Verify the assertion fails**
 
 ```bash
-npx playwright test e2e/safeship.spec.ts --grep "completed evidence-only"
+npx playwright test e2e/popper.spec.ts --grep "completed evidence-only"
 ```
 
 Expected: FAIL because stage state is currently represented only by an `aria-hidden` symbol and `data-state`.
@@ -1151,11 +1151,11 @@ Update the grid:
 - [ ] **Step 6: Verify, commit, and push**
 
 ```bash
-npx playwright test e2e/safeship.spec.ts --grep "completed evidence-only"
-npx playwright test e2e/safeship.spec.ts --grep "interrupt an active"
+npx playwright test e2e/popper.spec.ts --grep "completed evidence-only"
+npx playwright test e2e/popper.spec.ts --grep "interrupt an active"
 npm run lint
 npm run typecheck
-git add components/RunStatus.tsx components/PipelineView.tsx components/StageList.tsx app/globals.css e2e/safeship.spec.ts
+git add components/RunStatus.tsx components/PipelineView.tsx components/StageList.tsx app/globals.css e2e/popper.spec.ts
 git commit -m "refactor: extract run status instrument"
 git push origin integration/github-main-lane-c
 ```
@@ -1173,7 +1173,7 @@ git push origin integration/github-main-lane-c
 - Modify: `components/TestTable.tsx`
 - Modify: `components/OverrideBar.tsx`
 - Modify: `app/globals.css`
-- Modify: `e2e/safeship.spec.ts`
+- Modify: `e2e/popper.spec.ts`
 
 **Interfaces:**
 
@@ -1203,7 +1203,7 @@ test("completed evidence follows the claim-to-human-decision story", async ({ pa
 - [ ] **Step 2: Verify the test fails**
 
 ```bash
-npx playwright test e2e/safeship.spec.ts --grep "claim-to-human-decision"
+npx playwright test e2e/popper.spec.ts --grep "claim-to-human-decision"
 ```
 
 Expected: FAIL because the current sections are inline and use different labels.
@@ -1474,11 +1474,11 @@ wc -l components/PipelineView.tsx
 - [ ] **Step 7: Verify, commit, and push**
 
 ```bash
-npx playwright test e2e/safeship.spec.ts --grep "claim-to-human-decision"
-npx playwright test e2e/safeship.spec.ts --grep "failed override"
+npx playwright test e2e/popper.spec.ts --grep "claim-to-human-decision"
+npx playwright test e2e/popper.spec.ts --grep "failed override"
 npm run lint
 npm run typecheck
-git add components app/globals.css e2e/safeship.spec.ts
+git add components app/globals.css e2e/popper.spec.ts
 git commit -m "refactor: split evidence presentation"
 git push origin integration/github-main-lane-c
 ```
@@ -1492,7 +1492,7 @@ git push origin integration/github-main-lane-c
 - Modify: `app/globals.css`
 - Modify: `components/RunGallery.tsx`
 - Modify: `components/VerdictRail.tsx`
-- Modify: `e2e/safeship.spec.ts`
+- Modify: `e2e/popper.spec.ts`
 
 **Interfaces:**
 
@@ -1529,7 +1529,7 @@ test("the forensic control room exposes its signature visual tokens", async ({ p
 - [ ] **Step 2: Verify the contract fails before the CSS rewrite**
 
 ```bash
-npx playwright test e2e/safeship.spec.ts --grep "signature visual tokens"
+npx playwright test e2e/popper.spec.ts --grep "signature visual tokens"
 ```
 
 Expected: FAIL until every exact token is active.
@@ -1707,17 +1707,17 @@ Retain the existing `.tests-scroll` internal overflow and `min-width: 760px` tab
 - [ ] **Step 6: Verify all viewports and capture review screenshots**
 
 ```bash
-npx playwright test e2e/safeship.spec.ts --grep "signature visual tokens"
-npx playwright test e2e/safeship.spec.ts --grep "recorded evidence remains usable"
+npx playwright test e2e/popper.spec.ts --grep "signature visual tokens"
+npx playwright test e2e/popper.spec.ts --grep "recorded evidence remains usable"
 npm run test:e2e
 ```
 
-Capture `/tmp/safeship-mobile.png`, `/tmp/safeship-tablet.png`, and `/tmp/safeship-desktop.png` through Playwright at 390, 768, and 1440 pixels. Inspect all three for clipped text, accidental page overflow, weak hierarchy, and inaccessible evidence.
+Capture `/tmp/popper-mobile.png`, `/tmp/popper-tablet.png`, and `/tmp/popper-desktop.png` through Playwright at 390, 768, and 1440 pixels. Inspect all three for clipped text, accidental page overflow, weak hierarchy, and inaccessible evidence.
 
 - [ ] **Step 7: Commit and push**
 
 ```bash
-git add app/globals.css components/RunGallery.tsx components/VerdictRail.tsx e2e/safeship.spec.ts
+git add app/globals.css components/RunGallery.tsx components/VerdictRail.tsx e2e/popper.spec.ts
 git commit -m "feat: apply forensic control room design"
 git push origin integration/github-main-lane-c
 ```
@@ -1732,7 +1732,7 @@ git push origin integration/github-main-lane-c
 - Modify: `components/AccessBoundary.tsx`
 - Modify: `components/RunGallery.tsx`
 - Modify: `app/globals.css`
-- Modify: `e2e/safeship.spec.ts`
+- Modify: `e2e/popper.spec.ts`
 
 **Interfaces:**
 
@@ -1770,7 +1770,7 @@ test("the protected access boundary has no serious axe violations", async ({ pag
     });
   });
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Enter the SafeShip demo code" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Enter the Popper demo code" })).toBeVisible();
   expect(await seriousViolations(page, ".access-shell")).toEqual([]);
 });
 
@@ -1810,7 +1810,7 @@ test("an incorrect access code stays locked with an actionable error", async ({ 
   });
   await page.goto("/");
   await page.getByLabel("Demo access code").fill("incorrect-code");
-  await page.getByRole("button", { name: "Unlock SafeShip" }).click();
+  await page.getByRole("button", { name: "Unlock Popper" }).click();
   await expect(page.getByRole("alert")).toHaveText("Incorrect demo access code");
   await expect(page.getByText("Agent-authored pull requests")).toHaveCount(0);
 });
@@ -1837,7 +1837,7 @@ test("a correct access code mounts the control room", async ({ page }) => {
   });
   await page.goto("/");
   await page.getByLabel("Demo access code").fill("accepted-code");
-  await page.getByRole("button", { name: "Unlock SafeShip" }).click();
+  await page.getByRole("button", { name: "Unlock Popper" }).click();
   await expect(page.getByText("Agent-authored pull requests")).toBeVisible();
 });
 ```
@@ -1859,7 +1859,7 @@ Use this structure inside the existing state logic:
   <section className="access-panel" aria-labelledby="access-title">
     <span className="access-index">Protected integration boundary / 00</span>
     <p className="eyebrow">Live sponsor calls are locked</p>
-    <h2 id="access-title">Enter the SafeShip demo code</h2>
+    <h2 id="access-title">Enter the Popper demo code</h2>
     <p>
       A live gate generates attacks with Fireworks and creates a Daytona sandbox.
       Unlocking requires one explicit operator code.
@@ -1887,7 +1887,7 @@ Use this structure inside the existing state logic:
           type="submit"
           disabled={submitting || code.trim().length === 0}
         >
-          {submitting ? "Checking…" : "Unlock SafeShip"}
+          {submitting ? "Checking…" : "Unlock Popper"}
         </button>
         {state.error && (
           <p className="run-error-message" role="alert">
@@ -1985,7 +1985,7 @@ expect(duration).toBe("0.00001s");
 });
 ```
 
-Add to `e2e/safeship.spec.ts`:
+Add to `e2e/popper.spec.ts`:
 
 ```ts
 for (const expected of [
@@ -2223,7 +2223,7 @@ export default async function Page() {
         <PipelineView
           prs={STAGED_PRS}
           gateMode={
-            process.env.SAFESHIP_GATE_MODE === "recorded"
+            process.env.POPPER_GATE_MODE === "recorded"
               ? "recorded_fixture"
               : "live"
           }
@@ -2280,7 +2280,7 @@ const required = [
   "DAYTONA_API_KEY",
   "BRAINTRUST_API_KEY",
   "BRAINTRUST_PROJECT",
-  "SAFESHIP_DEMO_ACCESS_CODE",
+  "POPPER_DEMO_ACCESS_CODE",
   "CODERABBIT_MODE",
   "COPILOTKIT_MODEL",
 ] as const;
@@ -2289,7 +2289,7 @@ test("Vercel handoff names every required live variable without secrets", () => 
   const handoff = readFileSync("docs/VERCEL_HANDOFF.md", "utf8");
   for (const name of required) assert.match(handoff, new RegExp(`\\b${name}\\b`));
   assert.doesNotMatch(handoff, /\b(?:fw_|dtn_|cr-|sk-)[A-Za-z0-9_-]{16,}\b/);
-  assert.doesNotMatch(handoff, /SAFESHIP_GATE_MODE=recorded/);
+  assert.doesNotMatch(handoff, /POPPER_GATE_MODE=recorded/);
 });
 
 test("the public Vercel template omits local-only credentials", () => {
@@ -2320,15 +2320,15 @@ The document must contain this table:
 | `FIREWORKS_MODEL` | Yes | Yes | `accounts/fireworks/models/kimi-k2p6` |
 | `DAYTONA_API_KEY` | Yes | Yes | Local `.env` |
 | `BRAINTRUST_API_KEY` | Yes | Yes | Local `.env` |
-| `BRAINTRUST_PROJECT` | Yes | Yes | `safeship` |
-| `SAFESHIP_DEMO_ACCESS_CODE` | Yes | Yes | Local `.env` |
+| `BRAINTRUST_PROJECT` | Yes | Yes | `popper` |
+| `POPPER_DEMO_ACCESS_CODE` | Yes | Yes | Local `.env` |
 | `CODERABBIT_MODE` | Yes | Yes | `cache` |
 | `COPILOTKIT_MODEL` | Yes | Yes | `accounts/fireworks/models/kimi-k2p6` |
 ```
 
 State explicitly:
 
-- Do not set `SAFESHIP_GATE_MODE` on Preview or Production.
+- Do not set `POPPER_GATE_MODE` on Preview or Production.
 - Do not set `OPENAI_API_KEY`; CopilotKit uses Fireworks.
 - Do not set `NEXT_PUBLIC_COPILOTKIT_API_KEY`; the app uses its server runtime route.
 - The CodeRabbit API key is for the local recorder only and is not needed in Vercel cache mode.
@@ -2425,7 +2425,7 @@ Expected: the final comparison is `evidence_only` and the gate call is `block`. 
 Run the app in recorded mode:
 
 ```bash
-SAFESHIP_GATE_MODE=recorded SAFESHIP_RECORDED_DELAY_MS=5 npm run dev
+POPPER_GATE_MODE=recorded POPPER_RECORDED_DELAY_MS=5 npm run dev
 ```
 
 Use Playwright to inspect and capture:

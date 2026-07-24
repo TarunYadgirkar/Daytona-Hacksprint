@@ -3,7 +3,7 @@
 /**
  * The human override.
  *
- * SafeShip recommends; a person decides. Both buttons stay enabled regardless
+ * Popper recommends; a person decides. Both buttons stay enabled regardless
  * of the recommendation, because an override you can only click when you agree
  * is not an override. The reason field is optional but logged, and it is the
  * field that makes the Braintrust trail worth reading later.
@@ -73,7 +73,7 @@ export default function OverrideBar({
       )}
       {!sent && (
         <p className="rationale" style={{ color: "var(--muted)", fontSize: 11, marginTop: 10 }}>
-          Nothing merges automatically. SafeShip never takes this action on its own.
+          Nothing merges automatically. Popper never takes this action on its own.
         </p>
       )}
     </div>

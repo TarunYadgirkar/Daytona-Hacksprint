@@ -1,6 +1,6 @@
-# Protected deployment
+# Public deployment
 
-SafeShip can create paid model calls and live sandboxes, so a deployment is
+Popper can create paid model calls and live sandboxes, so a deployment is
 not ready merely because it builds.
 
 ## Vercel project
@@ -11,19 +11,12 @@ not ready merely because it builds.
 3. Add the exact production and preview environment variables from
    [`VERCEL_HANDOFF.md`](./VERCEL_HANDOFF.md). Keep
    `CODERABBIT_MODE=cache`; never use CLI mode during a demo.
-4. Generate a strong, shareable `SAFESHIP_DEMO_ACCESS_CODE`. Set it for both
-   Preview and Production, then redeploy. Environment-variable changes do not
-   affect already-created deployments.
-5. Do not set `SAFESHIP_GATE_MODE=recorded` on the live demo. It exists for
+4. Do not set `POPPER_GATE_MODE=recorded` on the live demo. It exists for
    deterministic browser testing only.
 
 Copy sensitive values directly from the ignored local `.env` into Vercel
 Project Settings. Do not print or commit them. Environment changes require a
 redeploy.
-
-SafeShip checks Vercel's `VERCEL_ENV`. A production request fails closed with
-HTTP 503 when `SAFESHIP_DEMO_ACCESS_CODE` is absent, instead of exposing paid
-integrations by mistake.
 
 ## Deployment Protection
 
@@ -31,16 +24,11 @@ In Vercel, open **Project → Settings → Deployment Protection**, enable
 **Vercel Authentication**, choose **Standard Protection**, and save.
 
 Standard Protection covers preview deployments and generated deployment URLs
-on Hobby, but it does not cover the public production domain. The application
-access code is therefore still required in Production. Vercel's current
-documentation is the source of truth:
+on Hobby. Production remains public so judges can open it without credentials.
+Vercel's current documentation is the source of truth:
 
 - https://vercel.com/docs/deployment-protection
 - https://vercel.com/docs/deployment-protection/methods-to-protect-deployments/vercel-authentication
-
-If the plan supports **All Deployments**, it can add another layer around the
-production domain. Keep the application access code anyway: API routes should
-not depend exclusively on a dashboard toggle.
 
 ## Release check
 
@@ -54,8 +42,7 @@ npm run smoke -- pr-101
 Then verify:
 
 - An unauthenticated preview URL redirects to Vercel Authentication.
-- The production URL asks for the SafeShip demo code.
-- An incorrect code does not mount the pipeline.
+- The production URL opens the Popper control room directly.
 - Selecting a PR makes no `/api/gate` request.
 - One explicit recorded-mode run completes without sponsor API keys.
 - One explicit live `pr-101` run returns `evidence_only` and `block`.
@@ -65,8 +52,7 @@ Then verify:
 
 ## Operational limits
 
-The access code is the durable public boundary. The five-runs-per-ten-minutes
-quota is deliberately a second guard, not a billing-grade distributed rate
-limiter: serverless instances do not share its in-memory counters. If this
-moves beyond a controlled demo, replace the map with a shared store such as
-Vercel KV or Upstash before opening access more broadly.
+The five-runs-per-ten-minutes quota is a best-effort guard, not a billing-grade
+distributed rate limiter: serverless instances do not share its in-memory
+counters. If this moves beyond a hackathon demo, replace the map with a shared
+store such as Vercel KV or Upstash.

@@ -17,7 +17,7 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SafeShip",
+  title: "Popper",
   description: "Adversarial PR verification gate. Break the claim, don't read the diff.",
 };
 

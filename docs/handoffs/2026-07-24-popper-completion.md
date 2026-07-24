@@ -1,4 +1,4 @@
-# SafeShip completion handoff
+# Popper completion handoff
 
 **Updated:** 2026-07-24 13:21 PDT
 **Repository:** `TarunYadgirkar/Daytona-Hacksprint`
@@ -8,7 +8,7 @@
 
 ## Objective
 
-Finish the approved SafeShip forensic control-room frontend, integrate it with
+Finish the approved Popper forensic control-room frontend, integrate it with
 the completed platform hardening, run the full deterministic and live release
 gates, push every meaningful segment, and tell the user when Vercel deployment
 is safe.
@@ -24,8 +24,8 @@ Read these completely before editing:
 
 1. `AGENTS.md`
 2. `CLAUDE.md`
-3. `docs/superpowers/specs/2026-07-24-safeship-forensic-control-room-design.md`
-4. `docs/superpowers/plans/2026-07-24-safeship-forensic-control-room.md`
+3. `docs/superpowers/specs/2026-07-24-popper-forensic-control-room-design.md`
+4. `docs/superpowers/plans/2026-07-24-popper-forensic-control-room.md`
 
 The design is approved. Do not restart brainstorming or redesign it. Execute
 the plan. Use the repository's frontend-design, engineering-rules, TDD,
@@ -175,7 +175,7 @@ services.
 Run the app in recorded mode and inspect 390×844, 768×900, and 1440×1000:
 
 ```bash
-SAFESHIP_GATE_MODE=recorded SAFESHIP_RECORDED_DELAY_MS=5 npm run dev
+POPPER_GATE_MODE=recorded POPPER_RECORDED_DELAY_MS=5 npm run dev
 ```
 
 Verify locked, idle, active, completed, fallback, and error states; keyboard
@@ -201,7 +201,7 @@ private `.env`. Never print, quote, or commit its values.
 The user will deploy through Vercel; do not deploy for them. When every release
 gate passes, explicitly say **deploy now** and point them to
 `docs/VERCEL_HANDOFF.md`. CodeRabbit must remain `cache` in Preview and
-Production. Do not set `SAFESHIP_GATE_MODE`, `OPENAI_API_KEY`,
+Production. Do not set `POPPER_GATE_MODE`, `OPENAI_API_KEY`,
 `NEXT_PUBLIC_COPILOTKIT_API_KEY`, or the local CodeRabbit recorder key in
 Vercel.
 

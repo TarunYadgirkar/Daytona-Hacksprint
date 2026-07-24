@@ -32,7 +32,7 @@ test("runs every verification gate and recorded browser suite in CI", () => {
     "run: npm run build",
     "npx playwright install --with-deps chromium",
     "run: npm run test:e2e",
-    "SAFESHIP_GATE_MODE: recorded",
+    "POPPER_GATE_MODE: recorded",
   ]) {
     assert.match(
       workflow,

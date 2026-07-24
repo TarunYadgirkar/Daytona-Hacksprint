@@ -22,7 +22,7 @@ test("pins the supported Node and npm versions", () => {
 test("runs infrastructure and product tests deterministically", () => {
   assert.equal(
     packageJson.scripts?.test,
-    "tsx --test tests/*.test.ts lib/access.test.ts lib/adapters/*.test.ts lib/*.test.ts",
+    "tsx --test tests/*.test.ts lib/adapters/*.test.ts lib/*.test.ts",
   );
   assert.equal(packageJson.scripts?.["test:e2e"], "playwright test");
 });

@@ -20,7 +20,7 @@ export function getLogger(): Logger<true> | null {
   if (!process.env.BRAINTRUST_API_KEY) return null; // no key, no-op, never throws
   if (!logger) {
     logger = initLogger({
-      projectName: process.env.BRAINTRUST_PROJECT ?? "safeship",
+      projectName: process.env.BRAINTRUST_PROJECT ?? "popper",
       apiKey: process.env.BRAINTRUST_API_KEY,
     }) as Logger<true>;
   }

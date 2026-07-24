@@ -25,9 +25,8 @@ export default defineConfig({
     timeout: 120_000,
     env: {
       ...process.env,
-      SAFESHIP_GATE_MODE: "recorded",
-      SAFESHIP_RECORDED_DELAY_MS: "5",
-      SAFESHIP_DEMO_ACCESS_CODE: "",
+      POPPER_GATE_MODE: "recorded",
+      POPPER_RECORDED_DELAY_MS: "5",
       BRAINTRUST_API_KEY: "",
     },
   },

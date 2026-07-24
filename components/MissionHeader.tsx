@@ -10,7 +10,7 @@ export default function MissionHeader() {
   return (
     <header className="mission-header">
       <div className="mission-brand">
-        <span className="wordmark">SafeShip</span>
+        <span className="wordmark">Popper</span>
         <span className="mission-index">Adversarial verification / 01</span>
       </div>
       <div className="mission-copy">
@@ -24,7 +24,7 @@ export default function MissionHeader() {
           Compare proof with review. Leave the call to a human.
         </p>
       </div>
-      <ol className="method-trace" aria-label="SafeShip integration trace">
+      <ol className="method-trace" aria-label="Popper integration trace">
         {METHODS.map(([name, role], index) => (
           <li key={name}>
             <span aria-hidden="true">

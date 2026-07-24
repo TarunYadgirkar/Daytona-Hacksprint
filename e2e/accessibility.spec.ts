@@ -18,27 +18,6 @@ async function selectPR(page: Page, prId: string): Promise<void> {
     .click();
 }
 
-test("the protected access boundary has no serious axe violations", async ({
-  page,
-}) => {
-  await page.route("**/api/access", async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({
-        required: true,
-        authorized: false,
-        configured: true,
-      }),
-    });
-  });
-  await page.goto("/");
-  await expect(
-    page.getByRole("heading", { name: "Enter the SafeShip demo code" }),
-  ).toBeVisible();
-  expect(await seriousViolations(page, ".access-shell")).toEqual([]);
-});
-
 test("the idle control room has no serious axe violations", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByText("Agent-authored pull requests")).toBeVisible({
@@ -119,63 +98,6 @@ test("an error state has no serious axe violations", async ({ page }) => {
     "Pipeline connection closed",
   );
   expect(await seriousViolations(page, ".shell")).toEqual([]);
-});
-
-test("an incorrect access code stays locked with an actionable error", async ({
-  page,
-}) => {
-  await page.route("**/api/access", async (route) => {
-    if (route.request().method() === "GET") {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify({
-          required: true,
-          authorized: false,
-          configured: true,
-        }),
-      });
-      return;
-    }
-    await route.fulfill({
-      status: 401,
-      contentType: "application/json",
-      body: JSON.stringify({ error: "Incorrect demo access code" }),
-    });
-  });
-  await page.goto("/");
-  await page.getByLabel("Demo access code").fill("incorrect-code");
-  await page.getByRole("button", { name: "Unlock SafeShip" }).click();
-  await expect(page.getByRole("alert")).toHaveText(
-    "Incorrect demo access code",
-  );
-  await expect(page.getByText("Agent-authored pull requests")).toHaveCount(0);
-});
-
-test("a correct access code mounts the control room", async ({ page }) => {
-  await page.route("**/api/access", async (route) => {
-    if (route.request().method() === "GET") {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify({
-          required: true,
-          authorized: false,
-          configured: true,
-        }),
-      });
-      return;
-    }
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({ authorized: true }),
-    });
-  });
-  await page.goto("/");
-  await page.getByLabel("Demo access code").fill("accepted-code");
-  await page.getByRole("button", { name: "Unlock SafeShip" }).click();
-  await expect(page.getByText("Agent-authored pull requests")).toBeVisible();
 });
 
 test("keyboard focus follows case selection before the paid run action", async ({

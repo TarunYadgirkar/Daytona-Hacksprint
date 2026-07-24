@@ -1,11 +1,11 @@
-# SafeShip forensic control room
+# Popper forensic control room
 
 Date: 2026-07-24
 Status: approved design
 
 ## Purpose
 
-SafeShip needs a judge-facing interface that explains its central argument in
+Popper needs a judge-facing interface that explains its central argument in
 seconds: execution evidence and static-review opinion are different methods,
 their disagreement is useful, and a human remains responsible for the final
 decision.
@@ -52,7 +52,7 @@ the older integration UI in isolation.
 - No recomputation of agreement or gate decisions in React.
 - No new design framework, Tailwind migration, charting library, or animation
   dependency.
-- No attempt to turn SafeShip into a general-purpose repository dashboard.
+- No attempt to turn Popper into a general-purpose repository dashboard.
 - No live CodeRabbit CLI execution during a demo.
 
 ## Approaches considered
@@ -113,7 +113,7 @@ The first viewport leads with:
 
 > Do not trust the diff. Test the claim.
 
-Supporting copy explains that SafeShip extracts the behavioral promise,
+Supporting copy explains that Popper extracts the behavioral promise,
 generates adversarial tests, executes both revisions, compares the evidence
 with CodeRabbit, and leaves the decision to a human.
 
@@ -181,7 +181,7 @@ and block actions require a reason and remain disabled until the run is
 complete. Success appears only after `/api/override` confirms the Braintrust
 write.
 
-The CopilotKit surface remains available as `Ask SafeShip`, focused on
+The CopilotKit surface remains available as `Ask Popper`, focused on
 interrogating the completed evidence and recording the same human override
 path rather than starting the pipeline nondeterministically.
 
@@ -302,7 +302,7 @@ No recorded action may call Fireworks, Daytona, CodeRabbit, or Braintrust.
 - Vercel Preview and Production receive the required variables through project
   settings or a non-echoing CLI import.
 - Preview deployments additionally enable Vercel Authentication.
-- Production fails closed when `SAFESHIP_DEMO_ACCESS_CODE` is missing.
+- Production fails closed when `POPPER_DEMO_ACCESS_CODE` is missing.
 
 The final handoff lists every Vercel variable name, indicates its environment
 scope, and provides commands that read values from the ignored local `.env`

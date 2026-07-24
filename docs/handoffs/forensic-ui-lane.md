@@ -6,7 +6,7 @@ Use this brief in a second Codex Pro session. Set reasoning effort to **high**.
 
 Implement Tasks 2–8 from:
 
-`docs/superpowers/plans/2026-07-24-safeship-forensic-control-room.md`
+`docs/superpowers/plans/2026-07-24-popper-forensic-control-room.md`
 
 This lane owns the judge-facing frontend: interruptible recorded fallback,
 mission header, case selector, run-status instrument, evidence workspace,
@@ -15,7 +15,7 @@ visual system, responsive behavior, and accessibility tests.
 The design is already approved. Do not repeat brainstorming or redesign the
 product:
 
-`docs/superpowers/specs/2026-07-24-safeship-forensic-control-room-design.md`
+`docs/superpowers/specs/2026-07-24-popper-forensic-control-room-design.md`
 
 ## Clone on the second device
 
@@ -23,8 +23,8 @@ The second account does not need access to the primary device. Clone the
 pushed GitHub repository into any directory on the second device:
 
 ```bash
-git clone https://github.com/TarunYadgirkar/Daytona-Hacksprint.git safeship
-cd safeship
+git clone https://github.com/TarunYadgirkar/Daytona-Hacksprint.git popper
+cd popper
 git fetch origin --prune
 git switch -c feature/forensic-control-room-ui \
   origin/integration/github-main-lane-c
@@ -45,7 +45,7 @@ branch to `TarunYadgirkar/Daytona-Hacksprint`.
 ```bash
 sed -n '1,260p' AGENTS.md
 sed -n '1,200p' CLAUDE.md
-sed -n '1,420p' docs/superpowers/specs/2026-07-24-safeship-forensic-control-room-design.md
+sed -n '1,420p' docs/superpowers/specs/2026-07-24-popper-forensic-control-room-design.md
 ```
 
 Use the repository skills for engineering rules, frontend design, TDD,
@@ -104,7 +104,7 @@ export default async function Page() {
         <PipelineView
           prs={STAGED_PRS}
           gateMode={
-            process.env.SAFESHIP_GATE_MODE === "recorded"
+            process.env.POPPER_GATE_MODE === "recorded"
               ? "recorded_fixture"
               : "live"
           }

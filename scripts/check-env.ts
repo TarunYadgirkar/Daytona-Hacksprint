@@ -14,27 +14,16 @@ interface Check {
   note: string;
 }
 
-const deployed =
-  process.env.NODE_ENV === "production" ||
-  process.env.VERCEL_ENV === "production" ||
-  process.env.VERCEL_ENV === "preview";
-
 const CHECKS: Check[] = [
   { name: "Fireworks", key: "FIREWORKS_API_KEY", required: true, note: "claim extraction + test generation" },
   { name: "Daytona", key: "DAYTONA_API_KEY", required: true, note: "sandbox execution — no key means no evidence" },
   { name: "Braintrust", key: "BRAINTRUST_API_KEY", required: false, note: "logging no-ops silently without this" },
   { name: "CodeRabbit", key: "CODERABBIT_API_KEY", required: false, note: "only needed for CODERABBIT_MODE=cli" },
-  {
-    name: "Demo access",
-    key: "SAFESHIP_DEMO_ACCESS_CODE",
-    required: deployed,
-    note: deployed ? "required for deployed API routes" : "set before deploying",
-  },
 ];
 
 let fatal = false;
 
-console.log("\nSafeShip preflight\n");
+console.log("\nPopper preflight\n");
 
 for (const check of CHECKS) {
   const present = Boolean(process.env[check.key]);
@@ -52,7 +41,7 @@ if (mode === "cli") {
   console.log("  Reading recorded verdicts. Run 'npm run record:coderabbit' to refresh them.");
 }
 
-const gateMode = process.env.SAFESHIP_GATE_MODE ?? "live";
+const gateMode = process.env.POPPER_GATE_MODE ?? "live";
 console.log(`\n  Gate mode: ${gateMode}`);
 if (gateMode === "recorded") {
   console.log("  WARNING: fixture events only. No Fireworks, Daytona, CodeRabbit, or Braintrust work will run.");

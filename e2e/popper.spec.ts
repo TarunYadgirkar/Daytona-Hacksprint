@@ -56,8 +56,8 @@ test("selecting a PR previews it without starting a run", async ({ page }) => {
 
 test("a recorded case can interrupt an active live run", async ({ page }) => {
   await page.addInitScript(() => {
-    const state = window as Window & { __safeShipSourceClosed?: boolean };
-    state.__safeShipSourceClosed = false;
+    const state = window as Window & { __popperSourceClosed?: boolean };
+    state.__popperSourceClosed = false;
 
     class HangingEventSource {
       onopen: ((event: Event) => void) | null = null;
@@ -69,7 +69,7 @@ test("a recorded case can interrupt an active live run", async ({ page }) => {
       }
 
       close() {
-        state.__safeShipSourceClosed = true;
+        state.__popperSourceClosed = true;
       }
     }
 
@@ -94,14 +94,14 @@ test("a recorded case can interrupt an active live run", async ({ page }) => {
     .poll(() =>
       page.evaluate(
         () =>
-          (window as Window & { __safeShipSourceClosed?: boolean })
-            .__safeShipSourceClosed,
+          (window as Window & { __popperSourceClosed?: boolean })
+            .__popperSourceClosed,
       ),
     )
     .toBe(true);
 });
 
-test("CopilotKit runtime advertises the default SafeShip agent", async ({
+test("CopilotKit runtime advertises the default Popper agent", async ({
   page,
 }) => {
   const response = await page.request.get("/api/copilotkit/info");
@@ -261,7 +261,7 @@ test("unavailable evidence is never rendered as green", async ({ page }) => {
 test("a completed recorded run remains loadable after reload", async ({ page }) => {
   await runRecordedGate(page);
   const saved = await page.evaluate(() =>
-    window.localStorage.getItem("safeship:run-library:v2"),
+    window.localStorage.getItem("popper:run-library:v2"),
   );
   expect(saved).toContain("fixture-pr-101-v1");
 

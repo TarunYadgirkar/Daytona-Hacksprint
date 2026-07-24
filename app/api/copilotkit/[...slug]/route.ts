@@ -4,7 +4,6 @@ import {
   createCopilotRuntimeHandler,
 } from "@copilotkit/runtime/v2";
 import { createOpenAI } from "@ai-sdk/openai";
-import { requireDemoAccess } from "@/lib/access";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -21,13 +20,13 @@ const agent = new BuiltInAgent({
   // .chat() forces the chat-completions API. The AI SDK's OpenAI provider now
   // defaults to the Responses API, which Fireworks does not implement.
   model: fireworks.chat(process.env.COPILOTKIT_MODEL ?? "accounts/fireworks/models/kimi-k2p6"),
-  prompt: `You are the operator assistant for SafeShip, an adversarial PR verification gate.
+  prompt: `You are the operator assistant for Popper, an adversarial PR verification gate.
 
 Before answering any question about the current gate run, call readGateState. Never invent a
 claim, test outcome, CodeRabbit finding, agreement, or decision. Sandbox tests that actually ran
 are evidence; CodeRabbit's static review is an opinion. Preserve that distinction in every answer.
 
-SafeShip only recommends merge or block. A human always decides. Call recordOverride only when
+Popper only recommends merge or block. A human always decides. Call recordOverride only when
 the operator clearly asks you to record their decision, and never imply that recording an override
 merged code.`,
 });
@@ -41,11 +40,6 @@ const handler = createCopilotRuntimeHandler({
   basePath: "/api/copilotkit",
 });
 
-async function protectedHandler(request: Request): Promise<Response> {
-  const denied = requireDemoAccess(request);
-  return denied ?? handler(request);
-}
-
-export const GET = protectedHandler;
-export const POST = protectedHandler;
+export const GET = handler;
+export const POST = handler;
 export const OPTIONS = handler;

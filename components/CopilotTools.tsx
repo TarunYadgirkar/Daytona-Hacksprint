@@ -37,7 +37,7 @@ export default function CopilotTools({
   useFrontendTool({
     name: "readGateState",
     description:
-      "Read the current SafeShip gate run: the extracted claim, the adversarial tests and their before/after outcomes, CodeRabbit's verdict, the agreement analysis, and the recommendation. Call this before answering any question about the current run.",
+      "Read the current Popper gate run: the extracted claim, the adversarial tests and their before/after outcomes, CodeRabbit's verdict, the agreement analysis, and the recommendation. Call this before answering any question about the current run.",
     parameters: z.object({}),
     handler: async () => JSON.stringify(getSnapshot(), null, 2),
   });

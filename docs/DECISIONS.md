@@ -6,7 +6,7 @@ Format: what we decided, why, and what it costs.
 
 ---
 
-## D-001 — SafeShip never merges on its own
+## D-001 — Popper never merges on its own
 
 **Decided:** The gate produces a recommendation. A human clicks merge or block. `GateDecision.requiresHuman` is typed as the literal `true` so the type system enforces it.
 
@@ -97,7 +97,7 @@ now the product says so.
 ## D-009 — A partial generated suite never reaches the sandbox
 
 **Decided:** Test generation accepts only distinct drafts with a non-empty adversarial hypothesis
-and an explicit `require('./target.js')`. If Fireworks returns fewer than requested, SafeShip asks
+and an explicit `require('./target.js')`. If Fireworks returns fewer than requested, Popper asks
 for only the missing attacks, up to three attempts. It then aborts the `tests` stage rather than
 executing a partial suite.
 
@@ -132,7 +132,7 @@ merge recommendation. They produce `no_evidence` and block. A real `claim_broken
 decisive even if another generated harness errored.
 
 **Why:** A counterexample needs only one successful execution to falsify a claim. Supporting a
-claim is asymmetric: SafeShip must complete the requested suite and obtain at least one test that
+claim is asymmetric: Popper must complete the requested suite and obtain at least one test that
 fails before and passes after. Treating “nothing broke” as proof would recreate the exact
 evidence/opinion error the product criticises.
 
@@ -159,7 +159,7 @@ a convenient green signal.
 **Decided:** Clicking a staged PR selects it and previews its diff. Only the explicit
 “Run adversarial gate” action may open the SSE route and spend Fireworks or Daytona capacity.
 The server independently allowlists staged IDs, fixes the requested suite at four tests, and
-applies signed demo access plus a best-effort quota.
+applies a best-effort per-client quota.
 
 **Why:** A navigation gesture should not have external cost. UI friction alone is not a security
 boundary, so the route enforces the same constraints even if it is called directly.
@@ -198,17 +198,16 @@ path.
 
 ---
 
-## D-016 — Production access fails closed
+## D-016 — Production is public for the hackathon
 
-**Decided:** Vercel production requires `SAFESHIP_DEMO_ACCESS_CODE`. Missing configuration returns
-503 instead of silently exposing live integrations. Vercel Authentication protects preview and
-generated deployment URLs; application access still protects the public production domain.
+**Decided:** The production control room and APIs are public. Vercel Authentication may still
+protect previews, while staged-case allowlisting, fixed test counts, and a best-effort per-client
+quota bound live gate usage.
 
-**Why:** Hobby Standard Protection does not cover the public production domain. A dashboard
-toggle and an in-memory quota are not substitutes for an application-level boundary.
+**Why:** Judges need to open the production URL without credentials.
 
-**Costs:** A forgotten environment variable makes production unavailable rather than permissive.
-That is the safer failure for a tool that creates paid sandboxes.
+**Costs:** Public users can trigger paid integrations. The in-memory quota is only a hackathon
+guard and must be replaced with a shared rate limiter before broader use.
 
 ---
 

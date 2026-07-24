@@ -1,8 +1,8 @@
-# SafeShip
+# Popper
 
-**Adversarial PR verification gate.** Most AI code review tools ask *does this diff look right?* SafeShip asks *can I break the claim this PR makes?*
+**Adversarial PR verification gate.** Most AI code review tools ask *does this diff look right?* Popper asks *can I break the claim this PR makes?*
 
-An AI agent opens a pull request that says it fixes a null pointer on an empty cart. SafeShip extracts that specific behavioural claim, generates tests designed to falsify it, and runs them against both the before and after code in an isolated sandbox. The result is real pass/fail evidence rather than a second model's read of the diff.
+An AI agent opens a pull request that says it fixes a null pointer on an empty cart. Popper extracts that specific behavioural claim, generates tests designed to falsify it, and runs them against both the before and after code in an isolated sandbox. The result is real pass/fail evidence rather than a second model's read of the diff.
 
 It then pulls CodeRabbit's independent static review of the same change and compares. **The interesting output is where the two methods disagree** — where running the code and reading the code reach different conclusions.
 
@@ -63,20 +63,19 @@ npm run test:e2e
 npm run smoke -- pr-101
 ```
 
-For deterministic UI development, set `SAFESHIP_GATE_MODE=recorded`. The gate
+For deterministic UI development, set `POPPER_GATE_MODE=recorded`. The gate
 route then streams the same SSE contract from validated fixtures and calls no
 sponsor APIs. Browser coverage lives in `e2e/` and runs with `npm run test:e2e`
 after Playwright is installed.
 
-## Safe demo access
+## Public demo safety
 
 Live gates are deliberately bounded:
 
 - Only the four staged PR IDs are accepted.
 - Every live run requests exactly four tests.
-- A server-side quota allows five live runs per session in ten minutes.
-- `SAFESHIP_DEMO_ACCESS_CODE` creates a signed, HTTP-only demo session.
-- Vercel production fails closed if that access code is missing.
+- A server-side quota allows five live runs per client in ten minutes.
+- The control room and API are public; no application access code is required.
 
 The recorded-runs gallery contains all four comparison outcomes and never
 consumes Fireworks, Daytona, CodeRabbit, or Braintrust capacity.
@@ -117,7 +116,7 @@ The verdict is CodeRabbit's real opinion of the real code; only the timing is pr
 - `docs/PROGRESS.md` — living status, blockers, and rejected approaches
 - `docs/DECISIONS.md` — why the non-obvious calls were made
 - `docs/DEMO_SCRIPT.md` — the three-minute run, and answers to the questions you will get
-- `docs/DEPLOYMENT.md` — protected Vercel deployment and release checklist
+- `docs/DEPLOYMENT.md` — public Vercel deployment and release checklist
 
 ## What this deliberately does not do
 

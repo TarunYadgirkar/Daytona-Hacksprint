@@ -9,7 +9,6 @@ const required = [
   "DAYTONA_API_KEY",
   "BRAINTRUST_API_KEY",
   "BRAINTRUST_PROJECT",
-  "SAFESHIP_DEMO_ACCESS_CODE",
   "CODERABBIT_MODE",
   "COPILOTKIT_MODEL",
 ] as const;
@@ -22,7 +21,8 @@ test("Vercel handoff names every required live variable without secrets", () => 
   }
 
   assert.doesNotMatch(handoff, /\b(?:fw_|dtn_|cr-|sk-)[A-Za-z0-9_-]{16,}\b/);
-  assert.doesNotMatch(handoff, /SAFESHIP_GATE_MODE=recorded/);
+  assert.doesNotMatch(handoff, /POPPER_GATE_MODE=recorded/);
+  assert.doesNotMatch(handoff, /DEMO_ACCESS_CODE/);
 });
 
 test("the public Vercel template omits local-only credentials", () => {

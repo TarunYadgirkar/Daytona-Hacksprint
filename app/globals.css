@@ -68,16 +68,7 @@ html, body {
   margin: 4px 0 12px;
   white-space: pre;
 }
-/* ---------- access + recorded runs ---------- */
-.access-form { display: grid; gap: 8px; margin-top: 18px; }
-.access-form label { font-family: var(--sans); font-size: 12px; font-weight: 700; }
-.access-form input {
-  font: inherit;
-  padding: 10px;
-  border: 1px solid var(--rule);
-  background: var(--panel-sunk);
-}
-.access-form input:focus-visible { outline: 2px solid var(--seam); outline-offset: 1px; }
+/* ---------- recorded runs ---------- */
 .run-error-message { color: var(--break); font-size: 12px; }
 .gallery-intro { color: var(--muted); font-size: 11px; margin: -4px 0 10px; }
 .run-gallery { display: grid; gap: 10px; }
@@ -635,8 +626,7 @@ summary:focus-visible {
 .run-card,
 .rail-caption,
 .evidence-counts span,
-.override input,
-.access-form input {
+.override input {
   background: var(--surface-sunk);
   color: var(--ink);
 }
@@ -660,30 +650,6 @@ button.act.ghost {
   background: transparent;
   border-color: var(--rule);
   color: var(--ink);
-}
-.access-shell {
-  display: grid;
-  min-height: 62vh;
-  padding: clamp(24px, 7vw, 96px);
-  place-items: center;
-}
-.access-panel {
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  box-shadow: inset 4px 0 0 var(--warning), 0 28px 90px rgba(0, 0, 0, 0.35);
-  max-width: 640px;
-  padding: clamp(24px, 5vw, 56px);
-  width: 100%;
-}
-.access-panel h2 {
-  font-family: var(--display);
-  font-size: clamp(2.5rem, 8vw, 5rem);
-  line-height: 0.9;
-  margin: 12px 0 20px;
-  text-transform: uppercase;
-}
-.access-form input {
-  min-height: 44px;
 }
 @media (max-width: 900px) {
   .mission-header,

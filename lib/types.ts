@@ -1,5 +1,5 @@
 /**
- * Shared vocabulary for the SafeShip gate.
+ * Shared vocabulary for the Popper gate.
  *
  * The whole product rests on one distinction, so it is worth naming it here:
  *   - EVIDENCE is a test that actually ran against real code (Daytona).
@@ -172,7 +172,7 @@ export type GateCall = "merge" | "block";
 export interface GateDecision {
   call: GateCall;
   rationale: string;
-  /** Always true. SafeShip never merges on its own. See docs/DECISIONS.md D-001. */
+  /** Always true. Popper never merges on its own. See docs/DECISIONS.md D-001. */
   requiresHuman: true;
 }
 

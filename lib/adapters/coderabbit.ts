@@ -52,17 +52,17 @@ export async function withStagedCodeRabbitRepository<T>(
   pr: StagedPR,
   operation: (dir: string) => Promise<T>,
 ): Promise<T> {
-  const dir = mkdtempSync(join(tmpdir(), "safeship-coderabbit-"));
+  const dir = mkdtempSync(join(tmpdir(), "popper-coderabbit-"));
   try {
     const sourceDir = join(dir, "src");
     const file = join(sourceDir, pr.entryFile);
     mkdirSync(sourceDir, { recursive: true });
     execFileSync("git", ["init", "-q"], { cwd: dir, stdio: "pipe" });
-    execFileSync("git", ["config", "user.email", "demo@safeship.local"], {
+    execFileSync("git", ["config", "user.email", "demo@popper.local"], {
       cwd: dir,
       stdio: "pipe",
     });
-    execFileSync("git", ["config", "user.name", "SafeShip"], {
+    execFileSync("git", ["config", "user.name", "Popper"], {
       cwd: dir,
       stdio: "pipe",
     });

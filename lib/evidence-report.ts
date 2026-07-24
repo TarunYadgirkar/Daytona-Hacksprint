@@ -22,7 +22,7 @@ export function formatEvidenceReport(input: EvidenceReportInput): string {
     input.results.map((result) => [result.testId, result]),
   );
   return [
-    `SafeShip evidence report`,
+    `Popper evidence report`,
     `Run: ${input.runId}`,
     `Claim: ${input.claim.statement}`,
     "",

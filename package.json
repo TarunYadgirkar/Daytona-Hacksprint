@@ -1,5 +1,5 @@
 {
-  "name": "safeship",
+  "name": "popper",
   "version": "0.1.0",
   "private": true,
   "description": "Adversarial PR verification gate. Extracts a PR's behavioral claim, generates tests designed to break it, and runs them in a sandbox for real pass/fail evidence.",
@@ -11,7 +11,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "tsx --test tests/*.test.ts lib/access.test.ts lib/adapters/*.test.ts lib/*.test.ts",
+    "test": "tsx --test tests/*.test.ts lib/adapters/*.test.ts lib/*.test.ts",
     "test:e2e": "playwright test",
     "lint": "eslint . --max-warnings=0",
     "verify": "npm run lint && npm run typecheck && npm test && npm run build",

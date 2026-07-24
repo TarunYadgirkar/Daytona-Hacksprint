@@ -10,8 +10,7 @@ Settings → Environment Variables**.
 | `FIREWORKS_MODEL` | Yes | Yes | `accounts/fireworks/models/kimi-k2p6` |
 | `DAYTONA_API_KEY` | Yes | Yes | Local `.env` |
 | `BRAINTRUST_API_KEY` | Yes | Yes | Local `.env` |
-| `BRAINTRUST_PROJECT` | Yes | Yes | `safeship` |
-| `SAFESHIP_DEMO_ACCESS_CODE` | Yes | Yes | Local `.env` |
+| `BRAINTRUST_PROJECT` | Yes | Yes | `popper` |
 | `CODERABBIT_MODE` | Yes | Yes | `cache` |
 | `COPILOTKIT_MODEL` | Yes | Yes | `accounts/fireworks/models/kimi-k2p6` |
 
@@ -21,7 +20,7 @@ them.
 
 Do not set these variables in Preview or Production:
 
-- `SAFESHIP_GATE_MODE`; its recorded value is only for deterministic local
+- `POPPER_GATE_MODE`; its recorded value is only for deterministic local
   browser tests.
 - `OPENAI_API_KEY`; CopilotKit uses Fireworks.
 - `NEXT_PUBLIC_COPILOTKIT_API_KEY`; the app uses its server runtime route.
@@ -34,8 +33,8 @@ Vercel cache mode.
 1. Use Node.js 22.x and the repository's standard Next.js build settings.
 2. Enable Vercel Authentication for Preview under **Project → Settings →
    Deployment Protection**.
-3. Keep the application access code enabled in Production because Vercel's
-   standard Preview protection does not protect the public production domain.
+3. Keep Production public. Live gate runs remain bounded to staged cases and
+   five runs per client in ten minutes.
 4. Redeploy after every environment-variable update.
 
 ## Verification

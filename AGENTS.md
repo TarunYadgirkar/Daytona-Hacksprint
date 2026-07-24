@@ -34,7 +34,7 @@ After every segment: `npm run typecheck`, `npm run smoke -- pr-101` (must stay `
 
 ## What this project is
 
-SafeShip is an adversarial PR verification gate, built for a hackathon. Most AI review tools ask "does this diff look right?" SafeShip asks "can I break the claim this PR makes?"
+Popper is an adversarial PR verification gate, built for a hackathon. Most AI review tools ask "does this diff look right?" Popper asks "can I break the claim this PR makes?"
 
 The pipeline: extract the behavioural claim a PR is making → generate tests designed to falsify that claim → run them against the before and after code in an isolated sandbox → compare that evidence against CodeRabbit's independent static review → surface where the two disagree → recommend, and let a human decide.
 
@@ -73,7 +73,7 @@ npm run record:coderabbit # refresh cached CodeRabbit verdicts (slow, 15-40 min)
 
 **Components render, they never compute.** Agreement and decision arrive pre-computed from `lib/pipeline.ts`. If the screen and the Braintrust trace can disagree, the product's whole argument collapses. Never derive a verdict inside a component.
 
-**Never merge automatically.** `GateDecision.requiresHuman` is typed as the literal `true` on purpose. SafeShip recommends; a person acts. Do not add an auto-merge path, an "auto-approve when confident" flag, or anything equivalent, even if it seems convenient.
+**Never merge automatically.** `GateDecision.requiresHuman` is typed as the literal `true` on purpose. Popper recommends; a person acts. Do not add an auto-merge path, an "auto-approve when confident" flag, or anything equivalent, even if it seems convenient.
 
 **Infra failure is not evidence.** A Daytona error means we could not verify, not that the claim is false. Keep `SandboxReport.infraError` distinct from a failing test, and keep the gate blocking (not approving) when evidence is unavailable.
 

@@ -1,8 +1,8 @@
 import { z } from "zod";
 import type { GateResult } from "./types";
 
-export const REPLAY_STORAGE_KEY = "safeship:run-library:v2";
-export const LEGACY_REPLAY_STORAGE_KEY = "safeship:last-completed-run:v1";
+export const REPLAY_STORAGE_KEY = "popper:run-library:v2";
+export const LEGACY_REPLAY_STORAGE_KEY = "popper:last-completed-run:v1";
 
 export type RunOrigin = "live" | "recorded_fixture";
 export type BraintrustProvenance = "configured" | "not_configured" | "not_run";

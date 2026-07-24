@@ -12,7 +12,7 @@ the integration described below; no live post-merge verification is claimed here
 
 ## Current state
 
-The merged baseline combines the protected demo work — explicit execution, signed access,
+The merged baseline combines the demo work — explicit execution, public access,
 four-outcome recorded runs, stream-failure recovery, evidence inspection, and recorded-mode
 Playwright coverage — with the hardening work — content-bound CodeRabbit provenance,
 `no_opinion` handling, constrained Daytona sandboxes, pinned Node/npm, strict linting, and
@@ -23,7 +23,7 @@ Outstanding operator work:
 
 - Restore the live `.env` configuration before the final `npm run smoke -- pr-101`.
 - Authenticate CodeRabbit CLI and refresh the recorded cache.
-- Configure Vercel Deployment Protection and `SAFESHIP_DEMO_ACCESS_CODE`.
+- Keep the public production URL available for judges.
 
 ## Done
 
@@ -61,10 +61,10 @@ Outstanding operator work:
 - [x] Verdict rail renders unavailable evidence and fixture opinions distinctly from green signals
 - [x] CopilotKit setup and preflight now reflect its Fireworks-backed runtime; no OpenAI key required
 - [x] Selecting a PR only previews it; an explicit run button shows cost/duration context before paid calls
-- [x] Gate APIs accept only staged IDs, request exactly four tests, enforce signed demo access,
-  and apply a best-effort five-runs-per-ten-minutes server quota
-- [x] Vercel production fails closed when `SAFESHIP_DEMO_ACCESS_CODE` is missing
-- [x] Preflight reports gate mode and requires the demo access code in deployed environments
+- [x] Gate APIs accept only staged IDs, request exactly four tests, and apply a best-effort
+  five-runs-per-ten-minutes per-client server quota
+- [x] Vercel production opens the control room without an application access code
+- [x] Preflight reports gate mode and sponsor configuration without requiring demo credentials
 - [x] Persistent run failures expose retry, recorded fallback, connection state, stage timeout,
   copyable run ID, sponsor provenance, and never leave a closed stream marked running
 - [x] Recorded cases can interrupt an active live stream; focused Playwright coverage confirms
@@ -89,13 +89,17 @@ Outstanding operator work:
   or incomplete output propagates, cache entries are content-bound, and fixture opinions block
 - [x] Daytona sandboxes are private, ephemeral, network-blocked, TTL-bounded, command-bounded,
   and retain automatic deletion if explicit cleanup fails
-- [x] Protected Vercel deployment checklist added in `docs/DEPLOYMENT.md`
+- [x] Public Vercel deployment checklist added in `docs/DEPLOYMENT.md`
 - [x] Forensic control-room frontend added with request-time nonce rendering, explicit sponsor
   roles, staged case files, visible pipeline states, split evidence/opinion rail, and human gate
 - [x] Responsive and accessibility coverage added for locked, idle, active, completed, error,
   keyboard, reduced-motion, recorded fallback, and four comparison quadrants
 - [x] Final frontend deterministic gate passed: environment preflight, zero-warning lint, strict
-  typecheck, all 43 unit/configuration tests, and a dynamic production build
+  typecheck, all 40 current unit/configuration tests, and a dynamic production build
+- [x] Product renamed to Popper across tracked source, UI, metadata,
+  prompts, tests, docs, storage keys, and sponsor defaults
+- [x] Application access-code boundary removed for the public hackathon demo while retaining
+  staged-case allowlisting, fixed test counts, and a per-client live-run quota
 
 ## Next
 
@@ -127,5 +131,5 @@ Keep failed approaches here so nobody retries them.
 | Generated tests are confirmatory, not adversarial | medium | The prompt is the lever. Check `pr-101` actually gets broken before trusting the demo. |
 | CodeRabbit CLI rate limit hit while recording | high | Record early, record once, commit the cache |
 | Venue wifi | high | Everything except Daytona can be shown from a recorded Braintrust trace |
-| Public production link triggers paid runs | medium | App access code fails closed on Vercel production; explicit run button, staged-ID allowlist, fixed count, and quota add defense in depth |
+| Public production link triggers paid runs | medium | Explicit run button, staged-ID allowlist, fixed count, and per-client quota bound hackathon usage |
 | Transitive dependency advisories | medium | `npm audit --omit=dev` reports 15 advisories, including 6 high. Current automatic fixes propose incompatible downgrades or have no upstream fix; reassess sponsor SDK updates before production use. |
