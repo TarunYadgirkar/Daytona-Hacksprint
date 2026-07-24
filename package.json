@@ -7,6 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "tsx --test lib/adapters/fireworks.test.ts lib/replay.test.ts",
     "typecheck": "tsc --noEmit",
     "record:coderabbit": "tsx scripts/record-coderabbit.ts",
     "check:env": "tsx scripts/check-env.ts",

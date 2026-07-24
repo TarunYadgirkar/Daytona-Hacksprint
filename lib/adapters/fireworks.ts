@@ -17,7 +17,11 @@
  */
 
 import OpenAI from "openai";
+import { z } from "zod";
 import type { AdversarialTest, ExtractedClaim, StagedPR } from "../types";
+
+const MAX_TEST_COUNT = 12;
+const MAX_GENERATION_ATTEMPTS = 3;
 
 function client(): OpenAI {
   const apiKey = process.env.FIREWORKS_API_KEY;
@@ -127,11 +131,79 @@ Reply with JSON only, no prose, no markdown fences:
   ]
 }`;
 
-export async function generateAdversarialTests(
+export interface GeneratedTestDraft {
+  name: string;
+  hypothesis: string;
+  code: string;
+}
+
+const generatedTestDraftSchema = z.object({
+  name: z.string().trim().min(1),
+  hypothesis: z.string().trim().min(1),
+  code: z
+    .string()
+    .trim()
+    .min(1)
+    .refine(
+      (code) => /require\(\s*(['"])\.\/target\.js\1\s*\)/.test(code),
+      "test must require ./target.js",
+    ),
+});
+
+function normalizedName(value: string): string {
+  return value.trim().replace(/\s+/g, " ").toLowerCase();
+}
+
+function normalizedCode(value: string): string {
+  // JavaScript string literals are case-sensitive, so only whitespace is
+  // normalized when deciding whether two attacks execute the same code.
+  return value.trim().replace(/\s+/g, " ");
+}
+
+/**
+ * Accept only runnable, distinct drafts. A repeated model answer does not
+ * become a second adversarial test merely because it arrived in another call.
+ */
+export function collectUniqueTestDrafts(
+  existing: GeneratedTestDraft[],
+  candidates: unknown[],
+  limit: number,
+): GeneratedTestDraft[] {
+  const collected = [...existing];
+  const names = new Set(collected.map((test) => normalizedName(test.name)));
+  const code = new Set(collected.map((test) => normalizedCode(test.code)));
+
+  for (const candidate of candidates) {
+    if (collected.length >= limit) break;
+    const parsed = generatedTestDraftSchema.safeParse(candidate);
+    if (!parsed.success) continue;
+
+    const nameKey = normalizedName(parsed.data.name);
+    const codeKey = normalizedCode(parsed.data.code);
+    if (names.has(nameKey) || code.has(codeKey)) continue;
+
+    names.add(nameKey);
+    code.add(codeKey);
+    collected.push(parsed.data);
+  }
+
+  return collected;
+}
+
+async function requestTestDrafts(
   pr: StagedPR,
   claim: ExtractedClaim,
-  count = 4,
-): Promise<AdversarialTest[]> {
+  missing: number,
+  accepted: GeneratedTestDraft[],
+  attempt: number,
+): Promise<unknown[]> {
+  const avoidRepeating =
+    accepted.length === 0
+      ? ""
+      : `\nAlready accepted attacks — do not repeat these:\n${accepted
+          .map((test) => `- ${test.name}: ${test.hypothesis}`)
+          .join("\n")}\n`;
+
   const res = await client().chat.completions.create({
     model: model(),
     temperature: 0.4, // some variety across attempts; the claim itself stays at 0.1
@@ -153,25 +225,58 @@ For reference, BEFORE the change:
 \`\`\`javascript
 ${pr.before}
 \`\`\`
-
-Write exactly ${count} adversarial tests.`,
+${avoidRepeating}
+Generation attempt ${attempt} of ${MAX_GENERATION_ATTEMPTS}. Write exactly ${missing} additional, distinct adversarial ${missing === 1 ? "test" : "tests"}.`,
       },
     ],
   });
 
-  const parsed = parseJSON<{ tests: Array<Omit<AdversarialTest, "id">> }>(
+  const parsed = parseJSON<{ tests?: unknown }>(
     res.choices[0]?.message?.content ?? "",
-    "test generation",
+    `test generation attempt ${attempt}`,
   );
+  return Array.isArray(parsed.tests) ? parsed.tests : [];
+}
 
-  const tests = Array.isArray(parsed.tests) ? parsed.tests : [];
-  return tests
-    .filter((t) => typeof t?.code === "string" && t.code.trim().length > 0)
-    .slice(0, count)
-    .map((t, i) => ({
-      id: `t${i + 1}`,
-      name: t.name?.trim() || `adversarial test ${i + 1}`,
-      hypothesis: t.hypothesis?.trim() || "unstated",
-      code: t.code,
-    }));
+export async function generateAdversarialTests(
+  pr: StagedPR,
+  claim: ExtractedClaim,
+  count = 4,
+): Promise<AdversarialTest[]> {
+  if (!Number.isInteger(count) || count < 1 || count > MAX_TEST_COUNT) {
+    throw new Error(`Adversarial test count must be an integer from 1 to ${MAX_TEST_COUNT}`);
+  }
+
+  let drafts: GeneratedTestDraft[] = [];
+  let lastError: Error | null = null;
+
+  for (let attempt = 1; attempt <= MAX_GENERATION_ATTEMPTS && drafts.length < count; attempt += 1) {
+    try {
+      const candidates = await requestTestDrafts(
+        pr,
+        claim,
+        count - drafts.length,
+        drafts,
+        attempt,
+      );
+      drafts = collectUniqueTestDrafts(drafts, candidates, count);
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      if (!lastError.message.startsWith("Fireworks returned unparseable JSON")) {
+        throw lastError;
+      }
+    }
+  }
+
+  if (drafts.length !== count) {
+    const cause = lastError ? ` Last error: ${lastError.message}` : "";
+    throw new Error(
+      `Fireworks produced ${drafts.length} of ${count} required unique, runnable adversarial tests after ${MAX_GENERATION_ATTEMPTS} attempts.${cause}`,
+    );
+  }
+
+  return drafts.map((test, i) => ({
+    id: `t${i + 1}`,
+    ...test,
+  }));
 }

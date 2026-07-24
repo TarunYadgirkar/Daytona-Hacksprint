@@ -9,9 +9,15 @@
  * can never tell different stories.
  */
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CopilotSidebar } from "@copilotkit/react-core/v2";
 import { decodeSSE } from "@/lib/events";
+import {
+  parseReplay,
+  REPLAY_STORAGE_KEY,
+  serializeReplay,
+  type SavedReplay,
+} from "@/lib/replay";
 import type {
   AdversarialTest,
   AgreementAnalysis,
@@ -19,6 +25,7 @@ import type {
   ExtractedClaim,
   GateCall,
   GateDecision,
+  GateResult,
   SandboxReport,
   SandboxTestResult,
   StageName,
@@ -34,9 +41,14 @@ import CopilotTools, { type GateSnapshot } from "./CopilotTools";
 const emptyStages = () =>
   Object.fromEntries(STAGE_ORDER.map((s) => [s, "pending"])) as Record<StageName, StageState>;
 
+const completedStages = () =>
+  Object.fromEntries(STAGE_ORDER.map((s) => [s, "done"])) as Record<StageName, StageState>;
+
 export default function PipelineView({ prs }: { prs: StagedPR[] }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
+  const [savedReplay, setSavedReplay] = useState<SavedReplay | null>(null);
+  const [replayedAt, setReplayedAt] = useState<string | null>(null);
 
   const [runId, setRunId] = useState<string | null>(null);
   const [claim, setClaim] = useState<ExtractedClaim | null>(null);
@@ -54,6 +66,14 @@ export default function PipelineView({ prs }: { prs: StagedPR[] }) {
   const startedAt = useRef<Partial<Record<StageName, number>>>({});
   const sourceRef = useRef<EventSource | null>(null);
 
+  useEffect(() => {
+    try {
+      setSavedReplay(parseReplay(window.localStorage.getItem(REPLAY_STORAGE_KEY)));
+    } catch {
+      // Storage can be disabled by browser policy; live runs still work.
+    }
+  }, []);
+
   const reset = () => {
     setRunId(null);
     setClaim(null);
@@ -66,6 +86,31 @@ export default function PipelineView({ prs }: { prs: StagedPR[] }) {
     setStages(emptyStages());
     setTimings({});
     setLogs([]);
+    setReplayedAt(null);
+    startedAt.current = {};
+  };
+
+  const showCompletedResult = (result: GateResult, savedAt: string) => {
+    sourceRef.current?.close();
+    setRunning(false);
+    setSelected(result.prId);
+    setRunId(result.runId);
+    setClaim(result.claim);
+    setTests(result.tests);
+    setResults(result.sandbox.results);
+    setSandbox(result.sandbox);
+    setReview(result.codeRabbit);
+    setAgreement(result.agreement);
+    setDecision(result.decision);
+    setStages(completedStages());
+    setTimings({});
+    setLogs([
+      {
+        stage: "decision",
+        message: `Replayed completed run ${result.runId.slice(0, 8)}. No model or sandbox stage ran again.`,
+      },
+    ]);
+    setReplayedAt(savedAt);
     startedAt.current = {};
   };
 
@@ -126,6 +171,19 @@ export default function PipelineView({ prs }: { prs: StagedPR[] }) {
           setDecision(event.decision);
           break;
         case "run_complete":
+          {
+            const savedAt = new Date().toISOString();
+            const replay = { savedAt, result: event.result };
+            setSavedReplay(replay);
+            try {
+              window.localStorage.setItem(
+                REPLAY_STORAGE_KEY,
+                serializeReplay(event.result, savedAt),
+              );
+            } catch {
+              // The in-memory replay still works if browser storage is disabled.
+            }
+          }
           setRunning(false);
           source.close();
           break;
@@ -200,6 +258,22 @@ export default function PipelineView({ prs }: { prs: StagedPR[] }) {
               </button>
             ))}
             {running && <p className="empty">Gate running. Buttons unlock when it finishes.</p>}
+            {savedReplay && (
+              <div className="replay-control">
+                <button
+                  type="button"
+                  className="act ghost"
+                  disabled={running}
+                  onClick={() => showCompletedResult(savedReplay.result, savedReplay.savedAt)}
+                >
+                  Replay saved run
+                </button>
+                <span>
+                  {savedReplay.result.prId} · saved{" "}
+                  {new Date(savedReplay.savedAt).toLocaleString()}
+                </span>
+              </div>
+            )}
           </section>
 
           {activePR && (
@@ -222,6 +296,13 @@ export default function PipelineView({ prs }: { prs: StagedPR[] }) {
 
           {selected && (
             <>
+              {replayedAt && (
+                <div className="replay-banner" role="status">
+                  Showing a completed run saved {new Date(replayedAt).toLocaleString()}. No model,
+                  sandbox, or review command ran again.
+                </div>
+              )}
+
               <section className="panel">
                 <span className="label">The claim this PR is making</span>
                 {claim ? (
@@ -287,7 +368,7 @@ export default function PipelineView({ prs }: { prs: StagedPR[] }) {
 
               {decision && runId && (
                 <section className="panel">
-                  <OverrideBar runId={runId} decision={decision} />
+                  <OverrideBar key={runId} runId={runId} decision={decision} />
                 </section>
               )}
             </>

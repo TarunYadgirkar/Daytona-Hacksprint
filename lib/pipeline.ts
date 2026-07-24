@@ -16,12 +16,31 @@ import type {
   GateDecision,
   GateResult,
   SandboxReport,
+  StageName,
   StagedPR,
 } from "./types";
 import { extractClaim, generateAdversarialTests } from "./adapters/fireworks";
 import { runAdversarialSuite } from "./adapters/daytona";
 import { getCodeRabbitReview } from "./adapters/coderabbit";
 import { flushLogger, logGateRun, tracedStage } from "./adapters/braintrust";
+
+export class GateStageError extends Error {
+  readonly stage: StageName;
+
+  constructor(stage: StageName, cause: unknown) {
+    super(cause instanceof Error ? cause.message : String(cause));
+    this.name = "GateStageError";
+    this.stage = stage;
+  }
+}
+
+async function inStage<T>(stage: StageName, operation: () => Promise<T>): Promise<T> {
+  try {
+    return await operation();
+  } catch (error) {
+    throw error instanceof GateStageError ? error : new GateStageError(stage, error);
+  }
+}
 
 /**
  * Compare the two signals.
@@ -143,8 +162,8 @@ export async function runGate({ pr, emit, testCount = 4 }: RunGateOptions): Prom
 
   // ---- 1. What is this PR actually promising? --------------------------
   emit({ type: "stage_start", stage: "claim", at: now() });
-  const claim = await tracedStage("1. extract claim", { pr: pr.id, title: pr.title }, () =>
-    extractClaim(pr),
+  const claim = await inStage("claim", () =>
+    tracedStage("1. extract claim", { pr: pr.id, title: pr.title }, () => extractClaim(pr)),
   );
   emit({ type: "claim_ready", claim });
   emit({ type: "stage_done", stage: "claim", at: now() });
@@ -152,24 +171,28 @@ export async function runGate({ pr, emit, testCount = 4 }: RunGateOptions): Prom
   // ---- 2. Write code designed to make that promise fail ----------------
   emit({ type: "stage_start", stage: "tests", at: now() });
   emit({ type: "log", stage: "tests", message: `Generating ${testCount} adversarial tests…` });
-  const tests = await tracedStage("2. generate adversarial tests", { claim }, () =>
-    generateAdversarialTests(pr, claim, testCount),
+  const tests = await inStage("tests", () =>
+    tracedStage("2. generate adversarial tests", { claim }, () =>
+      generateAdversarialTests(pr, claim, testCount),
+    ),
   );
   for (const test of tests) emit({ type: "test_generated", test });
   emit({ type: "stage_done", stage: "tests", at: now() });
 
   // ---- 3. Run them for real, against before and after ------------------
   emit({ type: "stage_start", stage: "sandbox", at: now() });
-  const sandbox = await tracedStage(
-    "3. execute in sandbox",
-    { testIds: tests.map((t) => t.id) },
-    () =>
-      runAdversarialSuite({
-        pr,
-        tests,
-        onResult: (result) => emit({ type: "test_result", result }),
-        onLog: (message) => emit({ type: "log", stage: "sandbox", message }),
-      }),
+  const sandbox = await inStage("sandbox", () =>
+    tracedStage(
+      "3. execute in sandbox",
+      { testIds: tests.map((t) => t.id) },
+      () =>
+        runAdversarialSuite({
+          pr,
+          tests,
+          onResult: (result) => emit({ type: "test_result", result }),
+          onLog: (message) => emit({ type: "log", stage: "sandbox", message }),
+        }),
+    ),
   );
   emit({ type: "sandbox_ready", report: sandbox });
   if (sandbox.infraError) emit({ type: "stage_error", stage: "sandbox", message: sandbox.infraError });
@@ -177,8 +200,8 @@ export async function runGate({ pr, emit, testCount = 4 }: RunGateOptions): Prom
 
   // ---- 4. The independent second opinion -------------------------------
   emit({ type: "stage_start", stage: "coderabbit", at: now() });
-  const codeRabbit = await tracedStage("4. coderabbit review", { pr: pr.id }, () =>
-    getCodeRabbitReview(pr),
+  const codeRabbit = await inStage("coderabbit", () =>
+    tracedStage("4. coderabbit review", { pr: pr.id }, () => getCodeRabbitReview(pr)),
   );
   emit({
     type: "log",
@@ -195,16 +218,20 @@ export async function runGate({ pr, emit, testCount = 4 }: RunGateOptions): Prom
 
   // ---- 5. Where do they disagree? --------------------------------------
   emit({ type: "stage_start", stage: "compare", at: now() });
-  const agreement = await tracedStage("5. compare methods", { sandbox, codeRabbit }, async () =>
-    compare(sandbox, codeRabbit),
+  const agreement = await inStage("compare", () =>
+    tracedStage("5. compare methods", { sandbox, codeRabbit }, async () =>
+      compare(sandbox, codeRabbit),
+    ),
   );
   emit({ type: "agreement_ready", agreement });
   emit({ type: "stage_done", stage: "compare", at: now() });
 
   // ---- 6. Recommend. A human still decides. ----------------------------
   emit({ type: "stage_start", stage: "decision", at: now() });
-  const decision = await tracedStage("6. gate decision", { agreement }, async () =>
-    decide(agreement, sandbox, codeRabbit),
+  const decision = await inStage("decision", () =>
+    tracedStage("6. gate decision", { agreement }, async () =>
+      decide(agreement, sandbox, codeRabbit),
+    ),
   );
   emit({ type: "decision_ready", decision });
   emit({ type: "stage_done", stage: "decision", at: now() });

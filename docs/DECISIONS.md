@@ -91,3 +91,34 @@ fixtures with authenticated CodeRabbit output.
 **Costs:** A fresh checkout cannot honestly demonstrate the CodeRabbit comparison until someone
 authenticates the CLI and runs `npm run record:coderabbit`. That was already operationally true;
 now the product says so.
+
+---
+
+## D-009 — A partial generated suite never reaches the sandbox
+
+**Decided:** Test generation accepts only distinct drafts with a non-empty adversarial hypothesis
+and an explicit `require('./target.js')`. If Fireworks returns fewer than requested, SafeShip asks
+for only the missing attacks, up to three attempts. It then aborts the `tests` stage rather than
+executing a partial suite.
+
+**Why:** Quietly running two tests when the gate requested four makes reduced model output look
+like complete verification. That is an evidence-availability failure, not a smaller success.
+Duplicate model answers are likewise one attack, not multiple independent tests.
+
+**Costs:** A weak model response can stop a run before Daytona instead of producing a low-coverage
+decision. The saved-run replay is the demo fallback for that failure.
+
+---
+
+## D-010 — Replay renders a completed result; it never reruns the gate
+
+**Decided:** The browser stores the last completed `GateResult` in a versioned, runtime-validated
+local snapshot. “Replay saved run” restores that already-computed claim, evidence, opinion,
+agreement, and decision, and labels the screen as replayed.
+
+**Why:** A venue-wifi fallback must be instant and must show exactly what the pipeline and
+Braintrust previously produced. Recomputing agreement in React or silently mixing saved and live
+state would violate the single-source-of-truth rule.
+
+**Costs:** Replay is browser-local and only exists after that browser has completed a run. Clearing
+site storage removes it, so the demo checklist must include creating the saved run beforehand.

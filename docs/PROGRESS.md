@@ -4,9 +4,10 @@ Living status. Update this in the same commit as the work it describes.
 
 **How to use this file:** move items between sections, do not delete them. At 3am the useful question is usually "did we already try that?", and a deleted line cannot answer it.
 
-Last updated: 2026-07-24. Full pipeline verified LIVE — `smoke -- pr-101` returns evidence_only + BLOCK
-against live Fireworks + Daytona (model kimi-k2p6). Keys in `.env`, deps installed, Braintrust span
-bug fixed. Two Codex agents building in parallel; lanes defined in AGENTS.md.
+Last updated: 2026-07-24. Full pipeline was verified live at `0bd3520`: `smoke -- pr-101`
+returned `evidence_only` + `BLOCK` against Fireworks `kimi-k2p6` and Daytona. Lane A exact-count
+test generation and Lane B saved-run replay are implemented and pass typecheck/build; post-change
+live smoke and browser interaction still need verification.
 
 ---
 
@@ -16,11 +17,9 @@ Lanes assigned in AGENTS.md (A = pipeline/adapters, B = UI/app). Put your name n
 
 | # | Item | Owner | Notes |
 |---|------|-------|-------|
-| 1 | Get keys for all five sponsors, run `npm run check:env` | | Preflight runs and reports Fireworks + Daytona missing. |
-| 2 | First live Fireworks call — confirm model ID and JSON mode | | Model IDs change; verify against fireworks.ai/models |
-| 3 | First live Daytona sandbox — confirm `executeCommand` shape | | See D-002 for why we avoid the filesystem API |
-| 4 | `npm run smoke -- pr-101` end to end | | Attempted; stops at claim extraction until Fireworks is configured. |
-| 5 | Authenticate CodeRabbit CLI and record verdicts | | CLI 0.7.0 is installed in `.tools/`; authentication is still required. |
+| 1 | Re-run `npm run smoke -- pr-101` after Lane A changes | Codex | Approval service currently rejects the required elevated `tsx` execution. |
+| 2 | Browser-check saved-run replay after a real completed run | Codex | Production build passes; local server binding needs the same unavailable approval path. |
+| 3 | Authenticate CodeRabbit CLI and record verdicts | | CLI 0.7.0 is installed in `.tools/`; authentication is still required. |
 
 ## Done
 
@@ -43,20 +42,25 @@ Lanes assigned in AGENTS.md (A = pipeline/adapters, B = UI/app). Put your name n
 - [x] CopilotKit `/api/copilotkit/info` returns the registered default agent
 - [x] Placeholder reviews are typed and labelled as `fixture`, never as recorded CodeRabbit cache
 - [x] CodeRabbit recorder fails fast when unauthenticated and preserves the existing cache
+- [x] Working Fireworks and Daytona keys configured; live `pr-101` smoke verified at `0bd3520`
+- [x] Fireworks model refreshed to live `accounts/fireworks/models/kimi-k2p6`
+- [x] Braintrust summary and override writes moved into traced spans
+- [x] Handle Fireworks returning fewer than the requested number of tests — retry missing,
+  reject malformed/duplicate drafts, and abort before sandbox execution if the suite stays partial
+- [x] A "replay last run" button so a failed live demo can fall back instantly — completed
+  `GateResult` snapshots are versioned, validated, and restored without recomputing a verdict
 
 ## Next
 
 - [ ] Tune the adversarial test prompt if generated tests come back weak or confirmatory
-- [ ] Handle the case where Fireworks returns fewer than the requested number of tests
 - [ ] Sandbox reuse across tests in one run (currently one sandbox per run, which is fine, but if creation is slow this is the lever)
-- [ ] A "replay last run" button so a failed live demo can fall back instantly
 - [ ] Braintrust dashboard view sorted by `methods_agree` ascending — that view IS the stage moment
 
 ## Blocked
 
-- Live Fireworks and Daytona validation: `FIREWORKS_API_KEY` and `DAYTONA_API_KEY` are absent.
-- Braintrust trace validation: `BRAINTRUST_API_KEY` is absent.
-- CopilotKit chat completion: `OPENAI_API_KEY` is absent; the runtime metadata endpoint is verified.
+- Current agent-side `tsx` and local-server verification: the execution approval service rejects
+  escalations with an internal schema error. Run smoke/tests/browser checks from a normal terminal.
+- CopilotKit chat completion: `OPENAI_API_KEY` is absent; the pipeline and runtime metadata work.
 - Real CodeRabbit cache capture: local CLI is installed but `coderabbit auth status --agent`
   reports `not_authenticated`, and no `CODERABBIT_API_KEY` is configured.
 

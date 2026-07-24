@@ -11,7 +11,7 @@ Three minutes. The audience does not need the architecture; they need one moment
 - [ ] CodeRabbit cache re-recorded, `recordedAt` visible in the UI
 - [ ] Braintrust project open in a second tab, sorted by `methods_agree` ascending
 - [ ] One sandbox already created once today, so the first call is warm
-- [ ] A completed run of `pr-101` left on screen as a fallback if wifi dies
+- [ ] A completed `pr-101` saved in the browser; verify “Replay saved run” restores it
 
 ## The run
 
@@ -47,8 +47,8 @@ That second case is what separates this from a tool that just argues with CodeRa
 
 ## If something breaks
 
-- Sandbox slow or failing → the gate blocks on missing evidence by design; say that, then switch to the recorded run.
-- Fireworks returns garbage → re-run once, the parser is tolerant. If it fails twice, go to the recorded run.
-- Wifi gone → Braintrust trace and the completed run in the other tab carry the whole story.
+- Sandbox slow or failing → the gate blocks on missing evidence by design; say that, then click “Replay saved run”.
+- Fireworks returns garbage → SafeShip retries missing tests. If generation still stops, click “Replay saved run”.
+- Wifi gone → use “Replay saved run”; the validated snapshot does not call the model, sandbox, or review CLI.
 
 Do not debug on stage. Narrate the fallback and keep moving.

@@ -10,7 +10,7 @@
 import { encodeSSE, type GateEvent } from "@/lib/events";
 import { flushLogger } from "@/lib/adapters/braintrust";
 import { getPR } from "@/lib/fixtures/prs";
-import { runGate } from "@/lib/pipeline";
+import { GateStageError, runGate } from "@/lib/pipeline";
 
 export const runtime = "nodejs"; // Daytona and Braintrust SDKs are Node-only
 export const dynamic = "force-dynamic";
@@ -47,7 +47,7 @@ export async function GET(request: Request) {
       } catch (err) {
         emit({
           type: "stage_error",
-          stage: "decision",
+          stage: err instanceof GateStageError ? err.stage : "decision",
           message: err instanceof Error ? err.message : String(err),
         });
       } finally {
