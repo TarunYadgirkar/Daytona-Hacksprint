@@ -39,6 +39,8 @@
 - `components/EvidenceWorkspace.tsx` — claim, verdict rail, stages, tests, and CodeRabbit findings.
 - `components/DecisionPanel.tsx` — evidence-report copy and human override composition.
 - `e2e/accessibility.spec.ts` — axe, keyboard, reduced-motion, and locked-screen checks.
+- `middleware.ts` — per-request script nonce and Content Security Policy.
+- `tests/security-headers.test.ts` — CSP and production-header contract checks.
 - `tests/deployment-docs.test.ts` — deploy-variable and secret-surface contract checks.
 - `docs/VERCEL_HANDOFF.md` — exact Vercel variable names, scopes, and safe transfer procedure.
 
@@ -59,6 +61,7 @@
 - `e2e/safeship.spec.ts` — narrative, fallback, provenance, and responsive regression coverage.
 - `lib/replay.ts` and `lib/replay.test.ts` — merge run-library behavior with trust-hardening schema.
 - `package.json` and `package-lock.json` — unified scripts and pinned browser-test dependencies.
+- `next.config.mjs` — standard production security headers.
 - `playwright.config.ts` — deterministic recorded-mode browser configuration.
 - `docs/DECISIONS.md` and `docs/PROGRESS.md` — reconciled branch history and completed frontend record.
 
@@ -698,6 +701,15 @@ Expected: FAIL because the extracted case-file heading and safety copy do not ex
 import type { RunOrigin } from "@/lib/replay";
 import type { StagedPR } from "@/lib/types";
 
+type Props = {
+  prs: StagedPR[];
+  selectedId: string | null;
+  running: boolean;
+  gateMode: RunOrigin;
+  onSelect: (prId: string) => void;
+  onRun: (prId: string) => void;
+};
+
 export default function CaseSelector({
   prs,
   selectedId,
@@ -705,14 +717,7 @@ export default function CaseSelector({
   gateMode,
   onSelect,
   onRun,
-}: {
-  prs: StagedPR[];
-  selectedId: string | null;
-  running: boolean;
-  gateMode: RunOrigin;
-  onSelect: (prId: string) => void;
-  onRun: (prId: string) => void;
-}) {
+}: Props) {
   const active = prs.find((pr) => pr.id === selectedId);
 
   return (
@@ -961,6 +966,20 @@ export interface RunNotice {
   message: string;
 }
 
+type Props = {
+  connection: ConnectionState;
+  runId: string | null;
+  running: boolean;
+  notice: RunNotice | null;
+  activeRecord: RunRecord | null;
+  origin: RunOrigin | null;
+  braintrust: BraintrustProvenance | null;
+  review: CodeRabbitReview | null;
+  onCopyRunId: () => void;
+  onRetry: () => void;
+  onLoadRecorded: () => void;
+};
+
 function executionProvenance(origin: RunOrigin | null): string {
   if (origin === "live") return "live call";
   if (origin === "recorded_fixture") return "recorded fixture";
@@ -992,19 +1011,7 @@ export default function RunStatus({
   onCopyRunId,
   onRetry,
   onLoadRecorded,
-}: {
-  connection: ConnectionState;
-  runId: string | null;
-  running: boolean;
-  notice: RunNotice | null;
-  activeRecord: RunRecord | null;
-  origin: RunOrigin | null;
-  braintrust: BraintrustProvenance | null;
-  review: CodeRabbitReview | null;
-  onCopyRunId: () => void;
-  onRetry: () => void;
-  onLoadRecorded: () => void;
-}) {
+}: Props) {
   return (
     <>
       <section className="run-status panel" aria-label="Run status">
@@ -1221,6 +1228,19 @@ import StageList, { type StageState } from "./StageList";
 import TestTable from "./TestTable";
 import VerdictRail from "./VerdictRail";
 
+type Props = {
+  running: boolean;
+  claim: ExtractedClaim | null;
+  tests: AdversarialTest[];
+  results: SandboxTestResult[];
+  sandbox: SandboxReport | null;
+  review: CodeRabbitReview | null;
+  agreement: AgreementAnalysis | null;
+  stages: Record<StageName, StageState>;
+  timings: Partial<Record<StageName, number>>;
+  logs: Array<{ stage: StageName; message: string }>;
+};
+
 export default function EvidenceWorkspace({
   running,
   claim,
@@ -1232,18 +1252,7 @@ export default function EvidenceWorkspace({
   stages,
   timings,
   logs,
-}: {
-  running: boolean;
-  claim: ExtractedClaim | null;
-  tests: AdversarialTest[];
-  results: SandboxTestResult[];
-  sandbox: SandboxReport | null;
-  review: CodeRabbitReview | null;
-  agreement: AgreementAnalysis | null;
-  stages: Record<StageName, StageState>;
-  timings: Partial<Record<StageName, number>>;
-  logs: Array<{ stage: StageName; message: string }>;
-}) {
+}: Props) {
   return (
     <div className="evidence-workspace">
       <section className="panel">
@@ -1341,6 +1350,15 @@ Use this file:
 import type { GateCall, GateDecision } from "@/lib/types";
 import OverrideBar from "./OverrideBar";
 
+type Props = {
+  runId: string;
+  decision: GateDecision;
+  report: string | null;
+  copyNotice: string | null;
+  onCopyReport: () => void;
+  onOverride: (call: GateCall, reason: string) => Promise<void>;
+};
+
 export default function DecisionPanel({
   runId,
   decision,
@@ -1348,14 +1366,7 @@ export default function DecisionPanel({
   copyNotice,
   onCopyReport,
   onOverride,
-}: {
-  runId: string;
-  decision: GateDecision;
-  report: string | null;
-  copyNotice: string | null;
-  onCopyReport: () => void;
-  onOverride: (call: GateCall, reason: string) => Promise<void>;
-}) {
+}: Props) {
   return (
     <section className="panel decision-panel">
       <div className="decision-actions">
@@ -2036,7 +2047,208 @@ git push origin integration/github-main-lane-c
 
 ---
 
-### Task 9: Create the Vercel handoff contract
+### Task 9: Add production CSP and security headers
+
+**Files:**
+
+- Create: `middleware.ts`
+- Create: `tests/security-headers.test.ts`
+- Modify: `next.config.mjs`
+- Modify: `app/page.tsx`
+
+**Interfaces:**
+
+- Consumes: Next.js 15 middleware, App Router dynamic rendering, and same-origin browser API calls.
+- Produces: a unique nonce per HTML request, a strict script CSP, and standard response security headers.
+
+- [ ] **Step 1: Write the failing security-header tests**
+
+Create:
+
+```ts
+import assert from "node:assert/strict";
+import test from "node:test";
+import nextConfig from "../next.config.mjs";
+import { buildContentSecurityPolicy } from "../middleware";
+
+test("production CSP uses a nonce and rejects unsafe script execution", () => {
+  const policy = buildContentSecurityPolicy("nonce-value", false);
+  assert.match(policy, /script-src 'self' 'nonce-nonce-value' 'strict-dynamic'/);
+  assert.match(policy, /frame-ancestors 'none'/);
+  assert.match(policy, /object-src 'none'/);
+  assert.doesNotMatch(policy, /script-src[^;]*'unsafe-inline'/);
+  assert.doesNotMatch(policy, /script-src[^;]*'unsafe-eval'/);
+});
+
+test("development CSP permits the Next.js evaluator without weakening production", () => {
+  const policy = buildContentSecurityPolicy("nonce-value", true);
+  assert.match(policy, /script-src[^;]*'unsafe-eval'/);
+});
+
+test("Next.js applies the standard production security headers", async () => {
+  assert.equal(nextConfig.poweredByHeader, false);
+  const routes = await nextConfig.headers();
+  const headers = Object.fromEntries(
+    routes.flatMap((route) => route.headers.map(({ key, value }) => [key, value])),
+  );
+  assert.equal(headers["X-Content-Type-Options"], "nosniff");
+  assert.equal(headers["X-Frame-Options"], "DENY");
+  assert.equal(headers["Referrer-Policy"], "strict-origin-when-cross-origin");
+  assert.equal(
+    headers["Permissions-Policy"],
+    "camera=(), microphone=(), geolocation=()",
+  );
+  assert.match(headers["Strict-Transport-Security"], /max-age=63072000/);
+});
+```
+
+- [ ] **Step 2: Run the test and verify the expected failure**
+
+```bash
+npx tsx --test tests/security-headers.test.ts
+```
+
+Expected: FAIL because `middleware.ts`, `buildContentSecurityPolicy`, and `nextConfig.headers` do not exist.
+
+- [ ] **Step 3: Create nonce-based middleware**
+
+Use:
+
+```ts
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+
+export function buildContentSecurityPolicy(
+  nonce: string,
+  isDevelopment: boolean,
+): string {
+  const developmentScript = isDevelopment ? " 'unsafe-eval'" : "";
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${developmentScript}`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' blob: data:",
+    "font-src 'self'",
+    "connect-src 'self'",
+    "worker-src 'self' blob:",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "upgrade-insecure-requests",
+  ].join("; ");
+}
+
+export function middleware(request: NextRequest): NextResponse {
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  const policy = buildContentSecurityPolicy(
+    nonce,
+    process.env.NODE_ENV === "development",
+  );
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set("Content-Security-Policy", policy);
+
+  const response = NextResponse.next({
+    request: { headers: requestHeaders },
+  });
+  response.headers.set("Content-Security-Policy", policy);
+  return response;
+}
+
+export const config = {
+  matcher: [
+    {
+      source: "/((?!api|_next/static|_next/image|favicon.ico).*)",
+      missing: [
+        { type: "header", key: "next-router-prefetch" },
+        { type: "header", key: "purpose", value: "prefetch" },
+      ],
+    },
+  ],
+};
+```
+
+The style directive permits inline styles because CopilotKit injects runtime
+styles. Script execution remains nonce-bound.
+
+- [ ] **Step 4: Add standard headers in `next.config.mjs`**
+
+Use:
+
+```js
+const SECURITY_HEADERS = [
+  {
+    key: "Strict-Transport-Security",
+    value: "max-age=63072000; includeSubDomains; preload",
+  },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=()",
+  },
+];
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  poweredByHeader: false,
+  serverExternalPackages: ["@daytona/sdk", "braintrust"],
+  async headers() {
+    return [{ source: "/(.*)", headers: SECURITY_HEADERS }];
+  },
+};
+
+export default nextConfig;
+```
+
+- [ ] **Step 5: Force request-time rendering so Next.js can apply the nonce**
+
+Use this complete page:
+
+```tsx
+import { connection } from "next/server";
+import AccessBoundary from "@/components/AccessBoundary";
+import MissionHeader from "@/components/MissionHeader";
+import PipelineView from "@/components/PipelineView";
+import { STAGED_PRS } from "@/lib/fixtures/prs";
+
+export default async function Page() {
+  await connection();
+  return (
+    <>
+      <MissionHeader />
+      <AccessBoundary>
+        <PipelineView
+          prs={STAGED_PRS}
+          gateMode={
+            process.env.SAFESHIP_GATE_MODE === "recorded"
+              ? "recorded_fixture"
+              : "live"
+          }
+          braintrustConfigured={Boolean(process.env.BRAINTRUST_API_KEY)}
+        />
+      </AccessBoundary>
+    </>
+  );
+}
+```
+
+- [ ] **Step 6: Verify CSP behavior, build, commit, and push**
+
+```bash
+npx tsx --test tests/security-headers.test.ts
+npm run typecheck
+npm run build
+git add middleware.ts tests/security-headers.test.ts next.config.mjs app/page.tsx
+git commit -m "security: add production response headers"
+git push origin integration/github-main-lane-c
+```
+
+---
+
+### Task 10: Create the Vercel handoff contract
 
 **Files:**
 
@@ -2165,7 +2377,7 @@ git push origin integration/github-main-lane-c
 
 ---
 
-### Task 10: Run production verification and prepare the deployment handoff
+### Task 11: Run production verification and prepare the deployment handoff
 
 **Files:**
 
