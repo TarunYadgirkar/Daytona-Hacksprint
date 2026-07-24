@@ -103,7 +103,7 @@ Outstanding operator work:
 - [x] Optional public GitHub PR importer added alongside all four staged cases, with a dedicated
   standalone JavaScript demo repository and pull request
 - [x] Fast sponsor path verified: Fireworks Kimi K2.6 Turbo with Priority returned successfully,
-  and Daytona `daytona-large` created in 251 ms before clean deletion
+  and a four-test Daytona `daytona-large` suite completed in 1.95 seconds before clean deletion
 
 ## Next
 

@@ -119,52 +119,56 @@ export async function runAdversarialSuite(opts: RunSandboxOptions): Promise<Sand
     onLog?.(`Sandbox ${sandbox.id} ready.`);
 
     await exec(sandbox, `mkdir -p ${ROOT}/before ${ROOT}/after`);
-    await writeFile(sandbox, `${ROOT}/before/target.js`, pr.before);
-    await writeFile(sandbox, `${ROOT}/after/target.js`, pr.after);
+    await Promise.all([
+      writeFile(sandbox, `${ROOT}/before/target.js`, pr.before),
+      writeFile(sandbox, `${ROOT}/after/target.js`, pr.after),
+    ]);
     onLog?.("Wrote before/ and after/ variants of the module under test.");
 
-    for (const test of tests) {
-      const testStart = Date.now();
-      const file = `${test.id}.js`;
-      await Promise.all([
-        writeFile(sandbox, `${ROOT}/before/${file}`, test.code),
-        writeFile(sandbox, `${ROOT}/after/${file}`, test.code),
-      ]);
+    const concurrentResults = await Promise.all(
+      tests.map(async (test): Promise<SandboxTestResult> => {
+        const testStart = Date.now();
+        const file = `${test.id}.js`;
+        await Promise.all([
+          writeFile(sandbox, `${ROOT}/before/${file}`, test.code),
+          writeFile(sandbox, `${ROOT}/after/${file}`, test.code),
+        ]);
 
-      const [beforeRun, afterRun] = await Promise.all([
-        exec(
-          sandbox,
-          `cd ${ROOT}/before && timeout ${DAYTONA_SANDBOX_POLICY.generatedTestTimeoutSeconds}s node ${file} 2>&1`,
-        ),
-        exec(
-          sandbox,
-          `cd ${ROOT}/after && timeout ${DAYTONA_SANDBOX_POLICY.generatedTestTimeoutSeconds}s node ${file} 2>&1`,
-        ),
-      ]);
+        const [beforeRun, afterRun] = await Promise.all([
+          exec(
+            sandbox,
+            `cd ${ROOT}/before && timeout ${DAYTONA_SANDBOX_POLICY.generatedTestTimeoutSeconds}s node ${file} 2>&1`,
+          ),
+          exec(
+            sandbox,
+            `cd ${ROOT}/after && timeout ${DAYTONA_SANDBOX_POLICY.generatedTestTimeoutSeconds}s node ${file} 2>&1`,
+          ),
+        ]);
 
-      // Exit 0 is a pass. 124 is GNU timeout's "killed", which we count as a
-      // fail rather than an error: a hang is a real failure of the claim.
-      const toOutcome = (r: ExecResult): RunOutcome => {
-        if (r.exitCode === 0) return "pass";
-        if (/SyntaxError|Cannot find module|ReferenceError: require/i.test(r.stdout)) return "error";
-        return "fail";
-      };
+        const toOutcome = (r: ExecResult): RunOutcome => {
+          if (r.exitCode === 0) return "pass";
+          if (/SyntaxError|Cannot find module|ReferenceError: require/i.test(r.stdout)) return "error";
+          return "fail";
+        };
 
-      const before = toOutcome(beforeRun);
-      const after = toOutcome(afterRun);
+        const before = toOutcome(beforeRun);
+        const after = toOutcome(afterRun);
 
-      const result: SandboxTestResult = {
-        testId: test.id,
-        testName: test.name,
-        hypothesis: test.hypothesis,
-        before,
-        after,
-        verdict: classify(before, after),
-        stdout: afterRun.stdout.slice(0, 4000),
-        stderr: before === "error" || after === "error" ? beforeRun.stdout.slice(0, 2000) : "",
-        durationMs: Date.now() - testStart,
-      };
+        return {
+          testId: test.id,
+          testName: test.name,
+          hypothesis: test.hypothesis,
+          before,
+          after,
+          verdict: classify(before, after),
+          stdout: afterRun.stdout.slice(0, 4000),
+          stderr: before === "error" || after === "error" ? beforeRun.stdout.slice(0, 2000) : "",
+          durationMs: Date.now() - testStart,
+        };
+      }),
+    );
 
+    for (const result of concurrentResults) {
       results.push(result);
       onResult?.(result);
     }
