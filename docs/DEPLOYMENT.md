@@ -8,13 +8,18 @@ not ready merely because it builds.
 1. Import this repository as a Next.js project.
 2. Keep the Node.js runtime and allow the gate route's 300-second
    `maxDuration` where the plan permits it.
-3. Add the production and preview environment variables from `.env.example`.
-   Set `CODERABBIT_MODE=cache`; never use CLI mode during a demo.
+3. Add the exact production and preview environment variables from
+   [`VERCEL_HANDOFF.md`](./VERCEL_HANDOFF.md). Keep
+   `CODERABBIT_MODE=cache`; never use CLI mode during a demo.
 4. Generate a strong, shareable `SAFESHIP_DEMO_ACCESS_CODE`. Set it for both
    Preview and Production, then redeploy. Environment-variable changes do not
    affect already-created deployments.
 5. Do not set `SAFESHIP_GATE_MODE=recorded` on the live demo. It exists for
    deterministic browser testing only.
+
+Copy sensitive values directly from the ignored local `.env` into Vercel
+Project Settings. Do not print or commit them. Environment changes require a
+redeploy.
 
 SafeShip checks Vercel's `VERCEL_ENV`. A production request fails closed with
 HTTP 503 when `SAFESHIP_DEMO_ACCESS_CODE` is absent, instead of exposing paid
