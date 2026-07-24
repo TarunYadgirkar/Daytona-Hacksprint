@@ -46,6 +46,18 @@ export function compare(sandbox: SandboxReport, review: CodeRabbitReview): Agree
     };
   }
 
+  const hasConclusiveEvidence = sandbox.results.some(
+    (result) => result.verdict === "claim_upheld" || result.verdict === "claim_broken",
+  );
+  if (!hasConclusiveEvidence) {
+    return {
+      agree: false,
+      kind: "no_evidence",
+      summary:
+        "No adversarial test produced conclusive evidence, so there is nothing to compare with the static review.",
+    };
+  }
+
   const evidenceObjects = sandbox.claimBroken;
   const opinionObjects = review.verdict === "block";
 
@@ -96,6 +108,15 @@ export function decide(
     return {
       call: "block",
       rationale: `No evidence available: the sandbox failed with "${sandbox.infraError}". SafeShip blocks when it cannot verify rather than assuming the claim holds.`,
+      requiresHuman: true,
+    };
+  }
+
+  if (agreement.kind === "no_evidence") {
+    return {
+      call: "block",
+      rationale:
+        "No conclusive evidence is available. SafeShip blocks when it cannot verify rather than assuming the claim holds.",
       requiresHuman: true,
     };
   }
