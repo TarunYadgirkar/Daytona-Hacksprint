@@ -10,6 +10,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CopilotSidebar } from "@copilotkit/react-core/v2";
+import { formatEvidenceReport } from "@/lib/evidence-report";
 import { decodeSSE } from "@/lib/events";
 import { RECORDED_RUNS } from "@/lib/fixtures/recorded-runs";
 import {
@@ -95,36 +96,6 @@ function braintrustProvenance(value: BraintrustProvenance | null): string {
   if (value === "configured") return "logging configured";
   if (value === "not_configured") return "not configured";
   return "not run";
-}
-
-function evidenceReportText(input: {
-  runId: string;
-  claim: ExtractedClaim;
-  tests: AdversarialTest[];
-  results: SandboxTestResult[];
-  review: CodeRabbitReview;
-  agreement: AgreementAnalysis;
-  decision: GateDecision;
-}): string {
-  const resultById = new Map(input.results.map((result) => [result.testId, result]));
-  return [
-    `SafeShip evidence report`,
-    `Run: ${input.runId}`,
-    `Claim: ${input.claim.statement}`,
-    "",
-    "Adversarial execution:",
-    ...input.tests.map((test) => {
-      const result = resultById.get(test.id);
-      return result
-        ? `- ${test.name}: before=${result.before}, after=${result.after}, verdict=${result.verdict}`
-        : `- ${test.name}: no execution result`;
-    }),
-    "",
-    `CodeRabbit: ${input.review.verdict} (${input.review.source})`,
-    `Comparison: ${input.agreement.kind} — ${input.agreement.summary}`,
-    `Recommendation: ${input.decision.call.toUpperCase()} — ${input.decision.rationale}`,
-    "Human decision required: yes",
-  ].join("\n");
 }
 
 export default function PipelineView({
@@ -548,7 +519,7 @@ export default function PipelineView({
 
   const report =
     runId && claim && review && agreement && decision
-      ? evidenceReportText({
+      ? formatEvidenceReport({
           runId,
           claim,
           tests,
