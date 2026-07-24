@@ -32,6 +32,7 @@ const ROOT = "/home/daytona/popper";
 export const DAYTONA_SANDBOX_POLICY = {
   createParams: {
     language: "javascript",
+    snapshot: process.env.DAYTONA_SNAPSHOT ?? "daytona-large",
     public: false,
     networkBlockAll: true,
     ephemeral: true,
@@ -101,7 +102,11 @@ export async function runAdversarialSuite(opts: RunSandboxOptions): Promise<Sand
 
   if (!process.env.DAYTONA_API_KEY) throw new Error("DAYTONA_API_KEY is not set");
 
-  const daytona = new Daytona({ apiKey: process.env.DAYTONA_API_KEY });
+  const daytona = new Daytona({
+    apiKey: process.env.DAYTONA_API_KEY,
+    apiUrl: process.env.DAYTONA_API_URL,
+    target: process.env.DAYTONA_TARGET,
+  });
   let sandbox: any = null;
   const results: SandboxTestResult[] = [];
 
@@ -121,17 +126,21 @@ export async function runAdversarialSuite(opts: RunSandboxOptions): Promise<Sand
     for (const test of tests) {
       const testStart = Date.now();
       const file = `${test.id}.js`;
-      await writeFile(sandbox, `${ROOT}/before/${file}`, test.code);
-      await writeFile(sandbox, `${ROOT}/after/${file}`, test.code);
+      await Promise.all([
+        writeFile(sandbox, `${ROOT}/before/${file}`, test.code),
+        writeFile(sandbox, `${ROOT}/after/${file}`, test.code),
+      ]);
 
-      const beforeRun = await exec(
-        sandbox,
-        `cd ${ROOT}/before && timeout ${DAYTONA_SANDBOX_POLICY.generatedTestTimeoutSeconds}s node ${file} 2>&1`,
-      );
-      const afterRun = await exec(
-        sandbox,
-        `cd ${ROOT}/after && timeout ${DAYTONA_SANDBOX_POLICY.generatedTestTimeoutSeconds}s node ${file} 2>&1`,
-      );
+      const [beforeRun, afterRun] = await Promise.all([
+        exec(
+          sandbox,
+          `cd ${ROOT}/before && timeout ${DAYTONA_SANDBOX_POLICY.generatedTestTimeoutSeconds}s node ${file} 2>&1`,
+        ),
+        exec(
+          sandbox,
+          `cd ${ROOT}/after && timeout ${DAYTONA_SANDBOX_POLICY.generatedTestTimeoutSeconds}s node ${file} 2>&1`,
+        ),
+      ]);
 
       // Exit 0 is a pass. 124 is GNU timeout's "killed", which we count as a
       // fail rather than an error: a hang is a real failure of the claim.

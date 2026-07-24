@@ -102,6 +102,8 @@ Outstanding operator work:
   staged-case allowlisting, fixed test counts, and a per-client live-run quota
 - [x] Optional public GitHub PR importer added alongside all four staged cases, with a dedicated
   standalone JavaScript demo repository and pull request
+- [x] Fast sponsor path verified: Fireworks Kimi K2.6 Turbo with Priority returned successfully,
+  and Daytona `daytona-large` created in 251 ms before clean deletion
 
 ## Next
 

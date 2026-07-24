@@ -48,6 +48,8 @@ if (gateMode === "recorded") {
 }
 
 console.log(`\n  Fireworks model: ${process.env.FIREWORKS_MODEL ?? "(default)"}`);
+console.log(`  Fireworks tier: ${process.env.FIREWORKS_SERVICE_TIER ?? "priority"}`);
+console.log(`  Daytona snapshot: ${process.env.DAYTONA_SNAPSHOT ?? "daytona-large"}`);
 console.log("  Verify this ID against fireworks.ai/models — the catalog changes.\n");
 
 if (fatal) {
