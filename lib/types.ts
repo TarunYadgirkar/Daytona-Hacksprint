@@ -40,6 +40,8 @@ export interface StagedPR {
   entryFile: string;
   /** Narrative note for the demo operator. Never shown to the model. */
   demoNote?: string;
+  /** Public source when the case was imported from GitHub. */
+  sourceUrl?: string;
 }
 
 /** Stage 1 output: the specific behavioural promise the PR is making. */

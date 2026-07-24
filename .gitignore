@@ -21,3 +21,4 @@ blob-report/
 # Logs and operating-system files
 *.log
 .DS_Store
+.vercel

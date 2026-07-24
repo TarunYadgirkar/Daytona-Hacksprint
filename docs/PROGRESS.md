@@ -95,11 +95,13 @@ Outstanding operator work:
 - [x] Responsive and accessibility coverage added for locked, idle, active, completed, error,
   keyboard, reduced-motion, recorded fallback, and four comparison quadrants
 - [x] Final frontend deterministic gate passed: environment preflight, zero-warning lint, strict
-  typecheck, all 40 current unit/configuration tests, and a dynamic production build
+  typecheck, all 42 current unit/configuration tests, and a dynamic production build
 - [x] Product renamed to Popper across tracked source, UI, metadata,
   prompts, tests, docs, storage keys, and sponsor defaults
 - [x] Application access-code boundary removed for the public hackathon demo while retaining
   staged-case allowlisting, fixed test counts, and a per-client live-run quota
+- [x] Optional public GitHub PR importer added alongside all four staged cases, with a dedicated
+  standalone JavaScript demo repository and pull request
 
 ## Next
 

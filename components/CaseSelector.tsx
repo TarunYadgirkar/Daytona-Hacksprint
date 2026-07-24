@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { RunOrigin } from "@/lib/replay";
 import type { StagedPR } from "@/lib/types";
 
@@ -8,8 +9,11 @@ type Props = {
   selectedId: string | null;
   running: boolean;
   gateMode: RunOrigin;
+  importing: boolean;
+  importError: string | null;
   onSelect: (prId: string) => void;
   onRun: (prId: string) => void;
+  onImport: (url: string) => Promise<void>;
 };
 
 export default function CaseSelector({
@@ -17,9 +21,13 @@ export default function CaseSelector({
   selectedId,
   running,
   gateMode,
+  importing,
+  importError,
   onSelect,
   onRun,
+  onImport,
 }: Props) {
+  const [githubUrl, setGitHubUrl] = useState("");
   const active = prs.find((pr) => pr.id === selectedId);
 
   return (
@@ -45,6 +53,27 @@ export default function CaseSelector({
             </button>
           ))}
         </div>
+        <form
+          className="github-import"
+          onSubmit={(event) => {
+            event.preventDefault();
+            void onImport(githubUrl);
+          }}
+        >
+          <label htmlFor="github-pr-url">Import a public GitHub PR</label>
+          <input
+            id="github-pr-url"
+            type="url"
+            value={githubUrl}
+            disabled={running || importing}
+            placeholder="https://github.com/owner/repo/pull/1"
+            onChange={(event) => setGitHubUrl(event.target.value)}
+          />
+          <button type="submit" disabled={running || importing || !githubUrl.trim()}>
+            {importing ? "Importing…" : "Import PR"}
+          </button>
+          {importError && <p role="alert">{importError}</p>}
+        </form>
       </section>
 
       {active && (
@@ -59,6 +88,11 @@ export default function CaseSelector({
           <p className="case-safety">
             Nothing runs until you start the gate.
           </p>
+          {active.sourceUrl && (
+            <a href={active.sourceUrl} target="_blank" rel="noreferrer">
+              View source PR on GitHub
+            </a>
+          )}
           <button
             type="button"
             className="act primary"

@@ -36,6 +36,10 @@ Run `pr-103`. CodeRabbit blocks it for prototype pollution and every adversarial
 
 That second case is what separates this from a tool that just argues with CodeRabbit, and it is worth the minute if you have it.
 
+Alternatively, paste `https://github.com/TarunYadgirkar/popper-demo-cart/pull/1`
+into **Import a public GitHub PR**. Show that Popper fetched a real GitHub diff,
+then return to the loaded staged case for the reliable live or recorded run.
+
 ## Questions you will get
 
 **"Isn't this just tests?"** Tests written by the same agent that wrote the code inherit its blind spots. These are generated against the *claim*, adversarially, and scored on whether they fail before and pass after — which is what makes them evidence rather than decoration.

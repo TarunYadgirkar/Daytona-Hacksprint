@@ -28,6 +28,9 @@ Do not set these variables in Preview or Production:
 The CodeRabbit API key is for the local recorder only and is not needed in
 Vercel cache mode.
 
+`GITHUB_TOKEN` is optional. Public PR import works without it, but a server-side
+token raises GitHub API rate limits. Never use a `NEXT_PUBLIC_` token.
+
 ## Deployment settings
 
 1. Use Node.js 22.x and the repository's standard Next.js build settings.
