@@ -3,11 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "description": "Adversarial PR verification gate. Extracts a PR's behavioral claim, generates tests designed to break it, and runs them in a sandbox for real pass/fail evidence.",
+  "packageManager": "npm@10.8.2",
+  "engines": {
+    "node": ">=20.20.0 <21"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "tsx --test lib/adapters/coderabbit.test.ts lib/adapters/fireworks.test.ts lib/pipeline.test.ts lib/replay.test.ts",
+    "test": "tsx --test tests/*.test.ts lib/adapters/*.test.ts lib/*.test.ts",
     "typecheck": "tsc --noEmit",
     "record:coderabbit": "tsx scripts/record-coderabbit.ts",
     "check:env": "tsx scripts/check-env.ts",
