@@ -20,7 +20,6 @@ import {
   parseRunLibrary,
   REPLAY_STORAGE_KEY,
   serializeRunLibrary,
-  type BraintrustProvenance,
   type RunOrigin,
   type RunRecord,
 } from "@/lib/replay";
@@ -37,26 +36,16 @@ import type {
   StagedPR,
 } from "@/lib/types";
 import { STAGE_ORDER } from "@/lib/types";
+import CaseSelector from "./CaseSelector";
 import CopilotTools, { type GateSnapshot } from "./CopilotTools";
-import OverrideBar from "./OverrideBar";
+import DecisionPanel from "./DecisionPanel";
+import EvidenceWorkspace from "./EvidenceWorkspace";
 import RunGallery from "./RunGallery";
-import StageList, { type StageState } from "./StageList";
-import TestTable from "./TestTable";
-import VerdictRail from "./VerdictRail";
-
-type ConnectionState =
-  | "idle"
-  | "connecting"
-  | "connected"
-  | "complete"
-  | "disconnected"
-  | "recorded";
-
-interface RunNotice {
-  severity: "warning" | "error";
-  title: string;
-  message: string;
-}
+import RunStatus, {
+  type ConnectionState,
+  type RunNotice,
+} from "./RunStatus";
+import type { StageState } from "./StageList";
 
 const STAGE_TIMEOUT_MS: Record<StageName, number> = {
   claim: 45_000,
@@ -78,25 +67,6 @@ const completedStages = () =>
     StageName,
     StageState
   >;
-
-function executionProvenance(origin: RunOrigin | null): string {
-  if (origin === "live") return "live call";
-  if (origin === "recorded_fixture") return "recorded fixture";
-  return "not run";
-}
-
-function reviewProvenance(review: CodeRabbitReview | null): string {
-  if (!review) return "not loaded";
-  if (review.source === "cache") return "recorded cache";
-  if (review.source === "cli") return "live CLI";
-  return "fixture placeholder";
-}
-
-function braintrustProvenance(value: BraintrustProvenance | null): string {
-  if (value === "configured") return "logging configured";
-  if (value === "not_configured") return "not configured";
-  return "not run";
-}
 
 export default function PipelineView({
   prs,
@@ -137,8 +107,6 @@ export default function PipelineView({
     () => mergeRunRecords(storedRecords, RECORDED_RUNS),
     [storedRecords],
   );
-
-  const activePR = prs.find((pr) => pr.id === selected);
 
   const clearStageTimer = useCallback((stage: StageName) => {
     const timer = stageTimers.current[stage];
@@ -551,42 +519,14 @@ export default function PipelineView({
 
       <div className="shell">
         <aside>
-          <section className="panel">
-            <span className="label">Queued PRs · agent-authored</span>
-            {prs.map((pr) => (
-              <button
-                key={pr.id}
-                type="button"
-                className="pr-card"
-                aria-pressed={selected === pr.id}
-                disabled={running}
-                onClick={() => selectPR(pr.id)}
-              >
-                <span className="id">
-                  {pr.id} · {pr.author}
-                </span>
-                <span className="title">{pr.title}</span>
-              </button>
-            ))}
-
-            {activePR && (
-              <div className="run-control">
-                <button
-                  type="button"
-                  className="act"
-                  disabled={running}
-                  onClick={() => startRun(activePR.id)}
-                >
-                  {running ? "Gate running…" : "Run adversarial gate"}
-                </button>
-                <span>
-                  {gateMode === "recorded_fixture"
-                    ? "Recorded test mode · no sponsor APIs"
-                    : "Estimated 30–120 seconds · uses Fireworks and a live Daytona sandbox"}
-                </span>
-              </div>
-            )}
-          </section>
+          <CaseSelector
+            prs={prs}
+            selectedId={selected}
+            running={running}
+            gateMode={gateMode}
+            onSelect={selectPR}
+            onRun={startRun}
+          />
 
           <RunGallery
             records={galleryRecords}
@@ -594,16 +534,6 @@ export default function PipelineView({
             activeId={activeRecord?.id ?? null}
             onLoad={showCompletedResult}
           />
-
-          {activePR && (
-            <section className="panel">
-              <span className="label">Diff under test</span>
-              <span className="label diff-label">before</span>
-              <pre className="diff-code">{activePR.before}</pre>
-              <span className="label diff-label">after</span>
-              <pre className="diff-code">{activePR.after}</pre>
-            </section>
-          )}
         </aside>
 
         <main>
@@ -618,173 +548,48 @@ export default function PipelineView({
 
           {selected && (
             <>
-              <section className="run-status panel" aria-label="Run status">
-                <div>
-                  <span className="label">Run status</span>
-                  <strong className={`connection ${connection}`}>{connection}</strong>
-                </div>
-                <div className="provenance-grid">
-                  <span>Fireworks: {executionProvenance(displayedOrigin)}</span>
-                  <span>Daytona: {executionProvenance(displayedOrigin)}</span>
-                  <span>CodeRabbit: {reviewProvenance(review)}</span>
-                  <span>Braintrust: {braintrustProvenance(displayedBraintrust)}</span>
-                </div>
-                {runId && (
-                  <div className="run-id">
-                    <span title={runId}>Run ID: {runId}</span>
-                    <button
-                      type="button"
-                      className="text-button"
-                      onClick={() => copyText(runId, "Run ID copied.")}
-                    >
-                      Copy run ID
-                    </button>
-                  </div>
-                )}
-              </section>
+              <RunStatus
+                connection={connection}
+                runId={runId}
+                running={running}
+                notice={runNotice}
+                activeRecord={activeRecord}
+                origin={displayedOrigin}
+                braintrust={displayedBraintrust}
+                review={review}
+                onCopyRunId={() => {
+                  if (runId) void copyText(runId, "Run ID copied.");
+                }}
+                onRetry={retryRun}
+                onLoadRecorded={loadRecordedForSelection}
+              />
 
-              {activeRecord && connection === "recorded" && (
-                <div className="replay-banner" role="status">
-                  Loaded {activeRecord.origin === "live" ? "a saved live run" : "a recorded fixture"}{" "}
-                  captured {new Date(activeRecord.capturedAt).toLocaleString()}. No model, sandbox,
-                  review command, or Braintrust write ran again.
-                </div>
-              )}
-
-              {runNotice && (
-                <section className={`run-alert ${runNotice.severity}`} role="alert">
-                  <strong>{runNotice.title}</strong>
-                  <p>{runNotice.message}</p>
-                  <div className="run-alert-actions">
-                    <button
-                      type="button"
-                      className="act"
-                      onClick={retryRun}
-                      disabled={running}
-                    >
-                      Retry run
-                    </button>
-                    <button
-                      type="button"
-                      className="act ghost"
-                      onClick={loadRecordedForSelection}
-                    >
-                      {running ? "Abort and load recorded run" : "Load recorded run"}
-                    </button>
-                  </div>
-                </section>
-              )}
-
-              <section className="panel">
-                <span className="label">The claim this PR is making</span>
-                {claim ? (
-                  <>
-                    <p className="claim">{claim.statement}</p>
-                    <p className="claim-meta">
-                      Target behaviour: {claim.targetBehavior || "—"}
-                      {claim.impliedInputs.length > 0 &&
-                        ` · Implied inputs: ${claim.impliedInputs.join(", ")}`}
-                      {" · "}confidence {claim.confidence.toFixed(2)}
-                      {claim.confidence < 0.5 &&
-                        " (low — the description was vague)"}
-                    </p>
-                  </>
-                ) : (
-                  <p className="empty">
-                    {running
-                      ? "Reading the pull request…"
-                      : "Ready. Start the gate to extract a falsifiable claim, or load a recorded run."}
-                  </p>
-                )}
-              </section>
-
-              <section className="panel">
-                <span className="label">Evidence vs opinion</span>
-                <VerdictRail
-                  sandbox={sandbox}
-                  review={review}
-                  agreement={agreement}
-                />
-              </section>
+              <EvidenceWorkspace
+                running={running}
+                claim={claim}
+                tests={tests}
+                results={results}
+                sandbox={sandbox}
+                review={review}
+                agreement={agreement}
+                stages={stages}
+                timings={timings}
+                logs={logs}
+              />
 
               {decision && runId && (
-                <section className="panel decision-panel">
-                  <div className="decision-actions">
-                    <span className="label">Human gate</span>
-                    {report && (
-                      <button
-                        type="button"
-                        className="act ghost"
-                        onClick={() =>
-                          copyText(report, "Evidence report copied.")
-                        }
-                      >
-                        Copy evidence report
-                      </button>
-                    )}
-                  </div>
-                  <OverrideBar
-                    key={runId}
-                    runId={runId}
-                    decision={decision}
-                    onOverride={submitOverride}
-                  />
-                  {copyNotice && <p className="copy-notice">{copyNotice}</p>}
-                </section>
-              )}
-
-              <section className="panel">
-                <span className="label">Pipeline</span>
-                <StageList states={stages} timings={timings} logs={logs} />
-              </section>
-
-              <section className="panel">
-                <span className="label">
-                  Adversarial tests · run against both revisions
-                </span>
-                <TestTable tests={tests} results={results} />
-                {sandbox?.infraError && (
-                  <p className="provenance evidence-error">
-                    Sandbox error: {sandbox.infraError}. No evidence was produced, so the gate
-                    blocks rather than assuming the claim holds.
-                  </p>
-                )}
-              </section>
-
-              {review && (
-                <section className="panel">
-                  <span className="label">
-                    CodeRabbit · independent static review
-                  </span>
-                  <p className="provenance">
-                    {review.source === "cache"
-                      ? `Recorded verdict from ${new Date(review.recordedAt).toLocaleString()}.`
-                      : review.source === "fixture"
-                        ? "Staged placeholder—not CodeRabbit output. Authenticate and run the recorder before presenting it as an independent review."
-                        : "Live CodeRabbit CLI review, run just now."}
-                  </p>
-                  {review.findings.length === 0 ? (
-                    <p className="empty">No findings.</p>
-                  ) : (
-                    review.findings.map((finding, index) => (
-                      <div
-                        className={`finding ${finding.severity}`}
-                        key={`${finding.title}-${index}`}
-                      >
-                        <span className="sev">{finding.severity}</span>
-                        {finding.file && (
-                          <span className="where">
-                            {" "}
-                            · {finding.file}
-                            {finding.line ? `:${finding.line}` : ""}
-                          </span>
-                        )}
-                        <div>{finding.title}</div>
-                        {finding.body && <p>{finding.body}</p>}
-                      </div>
-                    ))
-                  )}
-                </section>
+                <DecisionPanel
+                  runId={runId}
+                  decision={decision}
+                  report={report}
+                  copyNotice={copyNotice}
+                  onCopyReport={() => {
+                    if (report) {
+                      void copyText(report, "Evidence report copied.");
+                    }
+                  }}
+                  onOverride={submitOverride}
+                />
               )}
             </>
           )}

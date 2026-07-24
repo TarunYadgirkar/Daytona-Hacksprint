@@ -18,7 +18,23 @@ async function loadBundledRun(page: Page, prId: string): Promise<void> {
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByText("Recorded-runs gallery")).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText("Recorded-runs gallery")).toBeVisible({
+    timeout: 45_000,
+  });
+});
+
+test("the first viewport explains the method and sponsor roles", async ({ page }) => {
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Do not trust the diff. Test the claim.",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText("Fireworks: attack generation")).toBeVisible();
+  await expect(page.getByText("Daytona: execution")).toBeVisible();
+  await expect(page.getByText("CodeRabbit: opinion")).toBeVisible();
+  await expect(page.getByText("Braintrust: trace")).toBeVisible();
+  await expect(page.getByText("CopilotKit: interrogation")).toBeVisible();
 });
 
 test("selecting a PR previews it without starting a run", async ({ page }) => {
@@ -28,7 +44,9 @@ test("selecting a PR previews it without starting a run", async ({ page }) => {
   });
 
   await selectPR(page, "pr-101");
+  await expect(page.getByRole("heading", { name: "Case file pr-101" })).toBeVisible();
   await expect(page.getByText("Diff under test")).toBeVisible();
+  await expect(page.getByText("Nothing runs until you start the gate.")).toBeVisible();
   await expect(page.getByRole("button", { name: "Run adversarial gate" })).toBeVisible();
   await expect(page.locator(".connection")).toHaveText("idle");
   await expect(page.getByText(/Ready\. Start the gate/)).toBeVisible();
@@ -46,7 +64,7 @@ test("a recorded case can interrupt an active live run", async ({ page }) => {
       onmessage: ((event: MessageEvent) => void) | null = null;
       onerror: ((event: Event) => void) | null = null;
 
-      constructor(_url: string | URL) {
+      constructor() {
         window.setTimeout(() => this.onopen?.(new Event("open")), 0);
       }
 
@@ -105,12 +123,62 @@ test("completed evidence-only fixture blocks and labels opinion provenance", asy
 }) => {
   await runRecordedGate(page);
 
+  const stages = page.locator(".stage");
+  await expect(stages.first().getByText(/Pending|Running|Complete|Error/)).toBeVisible();
+  await expect(
+    page.getByRole("status", { name: "Pipeline status updates" }),
+  ).toBeAttached();
   await expect(page.locator(".rail-kind")).toHaveText("Disagreement — evidence only");
   await expect(page.locator(".call.block")).toHaveText("Block");
   await expect(
     page.getByText(/Staged placeholder—not CodeRabbit output/),
   ).toBeVisible();
   await expect(page.getByRole("button", { name: "Copy evidence report" })).toBeVisible();
+});
+
+test("completed evidence follows the claim-to-human-decision story", async ({
+  page,
+}) => {
+  await loadBundledRun(page, "pr-101");
+  const labels = await page
+    .locator(".evidence-workspace > section .label")
+    .allTextContents();
+  expect(labels).toEqual([
+    "The claim",
+    "Execution evidence vs review opinion",
+    "Pipeline",
+    "Adversarial execution",
+    "CodeRabbit opinion",
+  ]);
+  await expect(page.getByText("Execution evidence", { exact: true })).toBeVisible();
+  await expect(
+    page.locator(".rail-half.right").getByText("CodeRabbit opinion", {
+      exact: true,
+    }),
+  ).toBeVisible();
+});
+
+test("the forensic control room exposes its signature visual tokens", async ({
+  page,
+}) => {
+  const tokens = await page.evaluate(() => {
+    const style = getComputedStyle(document.documentElement);
+    return {
+      ground: style.getPropertyValue("--ground").trim(),
+      signal: style.getPropertyValue("--signal").trim(),
+      danger: style.getPropertyValue("--danger").trim(),
+      seam: style.getPropertyValue("--seam").trim(),
+      display: style.getPropertyValue("--display").trim(),
+    };
+  });
+
+  expect(tokens).toEqual({
+    ground: "#071016",
+    signal: "#42e397",
+    danger: "#ff6565",
+    seam: "#5b91ff",
+    display: 'var(--font-display), "Arial Narrow", sans-serif',
+  });
 });
 
 test("unavailable evidence is never rendered as green", async ({ page }) => {
@@ -215,6 +283,63 @@ test("failed override never displays a recorded success", async ({ page }) => {
     "Recorded fixture decisions are not written to Braintrust",
   );
   await expect(page.locator(".override-done")).toHaveCount(0);
+});
+
+for (const expected of [
+  { prId: "pr-101", kind: "Disagreement — evidence only", call: "Block" },
+  { prId: "pr-102", kind: "Agreement — both clear", call: "Merge" },
+  { prId: "pr-103", kind: "Disagreement — opinion only", call: "Block" },
+  { prId: "pr-104", kind: "Agreement — both caught it", call: "Block" },
+]) {
+  test(`recorded ${expected.prId} preserves its comparison and call`, async ({
+    page,
+  }) => {
+    await loadBundledRun(page, expected.prId);
+    await expect(page.locator(".rail-kind")).toHaveText(expected.kind);
+    await expect(page.locator(".call")).toHaveText(expected.call);
+  });
+}
+
+test("a disconnected live stream exposes recovery without inventing evidence", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    class DisconnectedEventSource {
+      onopen: ((event: Event) => void) | null = null;
+      onmessage: ((event: MessageEvent) => void) | null = null;
+      onerror: ((event: Event) => void) | null = null;
+
+      constructor() {
+        window.setTimeout(() => {
+          this.onopen?.(new Event("open"));
+          this.onerror?.(new Event("error"));
+        }, 0);
+      }
+
+      close() {}
+    }
+
+    Object.defineProperty(window, "EventSource", {
+      configurable: true,
+      value: DisconnectedEventSource,
+    });
+  });
+
+  await page.reload();
+  await expect(page.getByText("Agent-authored pull requests")).toBeVisible({
+    timeout: 45_000,
+  });
+  await selectPR(page, "pr-101");
+  await page.getByRole("button", { name: "Run adversarial gate" }).click();
+  await expect(page.getByRole("alert")).toContainText(
+    "Pipeline connection closed",
+  );
+  await expect(
+    page.locator(".run-alert").getByRole("button", {
+      name: "Load recorded run",
+    }),
+  ).toBeEnabled();
+  await expect(page.locator(".rail-half").first()).toContainText("not run");
 });
 
 for (const viewport of [

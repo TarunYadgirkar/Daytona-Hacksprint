@@ -76,12 +76,15 @@ export default function AccessBoundary({ children }: { children: ReactNode }) {
 
   return (
     <main className="access-shell">
-      <section className="panel access-panel">
-        <span className="label">Protected live integrations</span>
-        <h2>Enter the SafeShip demo code</h2>
+      <section className="access-panel" aria-labelledby="access-title">
+        <span className="access-index">
+          Protected integration boundary / 00
+        </span>
+        <p className="eyebrow">Live sponsor calls are locked</p>
+        <h2 id="access-title">Enter the SafeShip demo code</h2>
         <p>
-          Live gates create a Daytona sandbox and call Fireworks. Access is limited to prevent
-          accidental or automated runs.
+          A live gate generates attacks with Fireworks and creates a Daytona
+          sandbox. Unlocking requires one explicit operator code.
         </p>
 
         {state.status === "checking" && <p className="empty">Checking access…</p>}

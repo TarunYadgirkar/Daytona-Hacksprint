@@ -1,14 +1,15 @@
+import { connection } from "next/server";
 import AccessBoundary from "@/components/AccessBoundary";
+import MissionHeader from "@/components/MissionHeader";
 import PipelineView from "@/components/PipelineView";
 import { STAGED_PRS } from "@/lib/fixtures/prs";
 
-export default function Page() {
+export default async function Page() {
+  await connection();
+
   return (
     <>
-      <header className="masthead">
-        <h1>SafeShip</h1>
-        <p>Most review tools ask whether the diff looks right. This one tries to break what the PR claims.</p>
-      </header>
+      <MissionHeader />
       <AccessBoundary>
         <PipelineView
           prs={STAGED_PRS}

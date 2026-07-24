@@ -5,7 +5,10 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 const packageJson = JSON.parse(
   readFileSync(new URL("package.json", root), "utf8"),
-) as { scripts?: Record<string, string> };
+) as {
+  scripts?: Record<string, string>;
+  devDependencies?: Record<string, string>;
+};
 const workflowPath = new URL(".github/workflows/ci.yml", root);
 
 test("defines the local verification command", () => {
@@ -16,6 +19,8 @@ test("defines the local verification command", () => {
 });
 
 test("runs every verification gate and recorded browser suite in CI", () => {
+  assert.equal(packageJson.devDependencies?.["@playwright/test"], "1.61.1");
+  assert.equal(packageJson.devDependencies?.["@axe-core/playwright"], "4.12.1");
   assert.equal(existsSync(workflowPath), true, "CI workflow must exist");
   const workflow = readFileSync(workflowPath, "utf8");
   for (const fragment of [
@@ -25,7 +30,6 @@ test("runs every verification gate and recorded browser suite in CI", () => {
     "run: npm run typecheck",
     "run: npm test",
     "run: npm run build",
-    "npm install --no-save --package-lock=false @playwright/test@1.61.1",
     "npx playwright install --with-deps chromium",
     "run: npm run test:e2e",
     "SAFESHIP_GATE_MODE: recorded",

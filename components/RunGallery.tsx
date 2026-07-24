@@ -6,6 +6,18 @@ function originLabel(record: RunRecord): string {
   return record.origin === "live" ? "Live capture" : "Recorded fixture";
 }
 
+const COMPARISON_LABEL: Record<
+  RunRecord["result"]["agreement"]["kind"],
+  string
+> = {
+  both_caught: "Both methods caught it",
+  both_clear: "Both methods clear",
+  evidence_only: "Evidence caught it",
+  opinion_only: "Opinion caught it",
+  no_evidence: "Evidence unavailable",
+  no_opinion: "Opinion unavailable",
+};
+
 export default function RunGallery({
   records,
   running,
@@ -48,6 +60,10 @@ export default function RunGallery({
                 <div>
                   <dt>Evidence</dt>
                   <dd>{evidenceAvailable ? "available" : "unavailable"}</dd>
+                </div>
+                <div>
+                  <dt>Comparison</dt>
+                  <dd>{COMPARISON_LABEL[record.result.agreement.kind]}</dd>
                 </div>
                 <div>
                   <dt>Run ID</dt>

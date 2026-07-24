@@ -20,6 +20,13 @@ const DOT: Record<StageState, string> = {
   error: "✕",
 };
 
+const STATE_LABEL: Record<StageState, string> = {
+  pending: "Pending",
+  running: "Running",
+  done: "Complete",
+  error: "Error",
+};
+
 export default function StageList({
   states,
   timings,
@@ -30,7 +37,7 @@ export default function StageList({
   logs: Array<{ stage: StageName; message: string }>;
 }) {
   return (
-    <div>
+    <div role="status" aria-label="Pipeline status updates">
       {STAGE_ORDER.map((stage) => {
         const stageLogs = logs.filter((l) => l.stage === stage);
         const ms = timings[stage];
@@ -39,6 +46,9 @@ export default function StageList({
             <div className="stage" data-state={states[stage]}>
               <span className="dot" aria-hidden="true">{DOT[states[stage]]}</span>
               <span>{STAGE_LABEL[stage]}</span>
+              <span className="stage-state">
+                {STATE_LABEL[states[stage]]}
+              </span>
               <span className="ms">{ms !== undefined ? `${(ms / 1000).toFixed(1)}s` : ""}</span>
             </div>
             {states[stage] !== "pending" &&

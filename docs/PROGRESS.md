@@ -90,6 +90,12 @@ Outstanding operator work:
 - [x] Daytona sandboxes are private, ephemeral, network-blocked, TTL-bounded, command-bounded,
   and retain automatic deletion if explicit cleanup fails
 - [x] Protected Vercel deployment checklist added in `docs/DEPLOYMENT.md`
+- [x] Forensic control-room frontend added with request-time nonce rendering, explicit sponsor
+  roles, staged case files, visible pipeline states, split evidence/opinion rail, and human gate
+- [x] Responsive and accessibility coverage added for locked, idle, active, completed, error,
+  keyboard, reduced-motion, recorded fallback, and four comparison quadrants
+- [x] Final frontend deterministic gate passed: environment preflight, zero-warning lint, strict
+  typecheck, all 43 unit/configuration tests, and a dynamic production build
 
 ## Next
 

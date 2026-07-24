@@ -54,7 +54,7 @@ export default function VerdictRail({
     <div className={`rail${split ? " split" : ""}`}>
       <div className="rail-track">
         <div className={`rail-half ${evidenceState}`}>
-          <small>Evidence · sandbox</small>
+          <small>Execution evidence</small>
           <span>
             {!sandbox
               ? "not run"
@@ -71,9 +71,12 @@ export default function VerdictRail({
         <div className="rail-seam" aria-hidden="true" />
 
         <div className={`rail-half right ${opinionState}`}>
-          <small>
-            Opinion · {review?.source === "fixture" ? "placeholder" : "CodeRabbit"}
-          </small>
+          <small>CodeRabbit opinion</small>
+          <span className="rail-source">
+            {review?.source === "fixture"
+              ? "Fixture placeholder"
+              : review?.source ?? "Not loaded"}
+          </span>
           <span>
             {!review
               ? "not run"

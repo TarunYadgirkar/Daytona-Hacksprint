@@ -62,7 +62,7 @@ export default function OverrideBar({
       </div>
 
       {sent && (
-        <p className="override-done">
+        <p className="override-done" role="status">
           Recorded: a human chose to {sent}. Logged to Braintrust against run {runId.slice(0, 8)}.
         </p>
       )}

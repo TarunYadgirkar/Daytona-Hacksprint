@@ -72,12 +72,15 @@ export default function TestTable({
 
       <div className="tests-scroll" tabIndex={0} aria-label="Adversarial test results">
         <table className="tests">
+          <caption className="sr-only">
+            Adversarial tests executed against the before and after revisions
+          </caption>
           <thead>
             <tr>
-              <th>Attack</th>
-              <th>Before</th>
-              <th>After</th>
-              <th>Verdict</th>
+              <th scope="col">Attack</th>
+              <th scope="col">Before</th>
+              <th scope="col">After</th>
+              <th scope="col">Verdict</th>
             </tr>
           </thead>
           <tbody>
