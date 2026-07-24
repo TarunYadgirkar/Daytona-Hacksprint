@@ -67,6 +67,30 @@ export function compare(sandbox: SandboxReport, review: CodeRabbitReview): Agree
 
   const evidenceObjects = sandbox.claimBroken;
   const opinionObjects = review.verdict === "block";
+  const upheld = sandbox.results.filter((result) => result.verdict === "claim_upheld");
+  const errored = sandbox.results.filter((result) => result.verdict === "test_errored");
+
+  // One real counterexample is enough to falsify the claim, even if another
+  // generated harness errored. Errors only prevent a positive recommendation:
+  // SafeShip must never turn incomplete execution into evidence that a fix works.
+  if (!evidenceObjects && errored.length > 0) {
+    return {
+      agree: false,
+      kind: "no_evidence",
+      summary: `${errored.length} adversarial ${errored.length === 1 ? "test did" : "tests did"} not execute cleanly, so the requested suite is incomplete. SafeShip cannot compare incomplete evidence with CodeRabbit's opinion.`,
+    };
+  }
+
+  if (!evidenceObjects && upheld.length === 0) {
+    return {
+      agree: false,
+      kind: "no_evidence",
+      summary:
+        sandbox.results.length === 0
+          ? "The sandbox returned no test results, so there is no execution evidence to compare with CodeRabbit's opinion."
+          : "The tests ran, but none failed before and passed after. They did not distinguish the change from the old code, so they provide no evidence that the claim holds.",
+    };
+  }
 
   if (evidenceObjects && opinionObjects) {
     return {
@@ -82,7 +106,7 @@ export function compare(sandbox: SandboxReport, review: CodeRabbitReview): Agree
       agree: true,
       kind: "both_clear",
       summary:
-        "The claim survived every adversarial test, and CodeRabbit raised nothing critical. Nothing to escalate.",
+        "Conclusive adversarial tests supported the claim, and CodeRabbit raised nothing critical. Nothing to escalate.",
     };
   }
 
@@ -101,7 +125,7 @@ export function compare(sandbox: SandboxReport, review: CodeRabbitReview): Agree
     agree: false,
     kind: "opinion_only",
     summary:
-      "Every adversarial test passed, but CodeRabbit flagged a critical issue. The tests targeted the PR's stated claim; the finding is about something the claim never mentioned. Worth a human read.",
+      "Conclusive adversarial tests supported the claim, but CodeRabbit flagged a critical issue. The tests targeted the PR's stated claim; the finding is about something the claim never mentioned. Worth a human read.",
   };
 }
 
@@ -128,6 +152,14 @@ export function decide(
     };
   }
 
+  if (agreement.kind === "no_evidence") {
+    return {
+      call: "block",
+      rationale: `Verification incomplete: ${agreement.summary} SafeShip blocks when it cannot support the claim with conclusive execution evidence.`,
+      requiresHuman: true,
+    };
+  }
+
   if (review.verdict === "block") {
     return {
       call: "block",
@@ -137,12 +169,14 @@ export function decide(
   }
 
   const inconclusive = sandbox.results.filter((r) => r.verdict === "test_inconclusive").length;
+  const upheld = sandbox.results.filter((r) => r.verdict === "claim_upheld").length;
   return {
     call: "merge",
-    rationale:
+    rationale: `${upheld} conclusive adversarial ${upheld === 1 ? "test failed" : "tests failed"} against the old code and passed against the new code, supporting the claim.${
       inconclusive > 0
-        ? `The claim held under every adversarial test, though ${inconclusive} passed against the pre-change code too and so proved nothing.`
-        : "Every adversarial test failed against the old code and passed against the new code. The claim is supported by evidence, not assertion.",
+        ? ` ${inconclusive} additional ${inconclusive === 1 ? "test passed" : "tests passed"} against both revisions and therefore proved nothing.`
+        : ""
+    }`,
     requiresHuman: true,
   };
 }

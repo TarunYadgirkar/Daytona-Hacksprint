@@ -6,8 +6,9 @@ Living status. Update this in the same commit as the work it describes.
 
 Last updated: 2026-07-24. Full pipeline was verified live at `0bd3520`: `smoke -- pr-101`
 returned `evidence_only` + `BLOCK` against Fireworks `kimi-k2p6` and Daytona. Lane A exact-count
-test generation and Lane B saved-run replay are implemented and pass typecheck/build; post-change
-live smoke and browser interaction still need verification.
+test generation, Lane B saved-run replay, and the evidence/override integrity fixes below are
+implemented and pass typecheck/build; post-change live smoke, unit-test execution, and browser
+interaction still need verification.
 
 ---
 
@@ -19,13 +20,13 @@ Lanes assigned in AGENTS.md (A = pipeline/adapters, B = UI/app). Put your name n
 |---|------|-------|-------|
 | 1 | Re-run `npm run smoke -- pr-101` after Lane A changes | Codex | Approval service currently rejects the required elevated `tsx` execution. |
 | 2 | Browser-check saved-run replay after a real completed run | Codex | Production build passes; local server binding needs the same unavailable approval path. |
-| 3 | Authenticate CodeRabbit CLI and record verdicts | | CLI 0.7.0 is installed in `.tools/`; authentication is still required. |
+| 3 | Authenticate CodeRabbit CLI and record verdicts | Operator | CLI 0.7.0 is installed in `.tools/`; browser OAuth requires operator interaction. |
 
 ## Done
 
 - [x] Repo scaffold, folder structure, TypeScript config
 - [x] Type system and SSE event contract (`lib/types.ts`, `lib/events.ts`)
-- [x] Four sponsor adapters written (untested against live APIs)
+- [x] Four sponsor adapters written; Fireworks and Daytona live-verified at `0bd3520`, CodeRabbit capture pending
 - [x] Pipeline orchestrator with compare/decide logic
 - [x] Four staged PRs covering all four agreement quadrants
 - [x] SSE gate route, override route, CopilotKit v2 runtime route
@@ -49,6 +50,13 @@ Lanes assigned in AGENTS.md (A = pipeline/adapters, B = UI/app). Put your name n
   reject malformed/duplicate drafts, and abort before sandbox execution if the suite stays partial
 - [x] A "replay last run" button so a failed live demo can fall back instantly — completed
   `GateResult` snapshots are versioned, validated, and restored without recomputing a verdict
+- [x] Incomplete execution can no longer recommend merge — empty, inconclusive-only, errored-only,
+  and partially errored positive suites are labelled `no_evidence` and block
+- [x] CodeRabbit `review_skipped` output fails recording instead of becoming an empty approval
+- [x] Human overrides only display as recorded after a successful API response; button and chat
+  use the same failure-aware request path
+- [x] Verdict rail renders unavailable evidence and fixture opinions distinctly from green signals
+- [x] CopilotKit setup and preflight now reflect its Fireworks-backed runtime; no OpenAI key required
 
 ## Next
 
@@ -60,9 +68,9 @@ Lanes assigned in AGENTS.md (A = pipeline/adapters, B = UI/app). Put your name n
 
 - Current agent-side `tsx` and local-server verification: the execution approval service rejects
   escalations with an internal schema error. Run smoke/tests/browser checks from a normal terminal.
-- CopilotKit chat completion: `OPENAI_API_KEY` is absent; the pipeline and runtime metadata work.
 - Real CodeRabbit cache capture: local CLI is installed but `coderabbit auth status --agent`
-  reports `not_authenticated`, and no `CODERABBIT_API_KEY` is configured.
+  reports `not_authenticated`, and no `CODERABBIT_API_KEY` is configured. Run
+  `.tools/bin/coderabbit auth login`, then `npm run record:coderabbit`, from a normal terminal.
 
 ## Rejected
 

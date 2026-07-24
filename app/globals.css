@@ -164,6 +164,7 @@ html, body {
 .rail-half small { font-weight: 500; opacity: 0.8; letter-spacing: 0.1em; font-size: 9px; text-transform: uppercase; }
 .rail-half.ok { background: var(--evidence); }
 .rail-half.bad { background: var(--break); }
+.rail-half.unavailable { background: var(--warn); }
 .rail-half.idle { background: var(--rule); color: var(--muted); }
 .rail-half.right { text-align: right; align-items: flex-end; }
 
@@ -326,6 +327,7 @@ button.act:disabled { opacity: 0.4; cursor: not-allowed; }
 button.act:focus-visible { outline: 2px solid var(--seam); outline-offset: 2px; }
 
 .override-done { margin-top: 12px; font-size: 12px; color: var(--evidence); }
+.override-error { margin-top: 12px; font-size: 12px; color: var(--break); }
 
 .empty { color: var(--muted); font-size: 13px; }
 

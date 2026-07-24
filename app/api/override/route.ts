@@ -26,7 +26,13 @@ export async function POST(request: Request): Promise<Response> {
       at: new Date().toISOString(),
     };
 
-    await logHumanOverride(override);
+    const recorded = await logHumanOverride(override);
+    if (!recorded) {
+      return Response.json(
+        { error: "Braintrust is not configured; the override was not recorded" },
+        { status: 503 },
+      );
+    }
     return Response.json({ recorded: true, override });
   } catch (error) {
     const message = error instanceof SyntaxError ? "Request body must be valid JSON" : "Could not record override";

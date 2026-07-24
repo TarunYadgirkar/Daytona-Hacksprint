@@ -122,3 +122,32 @@ state would violate the single-source-of-truth rule.
 
 **Costs:** Replay is browser-local and only exists after that browser has completed a run. Clearing
 site storage removes it, so the demo checklist must include creating the saved run beforehand.
+
+---
+
+## D-011 — Incomplete positive evidence blocks; a counterexample remains decisive
+
+**Decided:** Empty, inconclusive-only, errored-only, and partially errored suites cannot support a
+merge recommendation. They produce `no_evidence` and block. A real `claim_broken` result remains
+decisive even if another generated harness errored.
+
+**Why:** A counterexample needs only one successful execution to falsify a claim. Supporting a
+claim is asymmetric: SafeShip must complete the requested suite and obtain at least one test that
+fails before and passes after. Treating “nothing broke” as proof would recreate the exact
+evidence/opinion error the product criticises.
+
+**Costs:** One malformed generated harness can block an otherwise promising change. That is a
+deliberate safe default; the human can inspect the successful evidence and override.
+
+---
+
+## D-012 — A skipped static review is unavailable, not approval
+
+**Decided:** CodeRabbit `review_skipped` events fail the review attempt and are never converted
+into an empty `approve` verdict or recorded cache entry.
+
+**Why:** Zero findings after a completed review can mean approval. Zero findings because no review
+ran means no opinion exists. Those states must remain distinct for the comparison to be honest.
+
+**Costs:** Rate limits and unsupported repositories now stop cache recording instead of producing
+a convenient green signal.

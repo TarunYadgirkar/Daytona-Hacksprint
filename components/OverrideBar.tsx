@@ -19,22 +19,21 @@ export default function OverrideBar({
 }: {
   runId: string;
   decision: GateDecision;
-  onOverride?: (call: GateCall, reason: string) => void;
+  onOverride: (call: GateCall, reason: string) => Promise<void>;
 }) {
   const [reason, setReason] = useState("");
   const [sent, setSent] = useState<GateCall | null>(null);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function submit(call: GateCall) {
     setBusy(true);
+    setError(null);
     try {
-      await fetch("/api/override", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ runId, call, reason }),
-      });
+      await onOverride(call, reason);
       setSent(call);
-      onOverride?.(call, reason);
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "Could not record override");
     } finally {
       setBusy(false);
     }
@@ -65,6 +64,11 @@ export default function OverrideBar({
       {sent && (
         <p className="override-done">
           Recorded: a human chose to {sent}. Logged to Braintrust against run {runId.slice(0, 8)}.
+        </p>
+      )}
+      {error && (
+        <p className="override-error" role="alert">
+          Not recorded: {error}
         </p>
       )}
       {!sent && (

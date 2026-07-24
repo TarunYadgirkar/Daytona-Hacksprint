@@ -37,7 +37,9 @@ That second case is what separates this from a tool that just argues with CodeRa
 
 **"Isn't this just tests?"** Tests written by the same agent that wrote the code inherit its blind spots. These are generated against the *claim*, adversarially, and scored on whether they fail before and pass after — which is what makes them evidence rather than decoration.
 
-**"What if the model writes bad tests?"** Then they come back inconclusive and we show that, rather than counting them as passes. Look at the `test_inconclusive` tag — we grade our own evidence.
+**"What if the model writes bad tests?"** Then they come back inconclusive or errored and we show
+that rather than counting them as passes. If the requested suite cannot produce conclusive
+evidence, SafeShip blocks. Look at the verdict tags — we grade our own evidence.
 
 **"Why CodeRabbit if you're beating it?"** We are not. `pr-103` is the case where CodeRabbit catches something we structurally cannot. The product is the disagreement, not the winner.
 

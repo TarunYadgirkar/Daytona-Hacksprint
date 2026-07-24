@@ -8,7 +8,7 @@ Scaffold complete, structure correct, pipeline runs live end to end. Verified, n
 
 - `npm install` done, `npm run typecheck` passes.
 - `npm run smoke -- pr-101` returns `evidence_only` + `BLOCK` with **live** Fireworks + Daytona, cached CodeRabbit.
-- `.env` holds working hackathon keys (gitignored). Missing only `OPENAI_API_KEY` — chat sidebar only; the pipeline does not need it.
+- `.env` holds working hackathon keys (gitignored). CopilotKit chat uses the same Fireworks key as the pipeline; no OpenAI key is needed.
 - Fireworks model is `accounts/fireworks/models/kimi-k2p6`. The old `kimi-k2-instruct-0905` was deleted from the catalog. On a 404 `Model not found`, re-list `GET /inference/v1/models` and pick a `supports_tools` chat model.
 - Braintrust summary/override logs are wrapped in `traced` spans — do not reintroduce a top-level `logger.log()`; the SDK (1.63+) throws once spans are used.
 
@@ -20,13 +20,13 @@ Two agents build at once. Owned files are exclusive; shared files are contract-o
 
 **Lane A — pipeline / adapters / scripts.** Owns `lib/adapters/*`, `lib/pipeline.ts`, `scripts/*`.
 - Tune the adversarial prompt in `lib/adapters/fireworks.ts` so tests truly falsify (keep `pr-101` broken).
-- Handle Fireworks returning fewer than the requested test count.
+- Handle Fireworks returning fewer than the requested test count. (Done.)
 - Optional: reuse one sandbox across tests in `lib/adapters/daytona.ts`.
 
 **Lane B — UI / app.** Owns `components/*`, `app/*` **except** `app/api/gate/route.ts` (Lane A's SSE contract surface — coordinate).
-- "Replay last run" button so a failed live demo falls back instantly.
+- "Replay last run" button so a failed live demo falls back instantly. (Done.)
 - Polish `VerdictRail` / `TestTable`.
-- Optional: route the CopilotKit chat (`app/api/copilotkit/[...slug]/route.ts`) through Fireworks so chat works without `OPENAI_API_KEY`.
+- Route the CopilotKit chat (`app/api/copilotkit/[...slug]/route.ts`) through Fireworks. (Done.)
 
 **Shared — change only by agreement, one edit at a time:** `lib/types.ts`, `lib/events.ts` (the SSE contract). Announce any change in `docs/PROGRESS.md` before touching it.
 
@@ -53,6 +53,7 @@ npm install
 cp .env.example .env      # then fill in keys
 npm run check:env         # preflight — run this first, and again before demoing
 npm run dev               # http://localhost:3000
+npm test                  # unit coverage for verdict logic, adapters, and replay validation
 npm run typecheck         # tsc --noEmit, must pass before you say you are done
 npm run smoke -- pr-101   # full pipeline, no browser, prints the same verdicts the UI will
 npm run record:coderabbit # refresh cached CodeRabbit verdicts (slow, 15-40 min)
@@ -65,7 +66,7 @@ npm run record:coderabbit # refresh cached CodeRabbit verdicts (slow, 15-40 min)
 - `lib/fixtures/` — staged demo PRs and recorded CodeRabbit verdicts.
 - `lib/events.ts` — the SSE contract between `/api/gate` and the UI.
 - `app/api/gate/route.ts` — streams the pipeline as SSE.
-- `app/api/copilotkit/route.ts` — CopilotKit v2 runtime.
+- `app/api/copilotkit/[...slug]/route.ts` — CopilotKit v2 runtime.
 - `components/PipelineView.tsx` — holds all stream-derived state.
 
 ## Rules

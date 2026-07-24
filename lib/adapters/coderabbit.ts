@@ -98,7 +98,7 @@ export async function runCodeRabbitCLI(pr: StagedPR, cwd = process.cwd()): Promi
     });
     child.on("close", (code) => {
       clearTimeout(timer);
-      const agentError = findAgentError(out);
+      const agentError = findAgentFailure(out);
       if (out.trim().length === 0) {
         reject(new Error(`CodeRabbit CLI produced no output (exit ${code}): ${err}`));
       } else if (code !== 0 || agentError) {
@@ -165,11 +165,12 @@ async function assertCodeRabbitAuthenticated(command: string, cwd: string): Prom
 
 /**
  * Agent mode streams JSON events, one per line, including `heartbeat` and
- * `review_skipped`. We keep the last object that carries findings and ignore
- * the rest. Written defensively because the event shape is not contractual.
+ * `review_skipped`. Skips are failures, not empty approvals. For completed
+ * reviews, collect every object that carries findings and ignore progress.
+ * Written defensively because the event shape is not contractual.
  */
 export function parseAgentOutput(stdout: string, _pr: StagedPR): CodeRabbitReview {
-  const agentError = findAgentError(stdout);
+  const agentError = findAgentFailure(stdout);
   if (agentError) throw new Error(`CodeRabbit CLI failed: ${agentError}`);
 
   const findings: CodeRabbitFinding[] = [];
@@ -226,7 +227,7 @@ function firstString(...values: unknown[]): string | undefined {
   return values.find((value): value is string => typeof value === "string");
 }
 
-function findAgentError(stdout: string): string | null {
+function findAgentFailure(stdout: string): string | null {
   for (const line of stdout.split("\n")) {
     const trimmed = line.trim();
     if (!trimmed.startsWith("{")) continue;
@@ -234,6 +235,10 @@ function findAgentError(stdout: string): string | null {
       const event = asRecord(JSON.parse(trimmed) as unknown);
       if (event?.type === "error") {
         return firstString(event.message, event.status, event.phase) ?? "unknown error";
+      }
+      if (event?.type === "review_skipped") {
+        const reason = firstString(event.reason, event.message, event.status, event.phase);
+        return `review skipped${reason ? `: ${reason}` : ""}`;
       }
     } catch {
       // Non-JSON progress output is ignored; the CLI can mix formats.

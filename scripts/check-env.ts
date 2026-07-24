@@ -19,7 +19,6 @@ const CHECKS: Check[] = [
   { name: "Daytona", key: "DAYTONA_API_KEY", required: true, note: "sandbox execution — no key means no evidence" },
   { name: "Braintrust", key: "BRAINTRUST_API_KEY", required: false, note: "logging no-ops silently without this" },
   { name: "CodeRabbit", key: "CODERABBIT_API_KEY", required: false, note: "only needed for CODERABBIT_MODE=cli" },
-  { name: "CopilotKit model", key: "OPENAI_API_KEY", required: false, note: "chat sidebar only; pipeline works without it" },
 ];
 
 let fatal = false;

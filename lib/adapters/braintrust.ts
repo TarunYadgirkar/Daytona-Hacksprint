@@ -85,8 +85,9 @@ export async function logGateRun(result: GateResult): Promise<void> {
           // 1 when the two methods reached the same conclusion. Sort ascending to
           // surface the disagreements, which is the whole point of the product.
           methods_agree: result.agreement.agree ? 1 : 0,
-          claim_survived: result.sandbox.claimBroken ? 0 : 1,
-          evidence_available: result.sandbox.infraError ? 0 : 1,
+          claim_survived:
+            result.agreement.kind === "no_evidence" || result.sandbox.claimBroken ? 0 : 1,
+          evidence_available: result.agreement.kind === "no_evidence" ? 0 : 1,
         },
       });
     },
@@ -95,9 +96,9 @@ export async function logGateRun(result: GateResult): Promise<void> {
 }
 
 /** A human clicking override is feedback on the gate, so log it as feedback. */
-export async function logHumanOverride(override: HumanOverride): Promise<void> {
+export async function logHumanOverride(override: HumanOverride): Promise<boolean> {
   const log = getLogger();
-  if (!log) return;
+  if (!log) return false;
   await log.traced(
     async (span) => {
       span.log({
@@ -109,14 +110,18 @@ export async function logHumanOverride(override: HumanOverride): Promise<void> {
     },
     { name: "human override" },
   );
-  await flushLogger();
+  return flushLogger();
 }
 
 /** Call before any serverless handler returns. Swallows its own errors. */
-export async function flushLogger(): Promise<void> {
+export async function flushLogger(): Promise<boolean> {
   try {
-    await getLogger()?.flush();
+    const log = getLogger();
+    if (!log) return true;
+    await log.flush();
+    return true;
   } catch (err) {
     console.error("[braintrust] flush failed:", err);
+    return false;
   }
 }

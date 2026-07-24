@@ -28,8 +28,22 @@ export default function VerdictRail({
   review: CodeRabbitReview | null;
   agreement: AgreementAnalysis | null;
 }) {
-  const evidenceState = !sandbox ? "idle" : sandbox.claimBroken ? "bad" : "ok";
-  const opinionState = !review ? "idle" : review.verdict === "block" ? "bad" : "ok";
+  const evidenceState =
+    !sandbox || !agreement
+      ? "idle"
+      : agreement.kind === "no_evidence"
+        ? "unavailable"
+        : sandbox.claimBroken
+          ? "bad"
+          : "ok";
+  const opinionState =
+    !review
+      ? "idle"
+      : review.source === "fixture"
+        ? "unavailable"
+        : review.verdict === "block"
+          ? "bad"
+          : "ok";
   const split = agreement ? !agreement.agree : false;
 
   const brokenCount = sandbox?.results.filter((r) => r.verdict === "claim_broken").length ?? 0;
@@ -43,8 +57,10 @@ export default function VerdictRail({
           <span>
             {!sandbox
               ? "not run"
-              : sandbox.infraError
-                ? "unavailable"
+              : !agreement
+                ? "evaluating"
+                : agreement.kind === "no_evidence"
+                  ? "unavailable"
                 : sandbox.claimBroken
                   ? `claim broken by ${brokenCount} ${brokenCount === 1 ? "test" : "tests"}`
                   : "claim held"}

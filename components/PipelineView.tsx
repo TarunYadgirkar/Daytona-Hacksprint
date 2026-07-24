@@ -225,12 +225,23 @@ export default function PipelineView({ prs }: { prs: StagedPR[] }) {
 
   const submitOverride = useCallback(
     async (call: GateCall, reason: string) => {
-      if (!runId) return;
-      await fetch("/api/override", {
+      if (!runId) throw new Error("No completed gate run is selected");
+      const response = await fetch("/api/override", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ runId, call, reason }),
       });
+
+      if (!response.ok) {
+        let message = `Override request failed with status ${response.status}`;
+        try {
+          const body = (await response.json()) as { error?: unknown };
+          if (typeof body.error === "string") message = body.error;
+        } catch {
+          // The status is still actionable if the server did not return JSON.
+        }
+        throw new Error(message);
+      }
     },
     [runId],
   );
@@ -368,7 +379,12 @@ export default function PipelineView({ prs }: { prs: StagedPR[] }) {
 
               {decision && runId && (
                 <section className="panel">
-                  <OverrideBar key={runId} runId={runId} decision={decision} />
+                  <OverrideBar
+                    key={runId}
+                    runId={runId}
+                    decision={decision}
+                    onOverride={submitOverride}
+                  />
                 </section>
               )}
             </>
