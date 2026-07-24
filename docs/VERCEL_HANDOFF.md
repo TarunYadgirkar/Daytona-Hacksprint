@@ -59,4 +59,4 @@ npm run test:e2e
 npm run smoke -- pr-101
 ```
 
-The live smoke must finish with `evidence_only` and `block`.
+The live smoke must finish with `both_caught` and `block`.

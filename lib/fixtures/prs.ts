@@ -4,7 +4,7 @@
  * These are chosen to cover all four quadrants of the agreement matrix, so the
  * demo can show that neither method dominates the other:
  *
- *   pr-101  evidence_only  sandbox breaks the claim, CodeRabbit approves   <- THE MONEY SLIDE
+ *   pr-101  both_caught    sandbox and the recorded CodeRabbit review catch the null bug
  *   pr-102  both_clear     genuine correct fix, nothing to report
  *   pr-103  opinion_only   CodeRabbit catches a risk the behaviour tests miss
  *   pr-104  both_caught    obvious bug, both methods flag it
@@ -40,8 +40,8 @@ module.exports = { cartTotal };`,
 module.exports = { cartTotal };`,
     demoNote:
       "The agent patched the symptom it could see ([]) and never handled null, " +
-      "which is the case the PR description itself describes. Static review reads " +
-      "the guard as correct. Only running it against null exposes the gap.",
+      "which is the case the PR description itself describes. Both the real CodeRabbit " +
+      "review and Popper's generated execution evidence independently catch the gap.",
   },
 
   {

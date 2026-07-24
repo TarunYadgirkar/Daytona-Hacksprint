@@ -2,6 +2,8 @@
 
 **Adversarial PR verification gate.** Most AI code review tools ask *does this diff look right?* Popper asks *can I break the claim this PR makes?*
 
+[Open the live demo](https://daytona-hacksprint.vercel.app) · [Try the public demo PR](https://github.com/TarunYadgirkar/popper-demo-cart/pull/1)
+
 An AI agent opens a pull request that says it fixes a null pointer on an empty cart. Popper extracts that specific behavioural claim, generates tests designed to falsify it, and runs them against both the before and after code in an isolated sandbox. The result is real pass/fail evidence rather than a second model's read of the diff.
 
 It then pulls CodeRabbit's independent static review of the same change and compares. **The interesting output is where the two methods disagree** — where running the code and reading the code reach different conclusions.
@@ -34,13 +36,24 @@ A test that passes against the old code is not a green tick. Reporting it as one
 
 | Sponsor | Role |
 |---|---|
-| **Fireworks AI** | hosts the model that extracts the claim and writes the adversarial tests |
-| **Daytona** | isolated sandbox where before/after code and tests actually execute |
-| **CodeRabbit** | the independent static review compared against sandbox evidence |
+| **Fireworks AI** | Kimi K2.6 Turbo + Priority extracts the claim and writes structured adversarial tests |
+| **Daytona** | `daytona-large` sandbox executes every before/after test pair concurrently |
+| **CodeRabbit** | recorded Pro Plus review of the same public PR, bound to the exact code digest |
 | **Braintrust** | logs every gate decision as a trace you can open and audit |
-| **CopilotKit** | renders the live pipeline, exposes gate state to chat, records the human override |
+| **CopilotKit** | operator assistant reads live gate state and supports the human decision |
 
 Next.js 15 App Router · React 19 · TypeScript.
+
+## Live demo
+
+1. Open [daytona-hacksprint.vercel.app](https://daytona-hacksprint.vercel.app).
+2. Select `pr-101`, or paste `https://github.com/TarunYadgirkar/popper-demo-cart/pull/1`.
+3. Press **Run adversarial gate**.
+
+The verified production run completes all six stages in about 13 seconds. Four
+generated tests execute in Daytona, CodeRabbit's timestamped review is loaded,
+and the null-cart bug finishes as `both_caught` with a `block` recommendation.
+No access code is required and Popper never merges the PR.
 
 ## Quick start
 
@@ -72,7 +85,7 @@ after Playwright is installed.
 
 Live gates are deliberately bounded:
 
-- Only the four staged PR IDs are accepted.
+- Only the four staged cases or validated public GitHub PR imports are accepted.
 - Every live run requests exactly four tests.
 - A server-side quota allows five live runs per client in ten minutes.
 - The control room and API are public; no application access code is required.
@@ -100,14 +113,16 @@ a problem; never expose that token to the browser.
 
 ## The staged PRs
 
-Rather than wiring a live GitHub webhook, four PRs with real bugs are staged in `lib/fixtures/prs.ts`, one for each quadrant of the agreement matrix:
+Four small PRs are staged in `lib/fixtures/prs.ts` so the core paths remain
+legible and reliable on stage. The separate recorded-runs gallery demonstrates
+all four quadrants of the agreement matrix without consuming sponsor capacity.
 
-| PR | Outcome | What it shows |
+| PR | Live expectation | What it shows |
 |---|---|---|
-| `pr-101` | disagreement — evidence only | sandbox breaks the claim, CodeRabbit approves |
+| `pr-101` | agreement — both caught | sandbox and the recorded CodeRabbit review catch the null-cart bug |
 | `pr-102` | agreement — both clear | a genuinely correct fix; the gate does not cry wolf |
-| `pr-103` | disagreement — opinion only | CodeRabbit catches a risk the claim never mentioned |
-| `pr-104` | agreement — both caught | obvious bug, both methods flag it |
+| `pr-103` | fixture opinion unavailable | deep-merge behavior plus a staged static-review risk |
+| `pr-104` | fixture opinion unavailable | an obvious retry-bound bug |
 
 ## CodeRabbit verdicts are recorded, not live
 
@@ -118,11 +133,13 @@ npm run record:coderabbit          # all four, slow — start it and go do somet
 npm run record:coderabbit -- pr-101
 ```
 
-Fresh checkouts contain clearly labelled `fixture` reviews so the UI can be developed before
-CodeRabbit is authenticated. Fixtures are not CodeRabbit output and are never relabelled as a
-recorded cache entry. The live pipeline treats a fixture as `no_opinion` and blocks. Bundled
-recorded-run fixtures are explicitly simulated UI examples and cannot record a human override.
-A demo-ready `cache` review has a capture timestamp and a digest binding it to the exact staged
+The public cart demo includes a real CodeRabbit Pro Plus review bound to
+`pr-101` and its imported GitHub equivalent. Other staged cases contain clearly
+labelled `fixture` reviews for UI examples. Fixtures are not CodeRabbit output
+and are never relabelled as a recorded cache entry. The live pipeline treats a
+fixture as `no_opinion` and blocks. Bundled recorded-run fixtures are explicitly
+simulated UI examples and cannot record a human override. A demo-ready `cache`
+review has a capture timestamp and a digest binding it to the exact staged
 before/after content.
 
 The verdict is CodeRabbit's real opinion of the real code; only the timing is pre-arranged. The UI shows the capture timestamp, and you should say so when presenting. Set `CODERABBIT_MODE=cli` to go live in development — never in a demo.

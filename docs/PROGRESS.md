@@ -17,12 +17,12 @@ four-outcome recorded runs, stream-failure recovery, evidence inspection, and re
 Playwright coverage — with the hardening work — content-bound CodeRabbit provenance,
 `no_opinion` handling, constrained Daytona sandboxes, pinned Node/npm, strict linting, and
 least-privilege CI. Deterministic post-merge checks belong to this integration task; live smoke is
-deferred to the final task.
+blocked on the local Fireworks credential described below.
 
 Outstanding operator work:
 
 - Restore the live `.env` configuration before the final `npm run smoke -- pr-101`.
-- Authenticate CodeRabbit CLI and refresh the recorded cache.
+- Retain the digest-bound CodeRabbit cache; refresh it only if the staged demo content changes.
 - Keep the public production URL available for judges.
 
 ## Done
@@ -109,8 +109,9 @@ Outstanding operator work:
   actions, recorded provenance, and warnings; rendered QA at 390px, 768px, and 1440px found no
   horizontal overflow, and the full deterministic verification suite still passes
 - [x] Finished the visual pass with semantic-tinted evidence panels and rounded pipeline states,
-  then rebuilt the pitch as a six-slide matching deck with native fade transitions and a
-  clickable Vercel demo link; PowerPoint rendering and overflow validation pass
+  then rebuilt the pitch as a six-slide matching deck in the supplied five-color palette with
+  native fade transitions and a clickable Vercel demo link; PowerPoint rendering and overflow
+  validation pass
 - [x] Optional public GitHub PR importer added alongside all four staged cases, with a dedicated
   standalone JavaScript demo repository and pull request
 - [x] Fast sponsor path verified: Fireworks Kimi K2.6 Turbo with Priority returned successfully,
@@ -118,6 +119,13 @@ Outstanding operator work:
 - [x] Two-minute demo instructions and a synchronized operator/narration script now cover all
   five sponsor integrations, the three expected judge objections, honest provenance, and a
   timed saved-live-run fallback
+- [x] Fireworks structured output uses enforced JSON Schema with reasoning disabled; the live
+  claim-and-four-test generation path completed in 11.2 seconds
+- [x] CodeRabbit Pro Plus reviewed the public demo PR; its timestamped major null-cart finding
+  is digest-bound to both the staged and imported copies for instant demo playback
+- [x] Merged the forensic UI and sponsor-integration branches without dropping either progress
+  history; preflight, lint, strict typecheck, all 43 unit/configuration tests, the production
+  build, and all 24 recorded browser/accessibility tests pass on the merged tree
 
 ## Next
 
@@ -129,10 +137,9 @@ Outstanding operator work:
 
 - Live pipeline re-verification: the post-palette `npm run smoke -- pr-101` attempt reached
   Fireworks but stopped at claim extraction with HTTP 401 because the configured API key is
-  invalid. Refresh the key, then require `evidence_only` + `BLOCK` before the demo.
-- Real CodeRabbit cache capture: local CLI is installed but `coderabbit auth status --agent`
-  reports `not_authenticated`, and no `CODERABBIT_API_KEY` is configured. Run
-  `.tools/bin/coderabbit auth login`, then `npm run record:coderabbit`, from a normal terminal.
+  invalid. Refresh the key, then require `both_caught` + `BLOCK` before the demo.
+- Future CodeRabbit cache refreshes from this machine require CLI authentication, but the current
+  timestamped review is already content-bound and its integrity test passes.
 
 ## Rejected
 
