@@ -4,21 +4,24 @@ Living status. Update this in the same commit as the work it describes.
 
 **How to use this file:** move items between sections, do not delete them. At 3am the useful question is usually "did we already try that?", and a deleted line cannot answer it.
 
-Last updated: scaffold complete. Decision logic and sandbox file-write verified locally; no live API calls made yet.
+Last updated: 2026-07-24 — full pipeline verified LIVE. `smoke -- pr-101` returns evidence_only + BLOCK against live Fireworks + Daytona. Keys, deps, CodeRabbit CLI all in place. Two Codex agents now building in parallel (lanes in AGENTS.md).
 
 ---
 
 ## Now
 
-Nobody assigned yet. Claim an item by putting your name on it.
+Lanes assigned in AGENTS.md. Put your name next to what you pick up.
 
-| # | Item | Owner | Notes |
-|---|------|-------|-------|
-| 1 | Get keys for all five sponsors, run `npm run check:env` | | Blocks everything. Do this first. |
-| 2 | First live Fireworks call — confirm model ID and JSON mode | | Model IDs change; verify against fireworks.ai/models |
-| 3 | First live Daytona sandbox — confirm `executeCommand` shape | | See D-002 for why we avoid the filesystem API |
-| 4 | `npm run smoke -- pr-101` end to end | | The moment the project is real |
-| 5 | Install + auth CodeRabbit CLI, record verdicts | | Slow. Start it early, do other work while it runs. |
+| # | Item | Lane | Owner | Notes |
+|---|------|------|-------|-------|
+| 1 | Tune adversarial prompt so tests falsify | A | | `lib/adapters/fireworks.ts`; keep pr-101 broken |
+| 2 | Handle Fireworks returning < count tests | A | | `lib/adapters/fireworks.ts` |
+| 3 | Sandbox reuse across tests (optional) | A | | `lib/adapters/daytona.ts` |
+| 4 | "Replay last run" button | B | | `components/PipelineView.tsx` |
+| 5 | Route CopilotKit chat via Fireworks (optional) | B | | removes OPENAI_API_KEY dependency |
+| 6 | Record real CodeRabbit verdicts | — | | `npm run record:coderabbit`; slow, start early |
+
+Done since scaffold: nested layout restored, model id → kimi-k2p6, Braintrust span fix, CodeRabbit `cr` fallback, scripts load `.env`, CopilotKit `prompt` field. See Done section.
 
 ## Done
 

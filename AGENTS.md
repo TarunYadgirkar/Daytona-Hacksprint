@@ -2,6 +2,37 @@
 
 Instructions for coding agents working in this repo. Human-facing setup lives in `README.md`.
 
+## Current state — read first (2026-07-24)
+
+The scaffold is complete and the whole pipeline runs live end to end. This is verified, not aspirational:
+
+- `npm install` done, `npm run typecheck` passes.
+- `npm run smoke -- pr-101` returns `evidence_only` + `BLOCK` with **live** Fireworks + Daytona and cached CodeRabbit.
+- `.env` has working hackathon keys (gitignored). Missing only `OPENAI_API_KEY` — chat sidebar only; the pipeline does not need it.
+- Fireworks model is `accounts/fireworks/models/kimi-k2p6`. The old `kimi-k2-instruct-0905` was deleted from the catalog. If you get a 404 `Model not found`, re-list `GET /inference/v1/models` and pick a `supports_tools` chat model.
+- Braintrust logs are wrapped in `traced` spans — do not reintroduce a top-level `logger.log()`, the SDK (1.63+) throws on it.
+- CodeRabbit CLI v0.7.0 installed as `coderabbit` (alias `cr`); use `--agent`. Default mode is `cache`, never demo in `cli`.
+
+Build from this state. Do not re-scaffold or "fix" the folder layout — it is already correct.
+
+## Parallel build lanes — two agents, no collisions
+
+Two Codex agents are building at once. Stay in your lane to avoid clobbering each other. Owned files are exclusive; shared files are contract-only.
+
+**Lane A — pipeline / adapters.** Owns `lib/adapters/*`, `lib/pipeline.ts`, `scripts/*`.
+- Tune the adversarial prompt in `lib/adapters/fireworks.ts` so tests actually falsify (check `pr-101` still breaks).
+- Handle Fireworks returning fewer than `count` tests.
+- Optional: reuse one sandbox across tests in `lib/adapters/daytona.ts`.
+
+**Lane B — UI / app.** Owns `components/*`, `app/*` (except `app/api/gate/route.ts`, which is Lane A's contract surface — coordinate).
+- "Replay last run" button so a failed live demo falls back instantly.
+- Polish the verdict rail / test table.
+- Optional: route the CopilotKit chat agent through Fireworks so it works without `OPENAI_API_KEY` (recipe in `app/api/copilotkit/route.ts`).
+
+**Shared — change only by agreement, one edit at a time:** `lib/types.ts`, `lib/events.ts`. These are the SSE contract. A change here ripples across both lanes; announce it in `docs/PROGRESS.md` before touching it.
+
+After every segment: `npm run typecheck`, `npm run smoke -- pr-101` (must stay `evidence_only`/`block`), append to `docs/PROGRESS.md`.
+
 ## What this project is
 
 SafeShip is an adversarial PR verification gate, built for a hackathon. Most AI review tools ask "does this diff look right?" SafeShip asks "can I break the claim this PR makes?"
