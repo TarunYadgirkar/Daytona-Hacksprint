@@ -4,14 +4,15 @@ Living status. Update this in the same commit as the work it describes.
 
 **How to use this file:** move items between sections, do not delete them. At 3am the useful question is usually "did we already try that?", and a deleted line cannot answer it.
 
-Last updated: 2026-07-24. Repository structure restored, dependencies locked, routes built and
-locally verified. Live sponsor calls are still blocked on credentials.
+Last updated: 2026-07-24. Full pipeline verified LIVE — `smoke -- pr-101` returns evidence_only + BLOCK
+against live Fireworks + Daytona (model kimi-k2p6). Keys in `.env`, deps installed, Braintrust span
+bug fixed. Two Codex agents building in parallel; lanes defined in AGENTS.md.
 
 ---
 
 ## Now
 
-Nobody assigned yet. Claim an item by putting your name on it.
+Lanes assigned in AGENTS.md (A = pipeline/adapters, B = UI/app). Put your name next to what you pick up.
 
 | # | Item | Owner | Notes |
 |---|------|-------|-------|

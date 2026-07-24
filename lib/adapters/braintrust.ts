@@ -58,45 +58,57 @@ export async function logGateRun(result: GateResult): Promise<void> {
   const log = getLogger();
   if (!log) return;
 
-  log.log({
-    input: { prId: result.prId, runId: result.runId },
-    output: {
-      claim: result.claim.statement,
-      decision: result.decision.call,
-      rationale: result.decision.rationale,
-      agreement: result.agreement.kind,
+  // The SDK forbids a top-level logger.log() once traced spans have been used on
+  // the same logger, so the run summary is written inside its own root span.
+  await log.traced(
+    async (span) => {
+      span.log({
+        input: { prId: result.prId, runId: result.runId },
+        output: {
+          claim: result.claim.statement,
+          decision: result.decision.call,
+          rationale: result.decision.rationale,
+          agreement: result.agreement.kind,
+        },
+        metadata: {
+          runId: result.runId,
+          prId: result.prId,
+          claimConfidence: result.claim.confidence,
+          testCount: result.tests.length,
+          codeRabbitVerdict: result.codeRabbit.verdict,
+          codeRabbitSource: result.codeRabbit.source,
+          sandboxId: result.sandbox.sandboxId,
+          infraError: result.sandbox.infraError ?? null,
+          verdicts: result.sandbox.results.map((r) => `${r.testId}:${r.verdict}`),
+        },
+        scores: {
+          // 1 when the two methods reached the same conclusion. Sort ascending to
+          // surface the disagreements, which is the whole point of the product.
+          methods_agree: result.agreement.agree ? 1 : 0,
+          claim_survived: result.sandbox.claimBroken ? 0 : 1,
+          evidence_available: result.sandbox.infraError ? 0 : 1,
+        },
+      });
     },
-    metadata: {
-      runId: result.runId,
-      prId: result.prId,
-      claimConfidence: result.claim.confidence,
-      testCount: result.tests.length,
-      codeRabbitVerdict: result.codeRabbit.verdict,
-      codeRabbitSource: result.codeRabbit.source,
-      sandboxId: result.sandbox.sandboxId,
-      infraError: result.sandbox.infraError ?? null,
-      verdicts: result.sandbox.results.map((r) => `${r.testId}:${r.verdict}`),
-    },
-    scores: {
-      // 1 when the two methods reached the same conclusion. Sort ascending to
-      // surface the disagreements, which is the whole point of the product.
-      methods_agree: result.agreement.agree ? 1 : 0,
-      claim_survived: result.sandbox.claimBroken ? 0 : 1,
-      evidence_available: result.sandbox.infraError ? 0 : 1,
-    },
-  });
+    { name: "gate summary" },
+  );
 }
 
 /** A human clicking override is feedback on the gate, so log it as feedback. */
 export async function logHumanOverride(override: HumanOverride): Promise<void> {
   const log = getLogger();
   if (!log) return;
-  log.log({
-    input: { runId: override.runId, action: "human_override" },
-    output: { call: override.call, reason: override.reason },
-    metadata: { runId: override.runId, at: override.at, source: "human" },
-    scores: { human_overrode_gate: 1 },
-  });
+  await log.traced(
+    async (span) => {
+      span.log({
+        input: { runId: override.runId, action: "human_override" },
+        output: { call: override.call, reason: override.reason },
+        metadata: { runId: override.runId, at: override.at, source: "human" },
+        scores: { human_overrode_gate: 1 },
+      });
+    },
+    { name: "human override" },
+  );
   await flushLogger();
 }
 

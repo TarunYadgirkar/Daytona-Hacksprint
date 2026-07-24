@@ -2,6 +2,36 @@
 
 Instructions for coding agents working in this repo. Human-facing setup lives in `README.md`.
 
+## Current state — read first (2026-07-24)
+
+Scaffold complete, structure correct, pipeline runs live end to end. Verified, not aspirational:
+
+- `npm install` done, `npm run typecheck` passes.
+- `npm run smoke -- pr-101` returns `evidence_only` + `BLOCK` with **live** Fireworks + Daytona, cached CodeRabbit.
+- `.env` holds working hackathon keys (gitignored). Missing only `OPENAI_API_KEY` — chat sidebar only; the pipeline does not need it.
+- Fireworks model is `accounts/fireworks/models/kimi-k2p6`. The old `kimi-k2-instruct-0905` was deleted from the catalog. On a 404 `Model not found`, re-list `GET /inference/v1/models` and pick a `supports_tools` chat model.
+- Braintrust summary/override logs are wrapped in `traced` spans — do not reintroduce a top-level `logger.log()`; the SDK (1.63+) throws once spans are used.
+
+Build from here. The layout is correct — do not re-scaffold it.
+
+## Parallel build lanes — two Codex agents, no collisions
+
+Two agents build at once. Owned files are exclusive; shared files are contract-only.
+
+**Lane A — pipeline / adapters / scripts.** Owns `lib/adapters/*`, `lib/pipeline.ts`, `scripts/*`.
+- Tune the adversarial prompt in `lib/adapters/fireworks.ts` so tests truly falsify (keep `pr-101` broken).
+- Handle Fireworks returning fewer than the requested test count.
+- Optional: reuse one sandbox across tests in `lib/adapters/daytona.ts`.
+
+**Lane B — UI / app.** Owns `components/*`, `app/*` **except** `app/api/gate/route.ts` (Lane A's SSE contract surface — coordinate).
+- "Replay last run" button so a failed live demo falls back instantly.
+- Polish `VerdictRail` / `TestTable`.
+- Optional: route the CopilotKit chat (`app/api/copilotkit/[...slug]/route.ts`) through Fireworks so chat works without `OPENAI_API_KEY`.
+
+**Shared — change only by agreement, one edit at a time:** `lib/types.ts`, `lib/events.ts` (the SSE contract). Announce any change in `docs/PROGRESS.md` before touching it.
+
+After every segment: `npm run typecheck`, `npm run smoke -- pr-101` (must stay `evidence_only`/`block`), append to `docs/PROGRESS.md`.
+
 ## What this project is
 
 SafeShip is an adversarial PR verification gate, built for a hackathon. Most AI review tools ask "does this diff look right?" SafeShip asks "can I break the claim this PR makes?"

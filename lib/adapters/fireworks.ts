@@ -4,7 +4,8 @@
  * Fireworks exposes an OpenAI-compatible surface at
  * https://api.fireworks.ai/inference/v1, so the stock `openai` SDK works
  * unchanged with a swapped baseURL. Model IDs are fully qualified, e.g.
- * `accounts/fireworks/models/kimi-k2-instruct-0905`.
+ * `accounts/fireworks/models/kimi-k2p6`. They drift — verify against the live
+ * /models catalog if you get a 404 Model not found.
  *
  * Two jobs, both structured-output:
  *   1. extractClaim  - read the PR, state the falsifiable promise
@@ -28,7 +29,7 @@ function client(): OpenAI {
 }
 
 function model(): string {
-  return process.env.FIREWORKS_MODEL ?? "accounts/fireworks/models/kimi-k2-instruct-0905";
+  return process.env.FIREWORKS_MODEL ?? "accounts/fireworks/models/kimi-k2p6";
 }
 
 /** Models wrap JSON in prose or fences more often than you'd like. Recover from both. */
