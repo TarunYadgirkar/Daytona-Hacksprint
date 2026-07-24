@@ -9,7 +9,7 @@ Scaffold complete, structure correct, pipeline runs live end to end. Verified, n
 - `npm install` done, `npm run typecheck` passes.
 - `npm run smoke -- pr-101` returns `evidence_only` + `BLOCK` with **live** Fireworks + Daytona, cached CodeRabbit.
 - `.env` holds working hackathon keys (gitignored). CopilotKit chat uses the same Fireworks key as the pipeline; no OpenAI key is needed.
-- Fireworks model is `accounts/fireworks/models/kimi-k2p6`. The old `kimi-k2-instruct-0905` was deleted from the catalog. On a 404 `Model not found`, re-list `GET /inference/v1/models` and pick a `supports_tools` chat model.
+- Fireworks uses the fast `accounts/fireworks/routers/kimi-k2p6-turbo` route with Priority service. On a 404 `Model not found`, re-list `GET /inference/v1/models` and pick a compatible chat model.
 - Braintrust summary/override logs are wrapped in `traced` spans — do not reintroduce a top-level `logger.log()`; the SDK (1.63+) throws once spans are used.
 
 Build from here. The layout is correct — do not re-scaffold it.

@@ -77,8 +77,11 @@ export default function PipelineView({
   gateMode: RunOrigin;
   braintrustConfigured: boolean;
 }) {
+  const [availablePRs, setAvailablePRs] = useState(prs);
   const [selected, setSelected] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
   const [storedRecords, setStoredRecords] = useState<RunRecord[]>([]);
   const [activeRecord, setActiveRecord] = useState<RunRecord | null>(null);
   const [connection, setConnection] = useState<ConnectionState>("idle");
@@ -403,6 +406,41 @@ export default function PipelineView({
     ],
   );
 
+  const importPR = useCallback(
+    async (url: string) => {
+      if (running || importing) return;
+      setImporting(true);
+      setImportError(null);
+      try {
+        const response = await fetch(
+          `/api/github-pr?url=${encodeURIComponent(url)}`,
+          { cache: "no-store" },
+        );
+        const body = (await response.json()) as StagedPR & { error?: unknown };
+        if (!response.ok) {
+          throw new Error(
+            typeof body.error === "string"
+              ? body.error
+              : `GitHub import failed with status ${response.status}`,
+          );
+        }
+        setAvailablePRs((current) => [
+          body,
+          ...current.filter((candidate) => candidate.id !== body.id),
+        ]);
+        selectPR(body.id);
+        setAnnouncement(`Imported ${body.id}. Review the diff, then run the gate.`);
+      } catch (error) {
+        setImportError(
+          error instanceof Error ? error.message : "Could not import this GitHub PR",
+        );
+      } finally {
+        setImporting(false);
+      }
+    },
+    [importing, running, selectPR],
+  );
+
   const retryRun = useCallback(() => {
     if (selected && !running) startRun(selected);
   }, [running, selected, startRun]);
@@ -520,12 +558,15 @@ export default function PipelineView({
       <div className="shell">
         <aside>
           <CaseSelector
-            prs={prs}
+            prs={availablePRs}
             selectedId={selected}
             running={running}
             gateMode={gateMode}
+            importing={importing}
+            importError={importError}
             onSelect={selectPR}
             onRun={startRun}
+            onImport={importPR}
           />
 
           <RunGallery

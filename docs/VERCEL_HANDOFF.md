@@ -7,12 +7,14 @@ Settings → Environment Variables**.
 |---|---:|---:|---|
 | `FIREWORKS_API_KEY` | Yes | Yes | Local `.env` |
 | `FIREWORKS_BASE_URL` | Yes | Yes | `https://api.fireworks.ai/inference/v1` |
-| `FIREWORKS_MODEL` | Yes | Yes | `accounts/fireworks/models/kimi-k2p6` |
+| `FIREWORKS_MODEL` | Yes | Yes | `accounts/fireworks/routers/kimi-k2p6-turbo` |
+| `FIREWORKS_SERVICE_TIER` | Yes | Yes | `priority` |
 | `DAYTONA_API_KEY` | Yes | Yes | Local `.env` |
+| `DAYTONA_SNAPSHOT` | Yes | Yes | `daytona-large` |
 | `BRAINTRUST_API_KEY` | Yes | Yes | Local `.env` |
 | `BRAINTRUST_PROJECT` | Yes | Yes | `popper` |
 | `CODERABBIT_MODE` | Yes | Yes | `cache` |
-| `COPILOTKIT_MODEL` | Yes | Yes | `accounts/fireworks/models/kimi-k2p6` |
+| `COPILOTKIT_MODEL` | Yes | Yes | `accounts/fireworks/routers/kimi-k2p6-turbo` |
 
 Copy sensitive values directly from the ignored local `.env` into Vercel
 Project Settings. Do not print those values in a terminal transcript or commit
@@ -27,6 +29,9 @@ Do not set these variables in Preview or Production:
 
 The CodeRabbit API key is for the local recorder only and is not needed in
 Vercel cache mode.
+
+`GITHUB_TOKEN` is optional. Public PR import works without it, but a server-side
+token raises GitHub API rate limits. Never use a `NEXT_PUBLIC_` token.
 
 ## Deployment settings
 

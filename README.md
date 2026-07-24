@@ -80,6 +80,24 @@ Live gates are deliberately bounded:
 The recorded-runs gallery contains all four comparison outcomes and never
 consumes Fireworks, Daytona, CodeRabbit, or Braintrust capacity.
 
+## Import a real GitHub PR
+
+Paste a public GitHub pull request URL into the importer below the staged case
+list. Popper fetches the PR metadata and the before/after contents of its first
+modified standalone JavaScript file, then runs that diff through the same live
+pipeline. The four staged cases remain available as the reliable demo path.
+
+Demo PR:
+
+```text
+https://github.com/TarunYadgirkar/popper-demo-cart/pull/1
+```
+
+The importer intentionally rejects private repositories, non-GitHub URLs,
+multi-file application builds, and non-JavaScript targets. Add an optional
+server-side `GITHUB_TOKEN` in Vercel if the public GitHub API rate limit becomes
+a problem; never expose that token to the browser.
+
 ## The staged PRs
 
 Rather than wiring a live GitHub webhook, four PRs with real bugs are staged in `lib/fixtures/prs.ts`, one for each quadrant of the agreement matrix:

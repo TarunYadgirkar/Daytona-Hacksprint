@@ -6,6 +6,7 @@ test("Daytona sandbox policy constrains untrusted test execution", () => {
   assert.deepEqual(DAYTONA_SANDBOX_POLICY, {
     createParams: {
       language: "javascript",
+      snapshot: "daytona-large",
       public: false,
       networkBlockAll: true,
       ephemeral: true,

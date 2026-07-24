@@ -4,7 +4,7 @@
  * Fireworks exposes an OpenAI-compatible surface at
  * https://api.fireworks.ai/inference/v1, so the stock `openai` SDK works
  * unchanged with a swapped baseURL. Model IDs are fully qualified, e.g.
- * `accounts/fireworks/models/kimi-k2p6`. They drift — verify against the live
+ * `accounts/fireworks/routers/kimi-k2p6-turbo`. They drift — verify against the live
  * /models catalog if you get a 404 Model not found.
  *
  * Two jobs, both structured-output:
@@ -29,11 +29,20 @@ function client(): OpenAI {
   return new OpenAI({
     apiKey,
     baseURL: process.env.FIREWORKS_BASE_URL ?? "https://api.fireworks.ai/inference/v1",
+    timeout: 45_000,
+    maxRetries: 1,
+    defaultHeaders: { "x-session-affinity": "popper-demo" },
   });
 }
 
 function model(): string {
-  return process.env.FIREWORKS_MODEL ?? "accounts/fireworks/models/kimi-k2p6";
+  return process.env.FIREWORKS_MODEL ?? "accounts/fireworks/routers/kimi-k2p6-turbo";
+}
+
+function serviceTier(): "default" | "priority" {
+  return process.env.FIREWORKS_SERVICE_TIER === "default"
+    ? "default"
+    : "priority";
 }
 
 /** Models wrap JSON in prose or fences more often than you'd like. Recover from both. */
@@ -75,6 +84,8 @@ confidence is your certainty that the PR description states a specific behaviour
 export async function extractClaim(pr: StagedPR): Promise<ExtractedClaim> {
   const res = await client().chat.completions.create({
     model: model(),
+    service_tier: serviceTier(),
+    max_tokens: 512,
     temperature: 0.1,
     response_format: { type: "json_object" },
     messages: [
@@ -206,6 +217,8 @@ async function requestTestDrafts(
 
   const res = await client().chat.completions.create({
     model: model(),
+    service_tier: serviceTier(),
+    max_tokens: 4096,
     temperature: 0.4, // some variety across attempts; the claim itself stays at 0.1
     response_format: { type: "json_object" },
     messages: [

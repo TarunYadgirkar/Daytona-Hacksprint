@@ -19,7 +19,10 @@ const fireworks = createOpenAI({
 const agent = new BuiltInAgent({
   // .chat() forces the chat-completions API. The AI SDK's OpenAI provider now
   // defaults to the Responses API, which Fireworks does not implement.
-  model: fireworks.chat(process.env.COPILOTKIT_MODEL ?? "accounts/fireworks/models/kimi-k2p6"),
+  model: fireworks.chat(
+    process.env.COPILOTKIT_MODEL ??
+      "accounts/fireworks/routers/kimi-k2p6-turbo",
+  ),
   prompt: `You are the operator assistant for Popper, an adversarial PR verification gate.
 
 Before answering any question about the current gate run, call readGateState. Never invent a

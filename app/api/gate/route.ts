@@ -12,6 +12,7 @@ import { flushLogger } from "@/lib/adapters/braintrust";
 import { consumeGateQuota } from "@/lib/quota";
 import { getPR } from "@/lib/fixtures/prs";
 import { getRecordedRun } from "@/lib/fixtures/recorded-runs";
+import { importGitHubPullRequest } from "@/lib/github-pr";
 import { GateStageError, runGate } from "@/lib/pipeline";
 import { streamRecordedRun } from "@/lib/recorded-stream";
 
@@ -23,7 +24,23 @@ const DEMO_TEST_COUNT = 4;
 
 export async function GET(request: Request) {
   const prId = new URL(request.url).searchParams.get("pr");
-  const pr = prId ? getPR(prId) : undefined;
+  let pr = prId ? getPR(prId) : undefined;
+  if (!pr && prId?.startsWith("github:")) {
+    try {
+      pr = await importGitHubPullRequest(prId);
+    } catch (error) {
+      await flushLogger();
+      return Response.json(
+        {
+          error:
+            error instanceof Error
+              ? error.message
+              : "Could not import the GitHub pull request",
+        },
+        { status: 422 },
+      );
+    }
+  }
   const recordedMode = process.env.POPPER_GATE_MODE === "recorded";
   const recordedRun = prId && recordedMode ? getRecordedRun(prId) : undefined;
 
