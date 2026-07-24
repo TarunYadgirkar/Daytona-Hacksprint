@@ -31,7 +31,7 @@ Vercel cache mode.
 
 ## Deployment settings
 
-1. Use Node.js 20.x and the repository's standard Next.js build settings.
+1. Use Node.js 22.x and the repository's standard Next.js build settings.
 2. Enable Vercel Authentication for Preview under **Project → Settings →
    Deployment Protection**.
 3. Keep the application access code enabled in Production because Vercel's

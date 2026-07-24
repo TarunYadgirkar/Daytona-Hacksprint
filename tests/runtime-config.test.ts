@@ -14,8 +14,8 @@ const nvmrc = new URL(".nvmrc", root);
 
 test("pins the supported Node and npm versions", () => {
   assert.equal(existsSync(nvmrc), true, ".nvmrc must exist");
-  assert.equal(readFileSync(nvmrc, "utf8").trim(), "20.20.0");
-  assert.equal(packageJson.engines?.node, ">=20.20.0 <21");
+  assert.equal(readFileSync(nvmrc, "utf8").trim(), "22");
+  assert.equal(packageJson.engines?.node, "22.x");
   assert.equal(packageJson.packageManager, "npm@10.8.2");
 });
 
