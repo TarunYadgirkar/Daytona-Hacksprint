@@ -115,7 +115,7 @@ export async function runCodeRabbitCLI(pr: StagedPR, cwd = process.cwd()): Promi
     });
   });
 
-  return parseAgentOutput(stdout, pr);
+  return parseAgentOutput(stdout);
 }
 
 async function assertCodeRabbitAuthenticated(command: string, cwd: string): Promise<void> {
@@ -169,7 +169,7 @@ async function assertCodeRabbitAuthenticated(command: string, cwd: string): Prom
  * reviews, collect every object that carries findings and ignore progress.
  * Written defensively because the event shape is not contractual.
  */
-export function parseAgentOutput(stdout: string, _pr: StagedPR): CodeRabbitReview {
+export function parseAgentOutput(stdout: string): CodeRabbitReview {
   const agentError = findAgentFailure(stdout);
   if (agentError) throw new Error(`CodeRabbit CLI failed: ${agentError}`);
 

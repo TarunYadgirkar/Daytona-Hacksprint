@@ -1,9 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { STAGED_PRS } from "../fixtures/prs";
 import { parseAgentOutput } from "./coderabbit";
-
-const pr = STAGED_PRS[0]!;
 
 test("parseAgentOutput rejects a skipped review instead of approving it", () => {
   const output = JSON.stringify({
@@ -11,12 +8,12 @@ test("parseAgentOutput rejects a skipped review instead of approving it", () => 
     reason: "rate limit reached",
   });
 
-  assert.throws(() => parseAgentOutput(output, pr), /review skipped: rate limit reached/);
+  assert.throws(() => parseAgentOutput(output), /review skipped: rate limit reached/);
 });
 
 test("parseAgentOutput keeps a completed review with no findings as approve", () => {
   const output = JSON.stringify({ type: "review_completed", findings: [] });
-  const review = parseAgentOutput(output, pr);
+  const review = parseAgentOutput(output);
 
   assert.equal(review.verdict, "approve");
   assert.deepEqual(review.findings, []);
@@ -35,7 +32,7 @@ test("parseAgentOutput derives block from a critical finding", () => {
       },
     ],
   });
-  const review = parseAgentOutput(output, pr);
+  const review = parseAgentOutput(output);
 
   assert.equal(review.verdict, "block");
   assert.equal(review.findings[0]?.title, "Null input still throws");
