@@ -13,6 +13,7 @@
     "smoke": "tsx scripts/smoke.ts"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^3.0.88",
     "@copilotkit/react-core": "latest",
     "@copilotkit/react-ui": "latest",
     "@copilotkit/runtime": "latest",
