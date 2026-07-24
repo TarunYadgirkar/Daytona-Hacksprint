@@ -1,0 +1,723 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/perf3j",
+    "id": "perf3j",
+    "slide": 5,
+    "layoutId": "fcfbdba6-368a-4d8b-85a7-69816aac02d0",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "77bc6c99-9641-482d-bc9e-8e3e23ac1386",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#07090D",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "+mn-lt"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "fcfbdba6-368a-4d8b-85a7-69816aac02d0",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "77bc6c99-9641-482d-bc9e-8e3e23ac1386",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "77bc6c99-9641-482d-bc9e-8e3e23ac1386",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/onaxgrmh",
+      "id": "1",
+      "bbox": [
+        72,
+        52,
+        600,
+        28
+      ],
+      "geometry": "rect",
+      "text": "POPPER'S RULE",
+      "textPreview": "POPPER'S RULE",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "fontSize": 16,
+        "typeface": "+mn-lt",
+        "color": "#9DB9FF",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "POPPER'S RULE"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "POPPER'S RULE",
+          "resolvedTextStyle": {
+            "fontSize": 16,
+            "color": "#9DB9FF",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "POPPER'S RULE",
+              "fontSize": 16,
+              "color": "#9DB9FF",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/nm1g7m5c",
+      "id": "2",
+      "bbox": [
+        72,
+        96,
+        940,
+        82
+      ],
+      "geometry": "rect",
+      "text": "Useful evidence has a shape.",
+      "textPreview": "Useful evidence has a shape.",
+      "resolvedFontSize": 50,
+      "resolvedTextStyle": {
+        "fontSize": 50,
+        "typeface": "+mn-lt",
+        "color": "#F7F4EC",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Useful evidence has a shape."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Useful evidence has a shape.",
+          "resolvedTextStyle": {
+            "fontSize": 50,
+            "color": "#F7F4EC",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Useful evidence has a shape.",
+              "fontSize": 50,
+              "color": "#F7F4EC",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/2lsfeh4r",
+      "id": "3",
+      "bbox": [
+        175,
+        230,
+        410,
+        30
+      ],
+      "geometry": "rect",
+      "text": "BEFORE THE FIX",
+      "textPreview": "BEFORE THE FIX",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "fontSize": 18,
+        "typeface": "+mn-lt",
+        "color": "#A6ADBB",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "BEFORE THE FIX"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "BEFORE THE FIX",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "color": "#A6ADBB",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "BEFORE THE FIX",
+              "fontSize": 18,
+              "color": "#A6ADBB",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/xs3ydgne",
+      "id": "4",
+      "bbox": [
+        175,
+        276,
+        410,
+        152
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#141A25",
+      "lineColor": "#FF5A5F",
+      "lineWidth": 2
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/cruhkbmt",
+      "id": "5",
+      "bbox": [
+        203,
+        304,
+        354,
+        76
+      ],
+      "geometry": "rect",
+      "text": "FAIL",
+      "textPreview": "FAIL",
+      "resolvedFontSize": 52,
+      "resolvedTextStyle": {
+        "fontSize": 52,
+        "typeface": "+mn-lt",
+        "color": "#FF5A5F",
+        "bold": true,
+        "alignment": "center",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "FAIL"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "FAIL",
+          "resolvedTextStyle": {
+            "fontSize": 52,
+            "color": "#FF5A5F",
+            "bold": true,
+            "alignment": "center"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "FAIL",
+              "fontSize": 52,
+              "color": "#FF5A5F",
+              "bold": true,
+              "alignment": "center"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/bq1gb658",
+      "id": "6",
+      "bbox": [
+        695,
+        230,
+        410,
+        30
+      ],
+      "geometry": "rect",
+      "text": "AFTER THE FIX",
+      "textPreview": "AFTER THE FIX",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "fontSize": 18,
+        "typeface": "+mn-lt",
+        "color": "#A6ADBB",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "AFTER THE FIX"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "AFTER THE FIX",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "color": "#A6ADBB",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "AFTER THE FIX",
+              "fontSize": 18,
+              "color": "#A6ADBB",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/apszi14n",
+      "id": "7",
+      "bbox": [
+        695,
+        276,
+        410,
+        152
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#141A25",
+      "lineColor": "#2864FF",
+      "lineWidth": 2
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/lg3yhgna",
+      "id": "8",
+      "bbox": [
+        723,
+        304,
+        354,
+        76
+      ],
+      "geometry": "rect",
+      "text": "PASS",
+      "textPreview": "PASS",
+      "resolvedFontSize": 52,
+      "resolvedTextStyle": {
+        "fontSize": 52,
+        "typeface": "+mn-lt",
+        "color": "#67D79A",
+        "bold": true,
+        "alignment": "center",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "PASS"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "PASS",
+          "resolvedTextStyle": {
+            "fontSize": 52,
+            "color": "#67D79A",
+            "bold": true,
+            "alignment": "center"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "PASS",
+              "fontSize": 52,
+              "color": "#67D79A",
+              "bold": true,
+              "alignment": "center"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/kvuhobmp",
+      "id": "9",
+      "bbox": [
+        611,
+        326,
+        58,
+        64
+      ],
+      "geometry": "rect",
+      "text": "+",
+      "textPreview": "+",
+      "resolvedFontSize": 44,
+      "resolvedTextStyle": {
+        "fontSize": 44,
+        "typeface": "+mn-lt",
+        "color": "#F7F4EC",
+        "bold": true,
+        "alignment": "center",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "+"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "+",
+          "resolvedTextStyle": {
+            "fontSize": 44,
+            "color": "#F7F4EC",
+            "bold": true,
+            "alignment": "center"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "+",
+              "fontSize": 44,
+              "color": "#F7F4EC",
+              "bold": true,
+              "alignment": "center"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/2d4fm5gr",
+      "id": "10",
+      "bbox": [
+        250,
+        514,
+        780,
+        54
+      ],
+      "geometry": "rect",
+      "text": "FAIL BEFORE  +  PASS AFTER  =  EVIDENCE",
+      "textPreview": "FAIL BEFORE  +  PASS AFTER  =  EVIDENCE",
+      "resolvedFontSize": 27,
+      "resolvedTextStyle": {
+        "fontSize": 27,
+        "typeface": "+mn-lt",
+        "color": "#F7F4EC",
+        "bold": true,
+        "alignment": "center",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "FAIL BEFORE  +  PASS AFTER  =  EVIDENCE"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "FAIL BEFORE  +  PASS AFTER  =  EVIDENCE",
+          "resolvedTextStyle": {
+            "fontSize": 27,
+            "color": "#F7F4EC",
+            "bold": true,
+            "alignment": "center"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "FAIL BEFORE  +  PASS AFTER  =  EVIDENCE",
+              "fontSize": 27,
+              "color": "#F7F4EC",
+              "bold": true,
+              "alignment": "center"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/nedgvaxc",
+      "id": "11",
+      "bbox": [
+        260,
+        582,
+        760,
+        40
+      ],
+      "geometry": "rect",
+      "text": "The test must prove it could detect the original failure.",
+      "textPreview": "The test must prove it could detect the original failure.",
+      "resolvedFontSize": 23,
+      "resolvedTextStyle": {
+        "fontSize": 23,
+        "typeface": "+mn-lt",
+        "color": "#A6ADBB",
+        "alignment": "center",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The test must prove it could detect the original failure."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The test must prove it could detect the original failure.",
+          "resolvedTextStyle": {
+            "fontSize": 23,
+            "color": "#A6ADBB",
+            "alignment": "center"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The test must prove it could detect the original failure.",
+              "fontSize": 23,
+              "color": "#A6ADBB",
+              "alignment": "center"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 12,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ofmxofex",
+      "id": "12",
+      "bbox": [
+        72,
+        674,
+        210,
+        24
+      ],
+      "geometry": "rect",
+      "text": "POPPER  ·  05",
+      "textPreview": "POPPER  ·  05",
+      "resolvedFontSize": 14,
+      "resolvedTextStyle": {
+        "fontSize": 14,
+        "typeface": "+mn-lt",
+        "color": "#687185",
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "POPPER  ·  05"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "POPPER  ·  05",
+          "resolvedTextStyle": {
+            "fontSize": 14,
+            "color": "#687185",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "POPPER  ·  05",
+              "fontSize": 14,
+              "color": "#687185",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

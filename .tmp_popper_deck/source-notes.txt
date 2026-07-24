@@ -1,0 +1,31 @@
+Slide 1
+- Local generated asset: /Users/NithinAwasome/Downloads/Daytona-Hacksprint/public/product-thumbnail.png
+- Product description: /Users/NithinAwasome/Downloads/Daytona-Hacksprint/README.md
+
+Slide 2
+- Team experience and project narrative supplied by the user in this Codex task.
+- Parallel AI-agent workflow documented in /Users/NithinAwasome/Downloads/Daytona-Hacksprint/AGENTS.md
+
+Slides 3–5
+- Evidence semantics: /Users/NithinAwasome/Downloads/Daytona-Hacksprint/lib/pipeline.ts
+- Product rules: /Users/NithinAwasome/Downloads/Daytona-Hacksprint/docs/DECISIONS.md
+
+Slide 6
+- Architecture: /Users/NithinAwasome/Downloads/Daytona-Hacksprint/README.md
+- Pipeline: /Users/NithinAwasome/Downloads/Daytona-Hacksprint/lib/pipeline.ts
+
+Slide 7
+- Local product screenshot captured from the recorded pr-101 run:
+  /Users/NithinAwasome/Downloads/Daytona-Hacksprint/.tmp_popper_deck/product-ui-clean.png
+- Recorded run fixture: /Users/NithinAwasome/Downloads/Daytona-Hacksprint/lib/fixtures/recorded-runs.ts
+
+Slide 8
+- Sponsor integrations: /Users/NithinAwasome/Downloads/Daytona-Hacksprint/README.md
+- Local adapter and route implementations under /Users/NithinAwasome/Downloads/Daytona-Hacksprint/lib/adapters and /Users/NithinAwasome/Downloads/Daytona-Hacksprint/app/api
+
+Slide 9
+- Failure handling and evidence boundaries: /Users/NithinAwasome/Downloads/Daytona-Hacksprint/docs/DECISIONS.md
+- Implementation progress: /Users/NithinAwasome/Downloads/Daytona-Hacksprint/docs/PROGRESS.md
+
+Slide 10
+- Closing language adapted from the user-approved Popper story and elevator pitch in this Codex task.

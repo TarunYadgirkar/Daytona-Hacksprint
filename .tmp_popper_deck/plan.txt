@@ -1,0 +1,23 @@
+Communication job:
+By the end, hackathon judges should believe Popper is a necessary trust layer for AI coding agents because it converts pull-request claims into before/after execution evidence while keeping the final decision human.
+
+Narrative:
+1. Popper title — proof for AI-generated fixes.
+2. Personal pain — two builders became the verification bottleneck.
+3. Build 1 — the generated test passed.
+4. Build 2 — it also passed before, so the green result proved nothing.
+5. Resolution — useful evidence fails before and passes after.
+6. Product mechanism — claim, attack, execute, cross-check, human verdict.
+7. Product moment — evidence and review disagree; Popper blocks.
+8. Sponsor stack — each sponsor technology owns one link in the trust chain.
+9. Hard lesson — verify the verifier.
+10. Close — AI makes the claim; Popper makes it earn trust.
+
+Visual direction:
+Cinematic dark editorial deck based on the product thumbnail. Near-black canvas, cobalt verification beam, coral failure accent, warm off-white type, restrained gold for independent opinion. Large typography, sparse layouts, no decorative card grids.
+
+Motion:
+Native fade transitions on every slide. Slides 3–5 are a progressive build using stable object positions, so each click reveals the contradiction and then resolves it into the Popper evidence rule.
+
+Speaker pacing:
+Approximately 3.5–4.5 minutes. Slides 3–5 should move quickly as a single reveal.

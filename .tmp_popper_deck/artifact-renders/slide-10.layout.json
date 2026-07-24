@@ -1,0 +1,275 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/ww6anj",
+    "id": "ww6anj",
+    "slide": 10,
+    "layoutId": "fcfbdba6-368a-4d8b-85a7-69816aac02d0",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "77bc6c99-9641-482d-bc9e-8e3e23ac1386",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#07090D",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "+mn-lt"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "fcfbdba6-368a-4d8b-85a7-69816aac02d0",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "77bc6c99-9641-482d-bc9e-8e3e23ac1386",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "77bc6c99-9641-482d-bc9e-8e3e23ac1386",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/apk3ed07",
+      "id": "1",
+      "bbox": [
+        0,
+        0,
+        1280,
+        720
+      ],
+      "alt": "A cobalt glass block intersected by a coral verification beam",
+      "contentType": "image/png",
+      "imageFit": "cover",
+      "asset": {
+        "assetId": "a516d4c8-0089-43c8-8df8-9bf4a923b084",
+        "contentType": "image/png",
+        "byteLength": 1499189
+      }
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/k36xcrat",
+      "id": "2",
+      "bbox": [
+        72,
+        78,
+        820,
+        72
+      ],
+      "geometry": "rect",
+      "text": "AI agents can make the claim.",
+      "textPreview": "AI agents can make the claim.",
+      "resolvedFontSize": 48,
+      "resolvedTextStyle": {
+        "fontSize": 48,
+        "typeface": "+mn-lt",
+        "color": "#F7F4EC",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "AI agents can make the claim."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "AI agents can make the claim.",
+          "resolvedTextStyle": {
+            "fontSize": 48,
+            "color": "#F7F4EC",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "AI agents can make the claim.",
+              "fontSize": 48,
+              "color": "#F7F4EC",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/54zy5wbe",
+      "id": "3",
+      "bbox": [
+        72,
+        568,
+        870,
+        78
+      ],
+      "geometry": "rect",
+      "text": "Popper makes it earn trust.",
+      "textPreview": "Popper makes it earn trust.",
+      "resolvedFontSize": 50,
+      "resolvedTextStyle": {
+        "fontSize": 50,
+        "typeface": "+mn-lt",
+        "color": "#F7F4EC",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Popper makes it earn trust."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Popper makes it earn trust.",
+          "resolvedTextStyle": {
+            "fontSize": 50,
+            "color": "#F7F4EC",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Popper makes it earn trust.",
+              "fontSize": 50,
+              "color": "#F7F4EC",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/658fe1sz",
+      "id": "4",
+      "bbox": [
+        916,
+        592,
+        290,
+        28
+      ],
+      "geometry": "rect",
+      "text": "THE HUMAN HOLDS THE KEY.",
+      "textPreview": "THE HUMAN HOLDS THE KEY.",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "fontSize": 16,
+        "typeface": "+mn-lt",
+        "color": "#9DB9FF",
+        "bold": true,
+        "alignment": "right",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "THE HUMAN HOLDS THE KEY."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "THE HUMAN HOLDS THE KEY.",
+          "resolvedTextStyle": {
+            "fontSize": 16,
+            "color": "#9DB9FF",
+            "bold": true,
+            "alignment": "right"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "THE HUMAN HOLDS THE KEY.",
+              "fontSize": 16,
+              "color": "#9DB9FF",
+              "bold": true,
+              "alignment": "right"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

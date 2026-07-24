@@ -1,0 +1,645 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/hmkwye",
+    "id": "hmkwye",
+    "slide": 2,
+    "layoutId": "fcfbdba6-368a-4d8b-85a7-69816aac02d0",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "77bc6c99-9641-482d-bc9e-8e3e23ac1386",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#07090D",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "+mn-lt"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "fcfbdba6-368a-4d8b-85a7-69816aac02d0",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "77bc6c99-9641-482d-bc9e-8e3e23ac1386",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "77bc6c99-9641-482d-bc9e-8e3e23ac1386",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/rm9czul0",
+      "id": "1",
+      "bbox": [
+        72,
+        52,
+        600,
+        28
+      ],
+      "geometry": "rect",
+      "text": "THE PROBLEM FOUND US FIRST",
+      "textPreview": "THE PROBLEM FOUND US FIRST",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "fontSize": 16,
+        "typeface": "+mn-lt",
+        "color": "#9DB9FF",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "THE PROBLEM FOUND US FIRST"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "THE PROBLEM FOUND US FIRST",
+          "resolvedTextStyle": {
+            "fontSize": 16,
+            "color": "#9DB9FF",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "THE PROBLEM FOUND US FIRST",
+              "fontSize": 16,
+              "color": "#9DB9FF",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/snitszml",
+      "id": "2",
+      "bbox": [
+        72,
+        98,
+        940,
+        72
+      ],
+      "geometry": "rect",
+      "text": "We became the bottleneck.",
+      "textPreview": "We became the bottleneck.",
+      "resolvedFontSize": 50,
+      "resolvedTextStyle": {
+        "fontSize": 50,
+        "typeface": "+mn-lt",
+        "color": "#F7F4EC",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "We became the bottleneck."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "We became the bottleneck.",
+          "resolvedTextStyle": {
+            "fontSize": 50,
+            "color": "#F7F4EC",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "We became the bottleneck.",
+              "fontSize": 50,
+              "color": "#F7F4EC",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/d8ru1436",
+      "id": "3",
+      "bbox": [
+        72,
+        226,
+        1136,
+        0
+      ],
+      "geometry": "line",
+      "lineColor": "#2A3242",
+      "lineWidth": 2
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/e90bu94r",
+      "id": "4",
+      "bbox": [
+        76,
+        276,
+        240,
+        28
+      ],
+      "geometry": "rect",
+      "text": "BUILDER",
+      "textPreview": "BUILDER",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "fontSize": 18,
+        "typeface": "+mn-lt",
+        "color": "#9DB9FF",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "BUILDER"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "BUILDER",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "color": "#9DB9FF",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "BUILDER",
+              "fontSize": 18,
+              "color": "#9DB9FF",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/fa9c3ulc",
+      "id": "5",
+      "bbox": [
+        72,
+        326,
+        470,
+        146
+      ],
+      "geometry": "rect",
+      "text": "AI gave us fixes\nin minutes.",
+      "textPreview": "AI gave us fixes | in minutes.",
+      "resolvedFontSize": 46,
+      "resolvedTextStyle": {
+        "fontSize": 46,
+        "typeface": "+mn-lt",
+        "color": "#F7F4EC",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "AI gave us fixes"
+          },
+          {
+            "index": 2,
+            "text": "in minutes."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "AI gave us fixes",
+          "resolvedTextStyle": {
+            "fontSize": 46,
+            "color": "#F7F4EC",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "AI gave us fixes",
+              "fontSize": 46,
+              "color": "#F7F4EC",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "in minutes.",
+          "resolvedTextStyle": {
+            "fontSize": 46,
+            "color": "#F7F4EC",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "in minutes.",
+              "fontSize": 46,
+              "color": "#F7F4EC",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/0bitwzmh",
+      "id": "6",
+      "bbox": [
+        620,
+        258,
+        4,
+        276
+      ],
+      "geometry": "rect",
+      "fillColor": "#FF5A5F",
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/1cbu5432",
+      "id": "7",
+      "bbox": [
+        690,
+        276,
+        240,
+        28
+      ],
+      "geometry": "rect",
+      "text": "REVIEWER",
+      "textPreview": "REVIEWER",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "fontSize": 18,
+        "typeface": "+mn-lt",
+        "color": "#FF9A9D",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "REVIEWER"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "REVIEWER",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "color": "#FF9A9D",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "REVIEWER",
+              "fontSize": 18,
+              "color": "#FF9A9D",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/mdkby94n",
+      "id": "8",
+      "bbox": [
+        686,
+        326,
+        510,
+        146
+      ],
+      "geometry": "rect",
+      "text": "We still had to prove\nevery one.",
+      "textPreview": "We still had to prove | every one.",
+      "resolvedFontSize": 46,
+      "resolvedTextStyle": {
+        "fontSize": 46,
+        "typeface": "+mn-lt",
+        "color": "#F7F4EC",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "We still had to prove"
+          },
+          {
+            "index": 2,
+            "text": "every one."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "We still had to prove",
+          "resolvedTextStyle": {
+            "fontSize": 46,
+            "color": "#F7F4EC",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "We still had to prove",
+              "fontSize": 46,
+              "color": "#F7F4EC",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "every one.",
+          "resolvedTextStyle": {
+            "fontSize": 46,
+            "color": "#F7F4EC",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "every one.",
+              "fontSize": 46,
+              "color": "#F7F4EC",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/netc7el8",
+      "id": "9",
+      "bbox": [
+        72,
+        570,
+        1040,
+        54
+      ],
+      "geometry": "rect",
+      "text": "The faster agents wrote, the more human trust became the scarce resource.",
+      "textPreview": "The faster agents wrote, the more human trust became the scarce resource.",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "fontSize": 25,
+        "typeface": "+mn-lt",
+        "color": "#A6ADBB",
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The faster agents wrote, the more human trust became the scarce resource."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The faster agents wrote, the more human trust became the scarce resource.",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "color": "#A6ADBB",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The faster agents wrote, the more human trust became the scarce resource.",
+              "fontSize": 25,
+              "color": "#A6ADBB",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/rap07m5w",
+      "id": "10",
+      "bbox": [
+        72,
+        674,
+        210,
+        24
+      ],
+      "geometry": "rect",
+      "text": "POPPER  ·  02",
+      "textPreview": "POPPER  ·  02",
+      "resolvedFontSize": 14,
+      "resolvedTextStyle": {
+        "fontSize": 14,
+        "typeface": "+mn-lt",
+        "color": "#687185",
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "POPPER  ·  02"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "POPPER  ·  02",
+          "resolvedTextStyle": {
+            "fontSize": 14,
+            "color": "#687185",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "POPPER  ·  02",
+              "fontSize": 14,
+              "color": "#687185",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}
