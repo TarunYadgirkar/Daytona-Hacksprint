@@ -13,6 +13,7 @@
     "start": "next start",
     "test": "tsx --test tests/*.test.ts lib/adapters/*.test.ts lib/*.test.ts",
     "lint": "eslint . --max-warnings=0",
+    "verify": "npm run lint && npm run typecheck && npm test && npm run build",
     "typecheck": "tsc --noEmit",
     "record:coderabbit": "tsx scripts/record-coderabbit.ts",
     "check:env": "tsx scripts/check-env.ts",
